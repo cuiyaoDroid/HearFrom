@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <string name="app_name">听说</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="verson">1.0</string>
+	
+	<string name="app_error">应用程序错误</string>
+    <string name="app_error_message">很抱歉，应用程序出现错误，即将退出。\n请选择邮件的方式将此错误报告提交给我，我会尽快修复这个问题，谢谢！</string>
+    <string name="submit_report">提交报告</string>
+    <string name="status_available">在线</string>
+    <string name="status_away">离开</string>
+    <string name="status_chat">Q我吧</string>
+    <string name="status_dnd">请勿打扰</string>
+    <string name="status_xa">隐身</string>
+    <string name="status_offline">离线</string>
+    <string name="status_busy">忙碌</string>
+    <string name="status_online">在线</string>
+</resources>
