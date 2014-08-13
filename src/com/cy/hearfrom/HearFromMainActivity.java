@@ -15,6 +15,8 @@ import cn.jpush.android.api.InstrumentedActivity;
 import com.cy.service.IConnectionStatusCallback;
 import com.cy.service.XXService;
 import com.cy.tool.L;
+import com.cy.tool.PreferenceConstants;
+import com.cy.tool.PreferenceUtils;
 import com.cy.tool.T;
 import com.cy.tool.view.PinnedHeaderListView;
 import com.cy.tool.view.adapter.TestAdapter;
@@ -23,7 +25,7 @@ public class HearFromMainActivity extends InstrumentedActivity implements
 IConnectionStatusCallback {
 	private TestAdapter adapter;
 	private PinnedHeaderListView listView;
-	public static final String LOGIN_ACTION = "com.way.action.LOGIN";
+	public static final String LOGIN_ACTION = "com.cy.hearfrom.action.LOGIN";
 	public static final String INTENT_EXTRA_USERNAME = HearFromMainActivity.class
 			.getName() + ".username";
 	private XXService mXxService;
@@ -45,14 +47,32 @@ IConnectionStatusCallback {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				if (mXxService != null) {
-					L.i("start login");
-					mXxService.Login("test", "test");
-				}
+//				splitAndSaveServer("test@10.10.1.49");
+//				if (mXxService != null) {
+//					mXxService.Login("test", "test");
+//				}
 			}
 		});
 	}
+	private String splitAndSaveServer(String account) {
+		if (!account.contains("@"))
+			return account;
+		String customServer = PreferenceUtils.getPrefString(this,
+				PreferenceConstants.CUSTOM_SERVER, "");
+		String[] res = account.split("@");
+		String userName = res[0];
+		String server = res[1];
+		// check for gmail.com and other google hosted jabber accounts
+		if ("gmail.com".equals(server) || "googlemail.com".equals(server)
+				|| PreferenceConstants.GMAIL_SERVER.equals(customServer)) {
+			// work around for gmail's incompatible jabber implementation:
+			// send the whole JID as the login, connect to talk.google.com
+			userName = account;
 
+		}
+		PreferenceUtils.setPrefString(this, PreferenceConstants.Server, server);
+		return userName;
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -88,7 +108,6 @@ IConnectionStatusCallback {
 		// TODO Auto-generated method stub
 		if (connectedState == XXService.CONNECTED) {
 			T.showLong(this, "µÇÂ¼³É¹¦");
-			finish();
 		} else if (connectedState == XXService.DISCONNECTED)
 			T.showLong(this, "µÇÂ¼Ê§°Ü"+ reason);
 	}

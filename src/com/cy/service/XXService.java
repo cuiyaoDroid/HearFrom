@@ -5,18 +5,6 @@ package com.cy.service;
 import java.util.HashSet;
 import java.util.List;
 
-import com.cy.exception.XXException;
-import com.cy.hearfrom.HearFromMainActivity;
-import com.cy.hearfrom.R;
-import com.cy.hearfrom.XXBroadcastReceiver;
-import com.cy.hearfrom.XXBroadcastReceiver.EventHandler;
-import com.cy.smack.SmackImpl;
-import com.cy.tool.L;
-import com.cy.tool.NetUtil;
-import com.cy.tool.PreferenceConstants;
-import com.cy.tool.PreferenceUtils;
-import com.cy.tool.T;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlarmManager;
@@ -31,6 +19,18 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
+
+import com.cy.exception.XXException;
+import com.cy.hearfrom.HearFromMainActivity;
+import com.cy.hearfrom.R;
+import com.cy.hearfrom.XXBroadcastReceiver;
+import com.cy.hearfrom.XXBroadcastReceiver.EventHandler;
+import com.cy.smack.SmackImpl;
+import com.cy.tool.L;
+import com.cy.tool.NetUtil;
+import com.cy.tool.PreferenceConstants;
+import com.cy.tool.PreferenceUtils;
+import com.cy.tool.T;
 
 
 public class XXService extends BaseService implements EventHandler {
@@ -53,7 +53,7 @@ public class XXService extends BaseService implements EventHandler {
 	// 自动重连 start
 	private static final int RECONNECT_AFTER = 5;
 	private static final int RECONNECT_MAXIMUM = 10 * 60;// 最大重连时间间隔
-	private static final String RECONNECT_ALARM = "com.way.xx.RECONNECT_ALARM";
+	private static final String RECONNECT_ALARM = "com.cy.hearfrom.RECONNECT_ALARM";
 	// private boolean mIsNeedReConnection = false; // 是否需要重连
 	private int mConnectedState = DISCONNECTED; // 是否已经连接
 	private int mReconnectTimeout = RECONNECT_AFTER;
@@ -179,9 +179,11 @@ public class XXService extends BaseService implements EventHandler {
 					mSmackable = new SmackImpl(XXService.this);
 					if (mSmackable.login(account, password)) {
 						// 登陆成功
+						L.i("postConnectionScuessed");
 						postConnectionScuessed();
 					} else {
 						// 登陆失败
+						L.i("postConnectionScuessed");
 						postConnectionFailed(LOGIN_FAILED);
 					}
 				} catch (XXException e) {
