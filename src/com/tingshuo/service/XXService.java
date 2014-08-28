@@ -418,10 +418,11 @@ public class XXService extends BaseService implements EventHandler {
 				if (!PreferenceUtils.getPrefBoolean(XXService.this,
 						PreferenceConstants.SCLIENTNOTIFY, false))
 					MediaPlayer.create(XXService.this, R.raw.office).start();
-				if (!isAppOnForeground())
+				if (!isAppOnForeground()){
 					notifyClient(from, mSmackable.getNameForJID(from), message,
 							!mIsBoundTo.contains(from));
-				// T.showLong(XXService.this, from + ": " + message);
+				}
+				T.showLong(XXService.this, from + ": " + message);
 
 			}
 
