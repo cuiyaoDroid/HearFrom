@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 import cn.jpush.android.api.JPushInterface;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -25,14 +27,15 @@ import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
 import com.tingshuo.tool.T;
-import com.tingshuo.tool.view.PinnedHeaderListView;
 import com.tingshuo.tool.view.adapter.TestAdapter;
-
+import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase;
+import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
+import com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView;
 @SuppressLint("NewApi") 
 public class HearFromMainActivity extends SherlockActivity implements
 IConnectionStatusCallback {
 	private TestAdapter adapter;
-	private PinnedHeaderListView listView;
+	private PullToRefreshListView listView;
 	public static final String LOGIN_ACTION = "com.tingshuo.hearfrom.action.LOGIN";
 	public static final String INTENT_EXTRA_USERNAME = HearFromMainActivity.class
 			.getName() + ".username";
@@ -61,11 +64,26 @@ IConnectionStatusCallback {
 				}
 			}
 		});
-		listView = (PinnedHeaderListView) findViewById(R.id.listview);
+		listView = (PullToRefreshListView) findViewById(R.id.listview);
+		listView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+
+			@Override
+			public void onPullDownToRefresh(
+					PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub
+				new GetDataTask().execute();
+			}
+
+			@Override
+			public void onPullUpToRefresh(
+					PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub
+				new GetDataTask().execute();
+			}
+
+		});
 		listView.setAdapter(adapter);
 		listView.setOnScrollListener(adapter);
-		listView.setPinnedHeaderView(getLayoutInflater().inflate(
-				R.layout.cell_listheader, listView, false));
 		startService(new Intent(HearFromMainActivity.this, XXService.class));
 		bindXMPPService();
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -74,13 +92,31 @@ IConnectionStatusCallback {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-//				splitAndSaveServer("cuiyao@www.wangjiaqi666.cn");
-//				if (mXxService != null) {
-//					mXxService.Login("cuiyao", "123456");
-//				}
 			}
 		});
 		
+	}
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... params) {
+			// Simulates a background job.
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+			adapter.notifyDataSetChanged();
+
+			// Call onRefreshComplete when the list has been refreshed.
+			listView.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
 	}
 	private String splitAndSaveServer(String account) {
 		if (!account.contains("@"))

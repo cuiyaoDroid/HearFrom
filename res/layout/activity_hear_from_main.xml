@@ -8,20 +8,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HearFromMainActivity" >
 
-<FrameLayout  
-        android:id="@+id/content"  
-        android:layout_width="match_parent"  
-        android:layout_height="0dp"  
-        android:layout_weight="1" >  
-    </FrameLayout> 
-    <com.tingshuo.tool.view.PinnedHeaderListView
-        android:id="@+id/listview"
+    <FrameLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" 
-        android:visibility="gone">
-    </com.tingshuo.tool.view.PinnedHeaderListView>
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </FrameLayout>
+
+    <com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/refresh_arrow_2"
+        ptr:ptrMode="both" >
+    </com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView>
 
     <Button
         android:id="@+id/test_btn"
