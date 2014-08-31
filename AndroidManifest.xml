@@ -5,7 +5,7 @@
     android:versionName="@string/verson" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="17" />
 
     <permission
@@ -42,15 +42,20 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.MyTheme" >
         <activity
-            android:name="com.tingshuo.hearfrom.HearFromMainActivity"
-            android:label="@string/app_name" >
+            android:name="com.tingshuo.hearfrom.RegisterFastActivity">
             <intent-filter>
-                <action android:name="com.tingshuo.hearfrom.action.LOGIN" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+		<activity
+            android:name="com.tingshuo.hearfrom.HearFromMainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.tingshuo.hearfrom.action.LOGIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
