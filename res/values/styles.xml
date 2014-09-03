@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -14,16 +14,20 @@
 
     <!-- Application theme. -->
     <!-- Application theme. -->
-    <style name="AppTheme" parent="@android:Theme.Light.NoTitleBar">
-        <item name="android:windowNoTitle">true</item>
+    <style name="AppTheme" parent="Theme.Sherlock.Light">
+        <item name="android:windowBackground">@drawable/leader_index1</item>  
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="actionBarStyle">@style/Theme.MyTheme.ActionBar2</item>
+        <item name="android:actionBarStyle">@style/Theme.MyTheme.ActionBar2</item>
     </style>
 
     <style name="Theme.MyTheme" parent="Theme.Sherlock.Light">
         <item name="actionBarStyle">@style/Theme.MyTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/Theme.MyTheme.ActionBar</item>
     </style>
-
+ 	<style name="Theme.MyTheme.ActionBar2" parent="Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="android:visibility">gone</item>
+    </style>
     <style name="Theme.MyTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
         
         <item name="android:titleTextStyle">@style/Theme.MyTheme.ActionBar.TitleTextStyle</item>

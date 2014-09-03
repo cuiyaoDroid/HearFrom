@@ -1,9 +1,7 @@
 package com.tingshuo.hearfrom.screen;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;;
 
-@SuppressLint("NewApi")
 public class BaseScreen extends Fragment {
 	protected ScreenChangeListener listener;
 

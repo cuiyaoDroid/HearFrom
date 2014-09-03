@@ -26,10 +26,12 @@
 
             <ImageButton
                 android:id="@+id/male_btn"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_gravity="center"
-                android:src="@drawable/cute_boys" />
+                android:src="@drawable/cute_boys" 
+                android:scaleType="fitXY"
+                android:background="@drawable/abs__item_background_holo_light"/>
         </FrameLayout>
 
         <FrameLayout
@@ -39,10 +41,12 @@
 
             <ImageButton
                 android:id="@+id/female_btn"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_gravity="center"
-                android:src="@drawable/cute_girl" />
+                android:scaleType="fitXY"
+                android:src="@drawable/cute_girl"
+                android:background="@drawable/abs__item_background_holo_light" />
         </FrameLayout>
     </LinearLayout>
 

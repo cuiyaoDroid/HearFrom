@@ -40,7 +40,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.MyTheme" >
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.tingshuo.hearfrom.RegisterFastActivity">
             <intent-filter>
@@ -50,6 +50,7 @@
         </activity>
 		<activity
             android:name="com.tingshuo.hearfrom.HearFromMainActivity"
+            android:theme="@style/Theme.MyTheme"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="com.tingshuo.hearfrom.action.LOGIN" />

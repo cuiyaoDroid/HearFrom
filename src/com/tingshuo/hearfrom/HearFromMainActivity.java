@@ -1,8 +1,6 @@
 package com.tingshuo.hearfrom;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +17,6 @@ import android.widget.ListView;
 import cn.jpush.android.api.JPushInterface;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.tingshuo.hearfrom.screen.leaderFirstScreen;
-import com.tingshuo.hearfrom.screen.leaderSecondScreen;
 import com.tingshuo.service.IConnectionStatusCallback;
 import com.tingshuo.service.XXService;
 import com.tingshuo.tool.L;
@@ -40,15 +36,10 @@ IConnectionStatusCallback {
 	public static final String INTENT_EXTRA_USERNAME = HearFromMainActivity.class
 			.getName() + ".username";
 	private XXService mXxService;
-	private FragmentManager fragmentManager;
-	private leaderFirstScreen leaderfirst_screen;
-	private leaderSecondScreen leadersecond_screen;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hear_from_main);
-		fragmentManager = getFragmentManager();  
-		
 		//requestWindowFeature(com.actionbarsherlock.view.Window.FEATURE_ACTION_BAR_OVERLAY);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -137,61 +128,7 @@ IConnectionStatusCallback {
 		PreferenceUtils.setPrefString(this, PreferenceConstants.Server, server);
 		return userName;
 	}
-	private void setTabSelection(int index) {  
-        // 开启一个Fragment事务  
-        FragmentTransaction transaction = fragmentManager.beginTransaction();  
-        // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况  
-        hideFragments(transaction);  
-        switch (index) {  
-        case 1:  
-            // 当点击了消息tab时，改变控件的图片和文字颜色  
-            if (leaderfirst_screen == null) {  
-                // 如果MessageFragment为空，则创建一个并添加到界面上  
-            	leaderfirst_screen = new leaderFirstScreen();  
-                transaction.add(R.id.content, leaderfirst_screen);  
-            } else {  
-                // 如果MessageFragment不为空，则直接将它显示出来  
-                transaction.show(leaderfirst_screen);  
-            }  
-            break;  
-        case 2:  
-            // 当点击了联系人tab时，改变控件的图片和文字颜色  
-            if (leadersecond_screen == null) {  
-                // 如果ContactsFragment为空，则创建一个并添加到界面上  
-            	leadersecond_screen = new leaderSecondScreen();  
-                transaction.add(R.id.content, leadersecond_screen);  
-            } else {  
-                // 如果ContactsFragment不为空，则直接将它显示出来  
-                transaction.show(leadersecond_screen);  
-            }  
-            break;  
-        default:  
-            break;  
-        }  
-        transaction.commit();  
-    }  
   
-  
-    /** 
-     * 将所有的Fragment都置为隐藏状态。 
-     *  
-     * @param transaction 
-     *            用于对Fragment执行操作的事务 
-     */  
-    private void hideFragments(FragmentTransaction transaction) {  
-        if (leaderfirst_screen != null) {  
-            transaction.hide(leaderfirst_screen);  
-        }  
-        if (leadersecond_screen != null) {  
-            transaction.hide(leadersecond_screen);  
-        }  
-    }  
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.hear_from_main, menu);
-		return true;
-	}*/
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		// TODO Auto-generated method stub
