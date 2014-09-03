@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -14,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import cn.jpush.android.api.JPushInterface;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.tingshuo.service.IConnectionStatusCallback;
@@ -42,7 +42,7 @@ IConnectionStatusCallback {
 		setContentView(R.layout.activity_hear_from_main);
 		//requestWindowFeature(com.actionbarsherlock.view.Window.FEATURE_ACTION_BAR_OVERLAY);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		adapter = new TestAdapter(getLayoutInflater());
 		((Button)findViewById(R.id.test_btn)).setOnClickListener(new OnClickListener() {
 			
@@ -83,9 +83,23 @@ IConnectionStatusCallback {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
+				startChatActivity("wangjiaqi@iz25b16f012z","wangjiaqi");
 			}
 		});
 		
+	}
+	private void save2Preferences() {
+		PreferenceUtils.setPrefString(this, PreferenceConstants.ACCOUNT,
+				"cuiyao");// 帐号是一直保存的
+			PreferenceUtils.setPrefString(this, PreferenceConstants.PASSWORD,
+					"123456");
+	}
+	private void startChatActivity(String userJid, String userName) {
+		Intent chatIntent = new Intent(HearFromMainActivity.this, ChatActivity.class);
+		Uri userNameUri = Uri.parse(userJid);
+		chatIntent.setData(userNameUri);
+		chatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, userName);
+		startActivity(chatIntent);
 	}
 	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
 
@@ -140,13 +154,13 @@ IConnectionStatusCallback {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		JPushInterface.onResume(this);
+//		JPushInterface.onResume(this);
 		
 	}
 	@Override
 	protected void onPause() {
 		super.onPause();
-		JPushInterface.onPause(this);
+//		JPushInterface.onPause(this);
 	};
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -164,10 +178,12 @@ IConnectionStatusCallback {
 		}
 
 	};
+
 	@Override
 	public void connectionStatusChanged(int connectedState, String reason) {
 		// TODO Auto-generated method stub
 		if (connectedState == XXService.CONNECTED) {
+			save2Preferences();
 			T.showLong(this, "登录成功");
 		} else if (connectedState == XXService.DISCONNECTED)
 			T.showLong(this, "登录失败"+ reason);

@@ -3,7 +3,6 @@ package com.tingshuo.hearfrom;
 
 import java.io.File;
 
-import cn.jpush.android.api.JPushInterface;
 
 import com.tingshuo.tool.CrashHandler;
 import com.tingshuo.tool.L;
@@ -37,8 +36,8 @@ public class HearFromApp extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
-        JPushInterface.init(this);     
+//		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+//        JPushInterface.init(this);     
 		upGradeDBifnessage();
 		createPath(appPath);
 		mApplication = this;

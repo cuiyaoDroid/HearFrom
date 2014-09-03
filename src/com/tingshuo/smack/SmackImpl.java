@@ -251,7 +251,7 @@ public class SmackImpl implements Smack {
 					if (packet instanceof Message) {
 						Message msg = (Message) packet;
 						String chatMessage = msg.getBody();
-
+						
 						// try to extract a carbon
 						Carbon cc = CarbonManager.getCarbon(msg);
 						if (cc != null

@@ -48,6 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
 		<activity
             android:name="com.tingshuo.hearfrom.HearFromMainActivity"
             android:theme="@style/Theme.MyTheme"
@@ -56,6 +57,10 @@
                 <action android:name="com.tingshuo.hearfrom.action.LOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tingshuo.hearfrom.ChatActivity"
+            android:theme="@style/Theme.MyTheme">
         </activity>
         <!-- Required SDK核心功能 -->
         <activity

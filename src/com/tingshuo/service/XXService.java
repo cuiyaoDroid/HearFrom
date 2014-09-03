@@ -232,9 +232,10 @@ public class XXService extends BaseService implements EventHandler {
 
 	// ·¢ËÍÏûÏ¢
 	public void sendMessage(String user, String message) {
-		if (mSmackable != null)
+		if (mSmackable != null){
+			L.i("user:  "+user+"   message:  "+message);
 			mSmackable.sendMessage(user, message);
-		else
+		}else
 			SmackImpl.sendOfflineMessage(getContentResolver(), user, message);
 	}
 
@@ -415,14 +416,16 @@ public class XXService extends BaseService implements EventHandler {
 	public void newMessage(final String from, final String message) {
 		mMainHandler.post(new Runnable() {
 			public void run() {
-				if (!PreferenceUtils.getPrefBoolean(XXService.this,
-						PreferenceConstants.SCLIENTNOTIFY, false))
-					MediaPlayer.create(XXService.this, R.raw.office).start();
+				
 				if (!isAppOnForeground()){
+					if (!PreferenceUtils.getPrefBoolean(XXService.this,
+							PreferenceConstants.SCLIENTNOTIFY, false)){
+						MediaPlayer.create(XXService.this, R.raw.office).start();
+					}
 					notifyClient(from, mSmackable.getNameForJID(from), message,
 							!mIsBoundTo.contains(from));
 				}
-				T.showLong(XXService.this, from + ": " + message);
+				//T.showLong(XXService.this, from + ": " + message);
 
 			}
 

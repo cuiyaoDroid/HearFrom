@@ -118,7 +118,6 @@ public class RegisterFastActivity extends FragmentActivity implements
 		}
 		super.onBackPressed();
 	}
-
 	@Override
 	public void startMainPage() {
 		// TODO Auto-generated method stub
