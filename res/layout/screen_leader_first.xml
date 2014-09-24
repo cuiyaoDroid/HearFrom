@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.4"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        >
     </LinearLayout>
 
     <LinearLayout
@@ -24,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:background="@null"
             android:src="@drawable/register_btn_bg"/>
 
     </LinearLayout>

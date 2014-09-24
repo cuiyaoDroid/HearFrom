@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/titleLayout"
+        layout="@layout/title_layout" />
+
+    <com.tingshuo.tool.view.CustomerScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/main_list_bg" >
+
+                <include
+                    android:id="@+id/setting_commit"
+                    layout="@layout/cell_setting_click" >
+                </include>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/main_list_bg"
+                android:orientation="vertical" >
+
+                <include
+                    android:id="@+id/setting_head"
+                    layout="@layout/cell_setting_img_click" >
+                </include>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/divider_color" />
+
+                <include
+                    android:id="@+id/setting_account"
+                    layout="@layout/cell_setting_click" >
+                </include>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/divider_color" />
+
+                <include
+                    android:id="@+id/setting_nick_name"
+                    layout="@layout/cell_setting_edit" >
+                </include>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/divider_color" />
+
+                <include
+                    android:id="@+id/setting_password"
+                    layout="@layout/cell_setting_click" >
+                </include>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/main_list_bg"
+                android:orientation="vertical" >
+
+                <include
+                    android:id="@+id/setting_sex"
+                    layout="@layout/cell_setting_click" >
+                </include>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/divider_color" />
+
+                <include
+                    android:id="@+id/setting_birthday"
+                    layout="@layout/cell_setting_click" >
+                </include>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/main_list_bg"
+                android:orientation="vertical" >
+
+                <include
+                    android:id="@+id/setting_clear"
+                    layout="@layout/cell_setting_click" >
+                </include>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/divider_color" />
+
+                <include
+                    android:id="@+id/setting_logout"
+                    layout="@layout/cell_setting_click" >
+                </include>
+            </LinearLayout>
+        </LinearLayout>
+    </com.tingshuo.tool.view.CustomerScrollView>
+
+</LinearLayout>

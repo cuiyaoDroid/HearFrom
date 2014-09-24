@@ -41,22 +41,28 @@ public class ImageFileCache {
         //清理文件缓存
         removeCache(getDirectory());
     }
-    public static void compressImage(String from , String to){
+    public static void compressImage(String from , String to,boolean delete){
     	File file = new File(from);
     	Bitmap bitmap;
 		if (file.length() > 1024*1024 * 2) {
 			L.i("getimage", "480*800");
-			bitmap = PictureUtil.getimage(from, 600, 1000, 1024*1024 * 2);
+			bitmap = PictureUtil.getimage(from, 1000, 1000, 1024*1024 * 2);
 		}else{
 			L.i("getSmallBitmap", "getSmallBitmap");
-			bitmap=PictureUtil.getimage(from, 600, 1000, 1024*1024 * 2);
+			bitmap=PictureUtil.getimage(from, 1000, 1000, 1024*1024 * 2);
+		}
+		if(bitmap==null){
+			L.i("bitmap=null", "getSmallBitmap");
+			return;
 		}
 		File tofile = new File(to);
         try {
         	FileOutputStream outStream = new FileOutputStream(tofile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
             bitmap.recycle();
-            new File(from).delete();
+            if(delete){
+            	new File(from).delete();
+        	}
             outStream.flush();
             outStream.close();
         } catch (FileNotFoundException e) {

@@ -8,6 +8,7 @@ import java.util.TimeZone;
 import android.text.format.Time;
 
 public class TimeFormatTool {
+	public static final int phpTojava=1000;
 	public static String getWeekDay(Time time){
 		String dataWeek = "";
 		switch (time.weekDay) {

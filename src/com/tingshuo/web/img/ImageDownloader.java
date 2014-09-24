@@ -29,6 +29,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.tingshuo.tool.L;
+import com.tingshuo.tool.view.imageshower.ShowerImageView;
+import com.tingshuo.web.img.fetcher.ImageCache;
 
 
 import android.content.Context;
@@ -39,12 +41,11 @@ import android.graphics.drawable.Drawable;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 
 /**
- * This helper class download images from the Internet and binds those with the provided ImageView.
+ * This helper class download images from the Internet and binds those with the provided ShowerImageView.
  *
  * <p>It requires the INTERNET permission, which should be added to your application's manifest
  * file.</p>
@@ -56,21 +57,17 @@ public class ImageDownloader {
 
     public enum Mode { NO_ASYNC_TASK, NO_DOWNLOADED_DRAWABLE, CORRECT }
     private Mode mode = Mode.CORRECT;
-    private ImageFileCache fileCache;
-    private ImageMemoryCache imageCache;
+    private ImageCache mImageCache;
     
     
-    private static Bitmap loadingimage;
-    public static void setloadingimage(Bitmap image){
-    	loadingimage = image;
-    }
+     public static  Bitmap loadingimage;
 	/**
-     * Download the specified image from the Internet and binds it to the provided ImageView. The
+     * Download the specified image from the Internet and binds it to the provided ShowerImageView. The
      * binding is immediate if the image is found in the cache and will be done asynchronously
-     * otherwise. A null bitmap will be associated to the ImageView if an error occurs.
+     * otherwise. A null bitmap will be associated to the ShowerImageView if an error occurs.
      *
      * @param url The URL of the image to download.
-     * @param imageView The ImageView to bind the downloaded image to.
+     * @param ShowerImageView The ShowerImageView to bind the downloaded image to.
      * 
      * edit by Cuiyao 2013-9-22 add fileCache
      * 
@@ -85,71 +82,67 @@ public class ImageDownloader {
      * 三、imageCache中存在图片缓存，读取并显示（所有的缓冲区入口都是经过圆角处理的）。
      * 
      */
-    private int type=0;
-    public ImageDownloader(Context context ,int type){
-    	fileCache=new ImageFileCache();
-    	imageCache=new ImageMemoryCache(context);
-    	this.type=type;
+    private Context context;
+    public ImageDownloader(Context context,ImageCache mImageCache){
+    	this.mImageCache=mImageCache;
+    	this.context=context;
     }
     
-    public void cleanCache(){
-    	imageCache.clearCache();
-    }
-    public void download(String url, ImageView imageView) {
-    	imageCache.resetPurgeTimer();
-        Bitmap bitmap = imageCache.getBitmapFromCache(url);
+    public void download(String url, ShowerImageView ShowerImageView) {
+        Bitmap bitmap = mImageCache.getBitmapFromMemCache(url);
         
 		if (bitmap == null) {
 			// 文件缓存中获取
-			bitmap = fileCache.getImage(url,""+type);
+			bitmap = mImageCache.getBitmapFromDiskCache(url);
 			if (bitmap == null) {
-				forceDownload(url, imageView);
+				forceDownload(url, ShowerImageView);
 			} else {
 				//edit bv cuiyao 
-				imageCache.addBitmapToCache(url, bitmap);
-				cancelPotentialDownload(url, imageView);
-				imageView.setImageBitmap(bitmap);
+				mImageCache.addBitmapToCache(url, bitmap);
+				cancelPotentialDownload(url, ShowerImageView);
+				ShowerImageView.setImageBitmap(bitmap);
 			}
 		}else {
-			cancelPotentialDownload(url, imageView);
-			imageView.setImageBitmap(bitmap);
+			cancelPotentialDownload(url, ShowerImageView);
+			ShowerImageView.setImageBitmap(bitmap);
 		}
     }
     private ProgressBar progressBar=null;
-    public void download(String url, ImageView imageView,ProgressBar progressBar) {
+    public void download(String url, ShowerImageView ShowerImageView
+    		,ProgressBar progressBar,Bitmap staticbitmap) {
     	this.progressBar=progressBar;
     	if(this.progressBar!=null){
 			this.progressBar.setVisibility(View.VISIBLE);
 		}
-    	imageCache.resetPurgeTimer();
-        Bitmap bitmap = imageCache.getBitmapFromCache(url);
+    	loadingimage=staticbitmap;
+        Bitmap bitmap = mImageCache.getBitmapFromMemCache(url);
         
 		if (bitmap == null) {
 			// 文件缓存中获取
-			bitmap = fileCache.getImage(url,""+type);
+			bitmap = mImageCache.getBitmapFromDiskCache(url);
 			if (bitmap == null) {
-				forceDownload(url, imageView);
+				forceDownload(url, ShowerImageView);
 			} else {
 				//edit bv cuiyao 
-				imageCache.addBitmapToCache(url, bitmap);
-				cancelPotentialDownload(url, imageView);
+				mImageCache.addBitmapToCache(url, bitmap);
+				cancelPotentialDownload(url, ShowerImageView);
 				if(this.progressBar!=null){
 					this.progressBar.setVisibility(View.GONE);
 				}
-				imageView.setImageBitmap(bitmap);
+				ShowerImageView.setImageBitmap(bitmap);
 			}
 		}else {
-			cancelPotentialDownload(url, imageView);
+			cancelPotentialDownload(url, ShowerImageView);
 			if(this.progressBar!=null){
 				this.progressBar.setVisibility(View.GONE);
 			}
-			imageView.setImageBitmap(bitmap);
+			ShowerImageView.setImageBitmap(bitmap);
 		}
     }
     /*
      * Same as download but the image is always downloaded and the cache is not used.
      * Kept private at the moment as its interest is not clear.
-       private void forceDownload(String url, ImageView view) {
+       private void forceDownload(String url, ShowerImageView view) {
           forceDownload(url, view, null);
        }
      */
@@ -158,36 +151,36 @@ public class ImageDownloader {
      * Same as download but the image is always downloaded and the cache is not used.
      * Kept private at the moment as its interest is not clear.
      */
-    private void forceDownload(String url, ImageView imageView) {
+    private void forceDownload(String url, ShowerImageView ShowerImageView) {
         // State sanity: url is guaranteed to never be null in DownloadedDrawable and cache keys.
         if (url == null) {
-            imageView.setImageDrawable(null);
+            ShowerImageView.setImageDrawable(null);
             return;
         }
 
-        if (cancelPotentialDownload(url, imageView)) {
+        if (cancelPotentialDownload(url, ShowerImageView)) {
             switch (mode) {
                 case NO_ASYNC_TASK:
                     Bitmap bitmap = downloadBitmap(url);
-                    imageCache.addBitmapToCache(url, bitmap);
+                    mImageCache.addBitmapToCache(url, bitmap);
                     if(this.progressBar!=null){
     					this.progressBar.setVisibility(View.GONE);
     				}
-    				imageView.setImageBitmap(bitmap);
+    				ShowerImageView.setImageBitmap(bitmap);
                     break;
 
                 case NO_DOWNLOADED_DRAWABLE:
-                    imageView.setMinimumHeight(156);
-                    BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
+                    ShowerImageView.setMinimumHeight(156);
+                    BitmapDownloaderTask task = new BitmapDownloaderTask(ShowerImageView);
                     task.execute(url);
                     break;
 
                 case CORRECT:
-                    task = new BitmapDownloaderTask(imageView);
+                    task = new BitmapDownloaderTask(ShowerImageView);
                     DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
-                    imageView.setImageDrawable(downloadedDrawable);
-//                    imageView.setMinimumHeight(156);
-//                    imageView.setMinimumWidth(156);
+                    ShowerImageView.setImageDrawable(downloadedDrawable);
+//                    ShowerImageView.setMinimumHeight(156);
+//                    ShowerImageView.setMinimumWidth(156);
                     task.execute(url);
                     break;
             }
@@ -200,8 +193,8 @@ public class ImageDownloader {
      * Returns false if the download in progress deals with the same url. The download is not
      * stopped in that case.
      */
-    private static boolean cancelPotentialDownload(String url, ImageView imageView) {
-        BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
+    private static boolean cancelPotentialDownload(String url, ShowerImageView ShowerImageView) {
+        BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(ShowerImageView);
 
         if (bitmapDownloaderTask != null) {
             String bitmapUrl = bitmapDownloaderTask.url;
@@ -216,13 +209,13 @@ public class ImageDownloader {
     }
 
     /**
-     * @param imageView Any imageView
-     * @return Retrieve the currently active download task (if any) associated with this imageView.
+     * @param ShowerImageView Any ShowerImageView
+     * @return Retrieve the currently active download task (if any) associated with this ShowerImageView.
      * null if there is no such task.
      */
-    private static BitmapDownloaderTask getBitmapDownloaderTask(ImageView imageView) {
-        if (imageView != null) {
-            Drawable drawable = imageView.getDrawable();
+    private static BitmapDownloaderTask getBitmapDownloaderTask(ShowerImageView ShowerImageView) {
+        if (ShowerImageView != null) {
+            Drawable drawable = ShowerImageView.getDrawable();
             if (drawable instanceof DownloadedDrawable) {
                 DownloadedDrawable downloadedDrawable = (DownloadedDrawable)drawable;
                 return downloadedDrawable.getBitmapDownloaderTask();
@@ -255,7 +248,7 @@ public class ImageDownloader {
                     bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
                 } catch(OutOfMemoryError e){
                 	BitmapFactory.Options options = new BitmapFactory.Options();
-                	options.inSampleSize = 2;
+                	options.inSampleSize = 3;
                     bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream),null,options);
                 }
                 finally {
@@ -318,10 +311,10 @@ public class ImageDownloader {
      */
     class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         private String url;
-        private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<ShowerImageView> imageViewReference;
 
-        public BitmapDownloaderTask(ImageView imageView) {
-            imageViewReference = new WeakReference<ImageView>(imageView);
+        public BitmapDownloaderTask(ShowerImageView ShowerImageView) {
+            imageViewReference = new WeakReference<ShowerImageView>(ShowerImageView);
         }
 
         /**
@@ -334,7 +327,7 @@ public class ImageDownloader {
         }
 
         /**
-         * Once the image is downloaded, associates it to the imageView
+         * Once the image is downloaded, associates it to the ShowerImageView
          */
         
         @Override
@@ -342,25 +335,25 @@ public class ImageDownloader {
             if (isCancelled()) {
                 bitmap = null;
             }
-            imageCache.addBitmapToCache(url, bitmap);
-            fileCache.saveBitmap(bitmap, url,""+type);
+            mImageCache.addBitmapToCache(url, bitmap);
             if (imageViewReference != null) {
-                ImageView imageView = imageViewReference.get();
-                BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
+                ShowerImageView ShowerImageView = imageViewReference.get();
+                BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(ShowerImageView);
                 // Change bitmap only if this process is still associated with it
                 // Or if we don't use any bitmap to task association (NO_DOWNLOADED_DRAWABLE mode)
                 if ((this == bitmapDownloaderTask) || (mode != Mode.CORRECT)) {
+                	L.i("this == bitmapDownloaderTask");
                 	if(bitmap==null){
                 		if(progressBar!=null){
         					progressBar.setVisibility(View.GONE);
         				}
-                		imageView.setImageBitmap(loadingimage);
+                		ShowerImageView.setImageBitmap(loadingimage);
                 		return;
                 	}
                 	if(progressBar!=null){
     					progressBar.setVisibility(View.GONE);
     				}
-    				imageView.setImageBitmap(bitmap);    				
+    				ShowerImageView.setImageBitmap(bitmap);  
                 }
             }
         }
@@ -368,17 +361,17 @@ public class ImageDownloader {
 
 
     /**
-     * A fake Drawable that will be attached to the imageView while the download is in progress.
+     * A fake Drawable that will be attached to the ShowerImageView while the download is in progress.
      *
      * <p>Contains a reference to the actual download task, so that a download task can be stopped
      * if a new binding is required, and makes sure that only the last started download process can
      * bind its result, independently of the download finish order.</p>
      */
-    static class DownloadedDrawable extends BitmapDrawable {
+   class DownloadedDrawable extends BitmapDrawable {
         private final WeakReference<BitmapDownloaderTask> bitmapDownloaderTaskReference;
 
         public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask) { 
-        	super(loadingimage);
+        	super(context.getResources(),loadingimage);
             bitmapDownloaderTaskReference =
                 new WeakReference<BitmapDownloaderTask>(bitmapDownloaderTask);
         }

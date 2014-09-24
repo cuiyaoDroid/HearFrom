@@ -2,40 +2,61 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
+    <style name="AnimBottom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
     <!-- Application theme. -->
     <!-- Application theme. -->
     <style name="AppTheme" parent="Theme.Sherlock.Light">
-        <item name="android:windowBackground">@drawable/leader_index1</item>  
+        <item name="android:windowBackground">@drawable/leader_index1</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="actionBarStyle">@style/Theme.MyTheme.ActionBar2</item>
         <item name="android:actionBarStyle">@style/Theme.MyTheme.ActionBar2</item>
+    </style>
+
+    <style name="imgDialog">
+        <item name="android:windowBackground">@color/transdarkblack</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowAnimationStyle">@style/dialogAnimationStyle</item>
+    </style>
+
+    <style name="dialogAnimationStyle" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@anim/dialog_show</item>
+        <item name="@android:windowExitAnimation">@anim/dialog_dismiss</item>
     </style>
 
     <style name="Theme.MyTheme" parent="Theme.Sherlock.Light">
         <item name="actionBarStyle">@style/Theme.MyTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/Theme.MyTheme.ActionBar</item>
     </style>
- 	<style name="Theme.MyTheme.ActionBar2" parent="Widget.Sherlock.Light.ActionBar.Solid">
+
+    <style name="Theme.MyTheme.ActionBar2" parent="Widget.Sherlock.ActionBar">
         <item name="android:visibility">gone</item>
     </style>
-    <style name="Theme.MyTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
-        
+
+    <style name="Theme.MyTheme.ActionBar" parent="Widget.Sherlock.ActionBar">
+        <item name="android:visibility">gone</item>
         <item name="android:titleTextStyle">@style/Theme.MyTheme.ActionBar.TitleTextStyle</item>
         <item name="titleTextStyle">@style/Theme.MyTheme.ActionBar.TitleTextStyle</item>
     </style>
 
     <style name="Theme.MyTheme.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
         <item name="android:textColor">#000000</item>
+        <item name="textColorPrimaryInverse">#000000</item>
+        <item name="android:textSize">@dimen/big_txt_size</item>
     </style>
 
 </resources>

@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/leader_index4"
     android:orientation="vertical"
-    android:weightSum="1"
-    android:background="@drawable/leader_index1" >
+    android:weightSum="1" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,11 +20,20 @@
         android:orientation="vertical" >
 
         <ImageButton
-            android:id="@+id/register_fast_button"
+            android:id="@+id/open_tingshuo_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/register_btn_bg"/>
+            android:background="@null"
+            android:src="@drawable/btn_open_bg" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:layout_gravity="center" />
 
     </LinearLayout>
 

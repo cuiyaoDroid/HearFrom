@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+<include 
+	    android:id="@+id/titleLayout" 
+	    layout="@layout/title_layout" /> 
+    <com.tingshuo.tool.view.CustomerScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <EditText
+                android:id="@+id/content_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:textSize="@dimen/big_txt_size"
+                android:hint="@string/hint_want_publish" >
+            </EditText>
+
+            <com.tingshuo.tool.view.MyGridView
+                android:id="@+id/pic_gridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:cacheColorHint="@android:color/transparent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="5dip"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="5dip" >
+            </com.tingshuo.tool.view.MyGridView>
+        </LinearLayout>
+    </com.tingshuo.tool.view.CustomerScrollView>
+
+</LinearLayout>

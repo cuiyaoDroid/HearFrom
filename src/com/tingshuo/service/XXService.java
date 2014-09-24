@@ -252,7 +252,6 @@ public class XXService extends BaseService implements EventHandler {
 	public void clearNotifications(String Jid) {
 		clearNotification(Jid);
 	}
-
 	/**
 	 * 非UI线程连接失败反馈
 	 * 
@@ -416,17 +415,15 @@ public class XXService extends BaseService implements EventHandler {
 	public void newMessage(final String from, final String message) {
 		mMainHandler.post(new Runnable() {
 			public void run() {
-				
-				if (!isAppOnForeground()){
+//				if (!isAppOnForeground()){
 					if (!PreferenceUtils.getPrefBoolean(XXService.this,
 							PreferenceConstants.SCLIENTNOTIFY, false)){
 						MediaPlayer.create(XXService.this, R.raw.office).start();
 					}
 					notifyClient(from, mSmackable.getNameForJID(from), message,
 							!mIsBoundTo.contains(from));
-				}
+//				}
 				//T.showLong(XXService.this, from + ": " + message);
-
 			}
 
 		});

@@ -1,6 +1,12 @@
 package com.tingshuo.tool;
 
 public class PreferenceConstants {
+	public static final String FIRST_USE = "first_use";
+	public static final String TINGSHUO = "tingshuo";
+	public static final String TOKEN = "token";
+	public static final String USER_ID = "user_id";
+	public static final String AUTHENTICATION = "authentication";
+	
 	public static final String GMAIL_SERVER = "talk.google.com";
 	public final static String ISNEEDLOG = "isneedlog";
 	public final static String REPORT_CRASH = "reportcrash";

@@ -19,7 +19,6 @@ package com.tingshuo.web.img.fetcher;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
@@ -38,6 +37,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.tingshuo.tool.L;
+import com.tingshuo.web.img.PictureUtil;
 
 
 /**
@@ -182,7 +182,13 @@ public class DiskLruCache {
 				if (L.isDebug) {
 					Log.d(TAG, "Disk cache hit");
 				}
-				return BitmapFactory.decodeFile(file);
+				Bitmap bitmap = null;
+				try{
+					bitmap=PictureUtil.getimage(file, 1000, 1000, 2*1024*1024);
+				}catch(OutOfMemoryError e){
+				}
+//						BitmapFactory.decodeFile(file);
+				return bitmap;
 			} else {
 				final String existingFile = createFilePath(mCacheDir, key);
 				if (new File(existingFile).exists()) {
@@ -190,7 +196,12 @@ public class DiskLruCache {
 					if (L.isDebug) {
 						Log.d(TAG, "Disk cache hit (existing file)");
 					}
-					return BitmapFactory.decodeFile(existingFile);
+					Bitmap bitmap = null;
+					try{
+						bitmap=PictureUtil.getimage(existingFile, 1000, 1000, 2*1024*1024);
+					}catch(OutOfMemoryError e){
+					}
+					return bitmap;
 				}
 			}
 			return null;

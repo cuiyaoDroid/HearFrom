@@ -17,6 +17,7 @@ public class HearFromApp extends Application {
 	public static final String appPath = Environment
 			.getExternalStorageDirectory() + "/.cyHearFrom/";
 	public static String token="";
+	public static int user_id=-1;
 	private static HearFromApp mApplication;
 
 	public synchronized static HearFromApp getInstance() {
@@ -41,10 +42,12 @@ public class HearFromApp extends Application {
 		upGradeDBifnessage();
 		createPath(appPath);
 		mApplication = this;
+		token=PreferenceUtils.getPrefString(this, PreferenceConstants.TOKEN, "");
+		user_id=PreferenceUtils.getPrefInt(this, PreferenceConstants.USER_ID, -1);
 		L.isDebug = PreferenceUtils.getPrefBoolean(this,
 				PreferenceConstants.ISNEEDLOG, true);
 		if (PreferenceUtils.getPrefBoolean(this,
-				PreferenceConstants.REPORT_CRASH, true))
+				PreferenceConstants.REPORT_CRASH, false))
 			CrashHandler.getInstance().init(this);
 	}
 }

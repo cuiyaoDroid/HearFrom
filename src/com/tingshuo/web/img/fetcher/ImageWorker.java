@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 import com.tingshuo.tool.L;
+import com.tingshuo.tool.view.imageshower.ShowerImageView;
 
 
 /**
@@ -68,7 +69,7 @@ public abstract class ImageWorker {
 	 * @param imageView
 	 *            The ImageView to bind the downloaded image to.
 	 */
-	public void loadImage(Object data, ImageView imageView) {
+	public void loadImage(Object data,ImageView imageView) {
 		Bitmap bitmap = null;
 
 		if (mImageCache != null) {
@@ -85,7 +86,6 @@ public abstract class ImageWorker {
 			task.execute(data);
 		}
 	}
-
 	/**
 	 * Load an image specified from a set adapter into an ImageView (override
 	 * {@link ImageWorker#processBitmap(Object)} to define the processing
@@ -329,6 +329,15 @@ public abstract class ImageWorker {
 		public BitmapWorkerTask getBitmapWorkerTask() {
 			return bitmapWorkerTaskReference.get();
 		}
+	}
+	private boolean isShowerImageView=false;
+	
+	public boolean isShowerImageView() {
+		return isShowerImageView;
+	}
+
+	public void setShowerImageView(boolean isShowerImageView) {
+		this.isShowerImageView = isShowerImageView;
 	}
 
 	/**

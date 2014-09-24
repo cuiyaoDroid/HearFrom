@@ -8,11 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.tingshuo.hearfrom.R;
+import com.tingshuo.tool.L;
+import com.tingshuo.web.http.HttpJsonTool;
 
 public class leaderSecondScreen extends BaseScreen{
+	public static int i_sex=1;
 	@Override  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
+		L.i("onCreateView");
     	View settingLayout = inflater.inflate(R.layout.screen_leader_second,  
                 container, false); 
     	ImageButton male_btn=(ImageButton)settingLayout.findViewById(R.id.male_btn);
@@ -22,6 +26,7 @@ public class leaderSecondScreen extends BaseScreen{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				i_sex=HttpJsonTool.MELA;
 				listener.changeToScreen(3);
 			}
 		});
@@ -30,6 +35,7 @@ public class leaderSecondScreen extends BaseScreen{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				i_sex=HttpJsonTool.FEMELA;
 				listener.changeToScreen(3);
 			}
 		});

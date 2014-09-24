@@ -8,6 +8,7 @@ import java.io.IOException;
 import com.tingshuo.tool.L;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,9 +18,26 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 
 public class PictureUtil {
+	public static void cropImageUri(Activity context,Uri uri, int outputX, int outputY, int requestCode){
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 2);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", outputX);
+		intent.putExtra("outputY", outputY);
+		intent.putExtra("scale", true);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+		intent.putExtra("return-data", false);
+		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+		intent.putExtra("noFaceDetection", true); // no face detection
+		context.startActivityForResult(intent, requestCode);
+	}
+	
 	public static Bitmap rotaingImageView(int angle , Bitmap bitmap) {  
         //旋转图片 动作  
         Matrix matrix = new Matrix();;  
@@ -47,9 +65,10 @@ public class PictureUtil {
 	private static Bitmap compressImage(Bitmap image,int length) {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		image.compress(Bitmap.CompressFormat.JPEG, 50, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+		image.compress(Bitmap.CompressFormat.JPEG, 70, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
 		int options = 100;
-		while ( baos.toByteArray().length > length) {	//循环判断如果压缩后图片是否大于100kb,大于继续压缩		
+		while ( baos.toByteArray().length > length) {
+			//循环判断如果压缩后图片是否大于100kb,大于继续压缩		
 			baos.reset();//重置baos即清空baos
 			image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
 			options -= 10;//每次都减少10
@@ -98,6 +117,7 @@ public class PictureUtil {
 		newOpts.inJustDecodeBounds = false;
 		int w = newOpts.outWidth;
 		int h = newOpts.outHeight;
+		
 		//现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
 		float hh = height;//这里设置高度为800f
 		float ww = width;//这里设置宽度为480f
@@ -113,6 +133,9 @@ public class PictureUtil {
 		newOpts.inSampleSize = be;//设置缩放比例
 		//重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
 		bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+		if(bitmap==null){
+			return null;
+		}
 		int degree = readPictureDegree(file.getAbsolutePath()); 
 		bitmap = rotaingImageView(degree, bitmap);  
 		return compressImage(bitmap,length);//压缩好比例大小后再进行质量压缩
@@ -121,7 +144,8 @@ public class PictureUtil {
 	       int degree  = 0;  
 	       try {  
 	               ExifInterface exifInterface = new ExifInterface(path);  
-	               int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);  
+	               int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION
+	            		   , ExifInterface.ORIENTATION_NORMAL);  
 	               switch (orientation) {  
 	               case ExifInterface.ORIENTATION_ROTATE_90:  
 	                       degree = 90;  

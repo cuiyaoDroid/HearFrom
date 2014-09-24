@@ -26,6 +26,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -112,10 +113,10 @@ public class ImageFetcher extends ImageResizer {
             if (entity != null) {
                 InputStream inputStream = entity.getContent();
                 try {
-                    bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+                	bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
                 } catch(OutOfMemoryError e){
                 	BitmapFactory.Options options = new BitmapFactory.Options();
-                	options.inSampleSize = 2;
+                	options.inSampleSize = 4;
                     bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream),null,options);
                 }
                 finally {

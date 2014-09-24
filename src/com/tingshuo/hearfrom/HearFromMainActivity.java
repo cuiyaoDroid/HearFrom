@@ -1,5 +1,9 @@
 package com.tingshuo.hearfrom;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,11 +14,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.tingshuo.service.IConnectionStatusCallback;
@@ -23,18 +26,21 @@ import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
 import com.tingshuo.tool.T;
-import com.tingshuo.tool.view.adapter.TestAdapter;
 import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase;
 import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
 import com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView;
 @SuppressLint("NewApi") 
 public class HearFromMainActivity extends SherlockActivity implements
 IConnectionStatusCallback {
-	private TestAdapter adapter;
+	private SimpleAdapter adapter;
+	private ArrayList<Map<String,Object>>listdata;
 	private PullToRefreshListView listView;
 	public static final String LOGIN_ACTION = "com.tingshuo.hearfrom.action.LOGIN";
 	public static final String INTENT_EXTRA_USERNAME = HearFromMainActivity.class
 			.getName() + ".username";
+	
+	private String[]textUser={"¥ﬁàê","¿Ó—Ó","¿Ó≥ø—Ù","’‘”∫","ÕıºŒÁ˘","π˘Ω®√Ò"};
+	private String[]textUserURL={"cuiyao","liyang","lichenyang","zhaorong","wangjiaqi","guojianmin"};
 	private XXService mXxService;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +49,18 @@ IConnectionStatusCallback {
 		//requestWindowFeature(com.actionbarsherlock.view.Window.FEATURE_ACTION_BAR_OVERLAY);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		adapter = new TestAdapter(getLayoutInflater());
-		((Button)findViewById(R.id.test_btn)).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				splitAndSaveServer("cuiyao@www.wangjiaqi666.cn");
-				if (mXxService != null) {
-					mXxService.Login("cuiyao", "123456");
-				}
-			}
-		});
+		
+		listdata=new ArrayList<Map<String,Object>>();
+		for(int i=0;i<textUser.length;i++){
+			Map<String,Object>data=new HashMap<String, Object>();
+			data.put("content", textUser[i]);
+			data.put("url", textUserURL[i]);
+			listdata.add(data);
+		}
+		
+		adapter = new SimpleAdapter(getApplicationContext(), listdata, R.layout.cell_mainhear_list
+				, new String[]{"content"}, new int[]{R.id.content_txt});
+		
 		listView = (PullToRefreshListView) findViewById(R.id.listview);
 		listView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 
@@ -74,7 +80,6 @@ IConnectionStatusCallback {
 
 		});
 		listView.setAdapter(adapter);
-		listView.setOnScrollListener(adapter);
 		startService(new Intent(HearFromMainActivity.this, XXService.class));
 		bindXMPPService();
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -83,7 +88,9 @@ IConnectionStatusCallback {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				startChatActivity("wangjiaqi@iz25b16f012z","wangjiaqi");
+				String usrUrl=(String) listdata.get(arg2-1).get("url");
+				String name=(String) listdata.get(arg2-1).get("content");
+				startChatActivity(usrUrl+"@iz25b16f012z",usrUrl,name);
 			}
 		});
 		
@@ -94,11 +101,12 @@ IConnectionStatusCallback {
 			PreferenceUtils.setPrefString(this, PreferenceConstants.PASSWORD,
 					"123456");
 	}
-	private void startChatActivity(String userJid, String userName) {
+	private void startChatActivity(String userJid, String userName,String nickname) {
 		Intent chatIntent = new Intent(HearFromMainActivity.this, ChatActivity.class);
 		Uri userNameUri = Uri.parse(userJid);
 		chatIntent.setData(userNameUri);
 		chatIntent.putExtra(ChatActivity.INTENT_EXTRA_USERNAME, userName);
+		chatIntent.putExtra("nickname", nickname);
 		startActivity(chatIntent);
 	}
 	private class GetDataTask extends AsyncTask<Void, Void, String[]> {

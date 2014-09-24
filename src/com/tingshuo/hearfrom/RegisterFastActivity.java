@@ -11,6 +11,8 @@ import com.tingshuo.hearfrom.screen.leaderFirstScreen;
 import com.tingshuo.hearfrom.screen.leaderFourthScreen;
 import com.tingshuo.hearfrom.screen.leaderSecondScreen;
 import com.tingshuo.hearfrom.screen.leaderThridScreen;
+import com.tingshuo.tool.PreferenceConstants;
+import com.tingshuo.tool.PreferenceUtils;
 
 public class RegisterFastActivity extends FragmentActivity implements
 		ScreenChangeListener {
@@ -25,6 +27,17 @@ public class RegisterFastActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register_fast);
+		boolean first_use=PreferenceUtils.getPrefBoolean(getApplicationContext()
+				, PreferenceConstants.FIRST_USE, true);
+		if(!first_use){
+			if(HearFromApp.token.length()>0){
+				startMainPage();
+				return;
+			}else{
+				startLoginPage();
+				return;
+			}
+		}
 		fragmentManager = getSupportFragmentManager();
 		changeToScreen(1);
 	}
@@ -122,7 +135,15 @@ public class RegisterFastActivity extends FragmentActivity implements
 	public void startMainPage() {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(RegisterFastActivity.this,
-				HearFromMainActivity.class);
+				HearFromTabMainActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+		finish();
+	}
+	private void startLoginPage() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(RegisterFastActivity.this,
+				LoginActivity.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
 		finish();

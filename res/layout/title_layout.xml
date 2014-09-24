@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="@color/title_color">
+
+		<TextView
+		    android:id="@+id/title_txt_left"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerVertical="true"
+		    android:textColor="@color/title_txt_bg"
+		    android:clickable="true"
+		    android:padding="10dp"
+		    android:text="想听谁说" />
+
+		<TextView
+		    android:id="@+id/title_txt_middle"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:layout_centerVertical="true"
+		    android:textColor="@android:color/white"
+		    android:text="听说"
+		    android:textStyle="bold"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		<TextView
+		    android:id="@+id/title_txt_right"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerVertical="true"
+		    android:layout_alignParentRight="true"
+		    android:textColor="@color/title_txt_bg"
+		    android:clickable="true"
+		    android:padding="10dp"
+		    android:visibility="gone"
+		    android:text="添加" />
+
+
+</RelativeLayout>

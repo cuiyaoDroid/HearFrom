@@ -222,6 +222,7 @@ public class ChatActivity extends SherlockActivity implements OnTouchListener,
 	private void initView() {
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setTitle("与"+getIntent().getStringExtra("nickname")+"对话中");
 		mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		mWindowNanagerParams = getWindow().getAttributes();
 

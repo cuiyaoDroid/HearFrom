@@ -1,4 +1,6 @@
 package com.tingshuo.tool;
+import java.lang.reflect.Field;
+
 import android.content.Context;  
   
 public class DensityUtil {  
@@ -21,5 +23,21 @@ public class DensityUtil {
    public static int sp2px(Context context, float spValue) {  
        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;  
        return (int) (spValue * fontScale + 0.5f);  
+   }
+   public static int getStatusBarHeight(Context context){
+       Class<?> c = null;
+       Object obj = null;
+       Field field = null;
+       int x = 0, statusBarHeight = 0;
+       try {
+           c = Class.forName("com.android.internal.R$dimen");
+           obj = c.newInstance();
+           field = c.getField("status_bar_height");
+           x = Integer.parseInt(field.get(obj).toString());
+           statusBarHeight = context.getResources().getDimensionPixelSize(x);
+       } catch (Exception e1) {
+           e1.printStackTrace();
+       } 
+       return statusBarHeight;
    }
 } 
