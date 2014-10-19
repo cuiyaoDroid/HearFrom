@@ -38,7 +38,7 @@ public class ImageCache {
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 5; // 5MB
 
     // Default disk cache size
-    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 500; // 10MB
 
     // Compression settings when writing images to disk cache
     private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
@@ -197,13 +197,18 @@ public class ImageCache {
         mDiskCache.clearCache();
         mMemoryCache.evictAll();
     }
-
+    public void clearMemorCaches(){
+    	mMemoryCache.evictAll();
+    }
     /**
      * A holder class that contains cache parameters.
      */
     public static class ImageCacheParams {
         public String uniqueName;
-        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory());
+		// 用最大内存的1/4来存储图片
+		final int cacheSize = maxMemory / 4;
+        public int memCacheSize = cacheSize;
         public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
         public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
         public int compressQuality = DEFAULT_COMPRESS_QUALITY;

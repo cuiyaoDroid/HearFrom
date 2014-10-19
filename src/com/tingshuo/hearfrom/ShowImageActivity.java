@@ -16,10 +16,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.tingshuo.hearfrom.base.BaseSelectImageActivity;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.db.MapHolder;
-import com.tingshuo.tool.imagescan.ChildAdapter;
-import com.tingshuo.tool.imagescan.imageSelectListener;
+import com.tingshuo.tool.view.imagescan.ChildAdapter;
+import com.tingshuo.tool.view.imagescan.imageSelectListener;
 import com.tingshuo.tool.view.imageshower.ImageDialog;
 import com.tingshuo.web.img.ImageFileCache;
 
@@ -126,7 +127,7 @@ public class ShowImageActivity extends BaseSelectImageActivity implements
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.title_txt_left:
+		case R.id.title_img_back:
 			finish();
 			break;
 		case R.id.title_txt_right:
@@ -155,6 +156,7 @@ public class ShowImageActivity extends BaseSelectImageActivity implements
 			break;
 		}
 	}
+	private ImageDialog imageDialog;
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -162,7 +164,12 @@ public class ShowImageActivity extends BaseSelectImageActivity implements
 		if (Imagelist.get(position).equals(CAMRE)) {
 			takePic();
 		}else{
-			ImageDialog imageDialog = new ImageDialog(
+			if(imageDialog!=null){
+				if(imageDialog.isShowing()){
+					return;
+				}
+			}
+			imageDialog = new ImageDialog(
 					ShowImageActivity.this, R.style.imgDialog, Imagelist,
 					position,false);
 			imageDialog.setCanceledOnTouchOutside(false);

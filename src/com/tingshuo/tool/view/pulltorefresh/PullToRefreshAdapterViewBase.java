@@ -53,7 +53,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 		return newLp;
 	}
-
+	
 	private boolean mLastItemVisible;
 	private OnScrollListener mOnScrollListener;
 	private OnLastItemVisibleListener mOnLastItemVisibleListener;

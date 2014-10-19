@@ -86,9 +86,25 @@
             android:name="com.tingshuo.hearfrom.HearFromTabMainActivity"
             android:theme="@style/Theme.MyTheme">
         </activity>
-        
+        <activity
+            android:name="com.tingshuo.hearfrom.SelectHeadImageActivity"
+            android:theme="@style/Theme.MyTheme">
+        </activity>
+        <activity
+            android:name="com.tingshuo.hearfrom.TopicDetailActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.MyTheme">
+        </activity>
         <activity
             android:name="com.tingshuo.hearfrom.ChatActivity"
+            android:theme="@style/Theme.MyTheme">
+        </activity>
+        <activity
+            android:name="com.tingshuo.hearfrom.SelectRoleActivity"
+            android:theme="@style/Theme.MyTheme">
+        </activity>
+        <activity
+            android:name="com.tingshuo.hearfrom.ContactsActivity"
             android:theme="@style/Theme.MyTheme">
         </activity>
         <activity
@@ -100,11 +116,15 @@
             android:theme="@style/Theme.MyTheme">
         </activity>
         <activity
-            android:name="com.tingshuo.hearfrom.SettingActivity"
+            android:name="com.tingshuo.hearfrom.setting.SettingActivity"
             android:theme="@style/Theme.MyTheme">
         </activity>
         <activity
-            android:name="com.tingshuo.hearfrom.authenticationActivity"
+            android:name="com.tingshuo.hearfrom.setting.authenticationActivity"
+            android:theme="@style/Theme.MyTheme">
+        </activity>
+        <activity
+            android:name="com.tingshuo.hearfrom.setting.editPasswordActivity"
             android:theme="@style/Theme.MyTheme">
         </activity>
         <activity

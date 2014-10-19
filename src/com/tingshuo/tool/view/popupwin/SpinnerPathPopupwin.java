@@ -14,8 +14,8 @@ import android.widget.PopupWindow;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.DensityUtil;
-import com.tingshuo.tool.imagescan.GroupAdapter;
-import com.tingshuo.tool.imagescan.ImageBean;
+import com.tingshuo.tool.view.imagescan.GroupAdapter;
+import com.tingshuo.tool.view.imagescan.ImageBean;
 /**
  * @blog http://blog.csdn.net/xiaanming
  * 
@@ -52,11 +52,11 @@ public class SpinnerPathPopupwin extends PopupWindow {
 		mGroupGridView.setAdapter(adapter);
 		this.setContentView(contentView);
 		this.setWidth(LayoutParams.MATCH_PARENT);
-		this.setHeight(DensityUtil.dip2px(context, 350));
+		this.setHeight(DensityUtil.dip2px(context, 400));
 		this.setFocusable(true);
 		this.setOutsideTouchable(true);
 		this.setAnimationStyle(R.style.AnimBottom);
-		ColorDrawable dw = new ColorDrawable(0x66000000);
+		ColorDrawable dw = new ColorDrawable(0x00000000);
 		this.setBackgroundDrawable(dw);
 	}
 

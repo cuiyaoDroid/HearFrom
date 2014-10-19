@@ -22,8 +22,8 @@ import android.widget.Gallery;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.L;
-import com.tingshuo.tool.imagescan.NativeImageLoader;
-import com.tingshuo.tool.imagescan.NativeImageLoader.NativeImageCallBack;
+import com.tingshuo.tool.view.imagescan.NativeImageLoader;
+import com.tingshuo.tool.view.imagescan.NativeImageLoader.NativeImageCallBack;
 import com.tingshuo.web.http.HttpJsonTool;
 import com.tingshuo.web.img.ImageDownloader;
 import com.tingshuo.web.img.fetcher.ImageCache;
@@ -94,7 +94,7 @@ public class GalleryAdapter extends BaseAdapter {
 				
 			} else {
 				// 利用NativeImageLoader类加载本地图片
-				Bitmap bitmap = NativeImageLoader.getInstance()
+				Bitmap bitmap = NativeImageLoader.getInstance(context)
 						.loadBigNativeImage(path, null,
 								new NativeImageCallBack() {
 

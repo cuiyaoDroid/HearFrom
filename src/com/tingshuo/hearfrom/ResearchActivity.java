@@ -1,5 +1,7 @@
 package com.tingshuo.hearfrom;
 
+import com.tingshuo.hearfrom.base.BaseAcivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;

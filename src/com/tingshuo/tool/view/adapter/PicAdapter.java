@@ -5,10 +5,10 @@ import java.util.Map;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.publishTopickActivity;
-import com.tingshuo.tool.imagescan.MyImageView;
-import com.tingshuo.tool.imagescan.MyImageView.OnMeasureListener;
-import com.tingshuo.tool.imagescan.NativeImageLoader;
-import com.tingshuo.tool.imagescan.NativeImageLoader.NativeImageCallBack;
+import com.tingshuo.tool.view.imagescan.MyImageView;
+import com.tingshuo.tool.view.imagescan.NativeImageLoader;
+import com.tingshuo.tool.view.imagescan.MyImageView.OnMeasureListener;
+import com.tingshuo.tool.view.imagescan.NativeImageLoader.NativeImageCallBack;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -43,9 +43,10 @@ public class PicAdapter extends BaseAdapter{
 	public long getItemId(int position) {
 		return position;
 	}
-	
+	private Context context;
 	public PicAdapter(Context context, List<? extends Map<String, ?>> list, GridView mGridView){
 		this.list = list;
+		this.context=context;
 		this.mGridView = mGridView;
 		mInflater = LayoutInflater.from(context);
 	}
@@ -82,7 +83,7 @@ public class PicAdapter extends BaseAdapter{
 			return convertView;
 		}
 		//利用NativeImageLoader类加载本地图片
-		Bitmap bitmap = NativeImageLoader.getInstance().loadNativeImage(path, mPoint, new NativeImageCallBack() {
+		Bitmap bitmap = NativeImageLoader.getInstance(context).loadNativeImage(path, mPoint, new NativeImageCallBack() {
 			
 			@Override
 			public void onImageLoader(Bitmap bitmap, String path) {

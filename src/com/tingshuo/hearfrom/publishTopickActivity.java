@@ -9,16 +9,23 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager.OnActivityResultListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.tingshuo.hearfrom.base.BaseAcivity;
 import com.tingshuo.tool.ActivityTool;
+import com.tingshuo.tool.FileTool;
+import com.tingshuo.tool.RoleUtil;
 import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.MapHolder;
 import com.tingshuo.tool.db.mainPostListHolder;
@@ -33,6 +40,13 @@ public class publishTopickActivity extends BaseAcivity{
 	public static final String PIC_ADD = "com.tingshuo.hearfrom.pic_add";
 	public static final int RESULT_IMG = 1236664;
 	private EditText content_txt;
+	
+	private View setting_role;
+	private TextView setting_role_title;
+	private TextView setting_role_content;
+	private View setting_location;
+	private TextView setting_location_title;
+	private TextView setting_location_content;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -42,11 +56,12 @@ public class publishTopickActivity extends BaseAcivity{
 		initContentView();
 		refreshPicData(null);
 	}
+	private int role_id;
 	@Override
 	protected void initContentView() {
 		super.initContentView();
 		title_middle.setText("");
-		titleLeft.setText("返回");
+		titleback.setVisibility(View.VISIBLE);
 		title_right.setText("发布");
 		title_right.setVisibility(View.VISIBLE);
 		
@@ -69,7 +84,6 @@ public class publishTopickActivity extends BaseAcivity{
 					intent.putExtra("count", pic_data.size());
 					startActivityForResult(intent, RESULT_IMG);
 				} else {
-					
 					List<String>list=new ArrayList<String>();
 					for(Map<String,Object>map:pic_data){
 						String path=(String) map.get("path");
@@ -86,6 +100,27 @@ public class publishTopickActivity extends BaseAcivity{
 				}
 			}
 		});
+		
+		setting_role = findViewById(R.id.setting_role);
+		setting_role_title = (TextView) setting_role
+				.findViewById(R.id.title);
+		setting_role_title.setText("角色");
+		setting_role_content = (TextView) setting_role
+				.findViewById(R.id.content);
+		role_id = RoleUtil.getDefaultRoleId(getApplicationContext());
+		if (role_id < RoleUtil.role_names.length) {
+			setting_role_content.setText(RoleUtil.role_names[role_id]);
+		}else{
+			setting_role_content.setText("");
+		}
+		setting_role.setOnClickListener(this);
+
+		setting_location = findViewById(R.id.setting_location);
+		setting_location_title = (TextView) setting_location.findViewById(R.id.title);
+		setting_location_content = (TextView) setting_location.findViewById(R.id.content);
+		setting_location_content.setText("选择位置");
+		setting_location_title.setText("位置");
+		setting_location.setOnClickListener(this);
 	}
 
 	@Override
@@ -106,7 +141,18 @@ public class publishTopickActivity extends BaseAcivity{
 			}
 			refreshPicData(holder);
 			break;
-
+		case RoleUtil.RESULT_SETTING_ROLE:
+			if (data == null) {
+				return;
+			}
+			int role_id=data.getIntExtra(RoleUtil.ROLE_ID, -1);
+			if(role_id==-1){
+				return;
+			}
+			this.role_id=role_id;
+			String role_name=data.getStringExtra(RoleUtil.ROLE_NAME);
+			setting_role_content.setText(role_name);
+			break;
 		default:
 			break;
 		}
@@ -186,22 +232,29 @@ public class publishTopickActivity extends BaseAcivity{
 					T.show(getApplicationContext(), "网络错误", Toast.LENGTH_LONG);
 				}else{
 					T.show(getApplicationContext(), "发布成功", Toast.LENGTH_LONG);
+					FileTool.delAllFile(HearFromApp.appPath);
 					finish();
 				}
 			}
 		};
 		task.execute();
 	}
-
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.title_txt_left:
+		case R.id.title_img_back:
 			finish();
 			break;
 		case R.id.title_txt_right:
 			commitTopick();
+			break;
+		case R.id.setting_role:
+			Intent intent=new Intent(getApplicationContext(),SelectRoleActivity.class);
+			startActivityForResult(intent, RoleUtil.RESULT_SETTING_ROLE);
+			break;
+		case R.id.setting_location:
 			break;
 		default:
 			break;

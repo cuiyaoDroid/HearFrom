@@ -1,18 +1,23 @@
 package com.tingshuo.hearfrom;
 
+import com.tingshuo.tool.L;
+import com.tingshuo.tool.T;
+
 import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
-public class HearFromTabMainActivity extends TabActivity implements OnClickListener {
+public class HearFromTabMainActivity extends TabActivity implements
+		OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -49,7 +54,7 @@ public class HearFromTabMainActivity extends TabActivity implements OnClickListe
 		ImageView icon2 = (ImageView) view2.findViewById(R.id.icon);
 		icon2.setImageResource(R.drawable.tab_item2);
 		host.addTab(host.newTabSpec("tab_item2").setIndicator(view2)
-				.setContent(new Intent(this, MainListActivity.class)));
+				.setContent(new Intent(this, ContactsActivity.class)));
 
 		View view3 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount3 = (TextView) view3.findViewById(R.id.txtCount);
@@ -59,7 +64,7 @@ public class HearFromTabMainActivity extends TabActivity implements OnClickListe
 		icon3.setBackgroundResource(R.drawable.tab_bg_background);
 		host.addTab(host.newTabSpec("tab_item3").setIndicator(view3)
 				.setContent(new Intent(this, MainListActivity.class)));
-		
+
 		view3.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -69,7 +74,7 @@ public class HearFromTabMainActivity extends TabActivity implements OnClickListe
 				startActivity(intent);
 			}
 		});
-		
+
 		View view4 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount4 = (TextView) view4.findViewById(R.id.txtCount);
 		txtCount4.setVisibility(View.GONE);
@@ -100,5 +105,22 @@ public class HearFromTabMainActivity extends TabActivity implements OnClickListe
 		default:
 			break;
 		}
+	}
+
+	private long pressTime = 0;
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK&&event.getAction() == KeyEvent.ACTION_DOWN) {
+			long curtime = System.currentTimeMillis();
+			if (curtime - pressTime <= 3000) {
+				finish();
+			} else {
+				pressTime = curtime;
+				T.show(getApplicationContext(), "再按一次返回键退出", Toast.LENGTH_LONG);
+			}
+			return true;
+		}
+		return super.dispatchKeyEvent(event);
 	}
 }

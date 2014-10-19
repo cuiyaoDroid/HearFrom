@@ -3,9 +3,10 @@
     android:descendantFocusability="blocksDescendants"
     android:id="@+id/framelayout"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/setting_btn_bg" >
 
-    <com.tingshuo.tool.imagescan.MyImageView
+    <com.tingshuo.tool.view.imagescan.MyImageView
         android:id="@+id/child_image"
         android:layout_width="fill_parent"
         android:layout_height="100dip"

@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.tingshuo.hearfrom.R;
-import com.tingshuo.tool.L;
 
 public class leaderFirstScreen extends BaseScreen{
 	 @Override  
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container,  
 	            Bundle savedInstanceState) {  
-		 L.i("onCreateView");
+		 
 	    	View settingLayout = inflater.inflate(R.layout.screen_leader_first,  
 	                container, false);  
 	    	ImageButton register_fast_button=(ImageButton)settingLayout.findViewById(R.id.register_fast_button);

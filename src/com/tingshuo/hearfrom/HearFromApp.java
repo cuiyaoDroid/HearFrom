@@ -33,17 +33,20 @@ public class HearFromApp extends Application {
 			file.mkdir();
 		}
 	}
+	public static boolean isFlitClose;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
 //		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
 //        JPushInterface.init(this);     
-		upGradeDBifnessage();
 		createPath(appPath);
 		mApplication = this;
+		isFlitClose = PreferenceUtils.getPrefBoolean(getApplicationContext()
+				, PreferenceConstants.SETTING_FLIT_CLOSE, true);
 		token=PreferenceUtils.getPrefString(this, PreferenceConstants.TOKEN, "");
 		user_id=PreferenceUtils.getPrefInt(this, PreferenceConstants.USER_ID, -1);
+		upGradeDBifnessage();
 		L.isDebug = PreferenceUtils.getPrefBoolean(this,
 				PreferenceConstants.ISNEEDLOG, true);
 		if (PreferenceUtils.getPrefBoolean(this,

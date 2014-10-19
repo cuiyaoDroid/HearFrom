@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tingshuo="http://schemas.android.com/apk/res/com.tingshuo.hearfrom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_frs_list"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.tingshuo.tool.view.RoundAngleImageView
+            android:id="@+id/head_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/app_bg"
+            android:src="@drawable/abs__ab_bottom_solid_inverse_holo"
+            tingshuo:roundHeight="10dp"
+            tingshuo:roundWidth="10dp" />
+
+        <TextView
+            android:id="@+id/name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/head_img"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/small_txt_size" />
+
+        <TextView
+            android:id="@+id/time_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/head_img"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/head_img"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/small_txt_size" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/content_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/normal_txt_size" />
+
+    <com.tingshuo.tool.view.MyGridView
+        android:id="@+id/img_gridview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@android:color/transparent"
+        android:columnWidth="90dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:horizontalSpacing="5dip"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:stretchMode="none"
+        android:verticalSpacing="5dip" >
+    </com.tingshuo.tool.view.MyGridView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/zan_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:button="@drawable/zan_check_bg"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="5dp"
+            android:paddingStart="3dp"
+            android:text="赞"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/small_txt_size" />
+
+        <CheckBox
+            android:id="@+id/post_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:button="@drawable/icon_bottom_comment_s"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="5dp"
+            android:paddingStart="3dp"
+            android:text="回复"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/small_txt_size" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider_color" />
+
+    <TextView
+        android:id="@+id/zan_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/small_txt_size" />
+
+</LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -16,8 +16,15 @@
         android:cacheColorHint="#00000000"
         android:divider="@null"
         android:dividerHeight="@dimen/setting_padding"
+        android:layout_below="@+id/titleLayout"
         android:fadingEdgeLength="0dp"
         android:padding="0dp"
-        imglistview:headimage="@drawable/top_img" />
+        />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Handler;
@@ -88,7 +89,14 @@ public class ImgListView extends ListView{
 
 	public void setImageId(int id) {
 		this.mImageId = id;
+		try{
 		bmp = BitmapFactory.decodeResource(getResources(), mImageId);
+		}catch(OutOfMemoryError err){
+			err.printStackTrace();
+			Options options=new Options();
+			options.inSampleSize=2;
+			bmp = BitmapFactory.decodeResource(getResources(), mImageId);
+		}
 		if (isHaveHead)
 			this.removeHeaderView(headerView);
 		initHead();

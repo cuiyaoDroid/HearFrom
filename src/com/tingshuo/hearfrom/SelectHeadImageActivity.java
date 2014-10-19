@@ -3,6 +3,7 @@ package com.tingshuo.hearfrom;
 import java.io.File;
 
 import android.content.Intent;
+import android.drm.DrmStore.RightsStatus;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,9 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.tingshuo.hearfrom.base.BaseSelectImageActivity;
+import com.tingshuo.hearfrom.setting.SettingActivity;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.view.adapter.HeadAdapter;
-import com.tingshuo.web.img.ImageFileCache;
 import com.tingshuo.web.img.PictureUtil;
 
 public class SelectHeadImageActivity extends BaseSelectImageActivity {
@@ -30,18 +32,26 @@ public class SelectHeadImageActivity extends BaseSelectImageActivity {
 			case PIC_LOAD_FINISH:
 				mProgressDialog.dismiss();
 				String path=(String) msg.obj;
-				PictureUtil.cropImageUri(SelectHeadImageActivity.this, Uri.parse(path), 320, 320, CROP_BIG_PICTURE);
+				toUri=HearFromApp.appPath+System.currentTimeMillis()+".jpg";
+				PictureUtil.cropImageUri(SelectHeadImageActivity.this
+						, Uri.parse("file://"+path),Uri.parse("file://"+toUri), 600, 600, CROP_BIG_PICTURE);
 				break;
 			}
 		}
 
 	};
+	@Override
+	protected void initContentView() {
+		super.initContentView();
+		title_right.setVisibility(View.GONE);
+	};
+	private String toUri;
 	private void takePic() {
 		Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		if (isHasSdcard()) {
-			cramepath = System.currentTimeMillis() + ".jpg";
+			cramepath = HearFromApp.appPath + System.currentTimeMillis() + ".jpg";
 			camera.putExtra(MediaStore.EXTRA_OUTPUT,
-					Uri.fromFile(new File(HearFromApp.appPath + cramepath)));
+					Uri.fromFile(new File(cramepath)));
 		} else {
 			Toast.makeText(getApplicationContext(), "Ã»ÓÐÕÒµ½sd¿¨",
 					Toast.LENGTH_LONG).show();
@@ -69,12 +79,8 @@ public class SelectHeadImageActivity extends BaseSelectImageActivity {
 			if (resultCode == RESULT_OK) {
 				try {
 					if (cramepath.length() > 0) {
-						String savePath = HearFromApp.appPath + "j_"
-								+ cramepath;
-						ImageFileCache.compressImage(HearFromApp.appPath
-								+ cramepath, savePath, true);
 						Message msg = new Message();
-						msg.obj = savePath;
+						msg.obj = cramepath;
 						msg.what = PIC_LOAD_FINISH;
 						mHandler.sendMessage(msg);
 					}
@@ -82,6 +88,12 @@ public class SelectHeadImageActivity extends BaseSelectImageActivity {
 					L.e("Exception", e.getMessage(), e);
 				}
 			}
+			break;
+		case CROP_BIG_PICTURE:
+			Intent intent=new Intent(SelectHeadImageActivity.this,SettingActivity.class);
+			intent.putExtra("path", toUri);
+			setResult(SettingActivity.SETTINGHEAD, intent);
+			finish();
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -117,7 +129,10 @@ public class SelectHeadImageActivity extends BaseSelectImageActivity {
 			takePic();
 		}else{
 			String path=Imagelist.get(position);
-			PictureUtil.cropImageUri(this, Uri.parse(path), 320, 320, CROP_BIG_PICTURE);
+			Message msg = new Message();
+			msg.obj = path;
+			msg.what = PIC_LOAD_FINISH;
+			mHandler.sendMessage(msg);
 		}
 	}
 

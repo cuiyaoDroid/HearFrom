@@ -15,12 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tingshuo.hearfrom.base.BaseSwipeFragmentActivity;
 import com.tingshuo.hearfrom.screen.mineTopicScreen;
 import com.tingshuo.tool.view.SplitViewPager;
 import com.tingshuo.tool.view.SplitViewPager.OnPageScroll;
 import com.tingshuo.tool.view.adapter.PagerFragmentAdapter;
 
-public class MyContentActivity extends BaseFragmentActivity  {
+public class MyContentActivity extends BaseSwipeFragmentActivity  {
 	private SplitViewPager mPager;// Ò³¿¨ÄÚÈÝ
 	private ImageView cursor;// ¶¯»­Í¼Æ¬
 	private TextView t1, t2, t3;// Ò³¿¨Í·±ê

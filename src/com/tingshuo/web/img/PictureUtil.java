@@ -22,16 +22,16 @@ import android.provider.MediaStore;
 import android.util.Base64;
 
 public class PictureUtil {
-	public static void cropImageUri(Activity context,Uri uri, int outputX, int outputY, int requestCode){
+	public static void cropImageUri(Activity context,Uri uri,Uri toUri, int outputX, int outputY, int requestCode){
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		intent.putExtra("aspectX", 2);
+		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		intent.putExtra("outputX", outputX);
 		intent.putExtra("outputY", outputY);
 		intent.putExtra("scale", true);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, toUri);
 		intent.putExtra("return-data", false);
 		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 		intent.putExtra("noFaceDetection", true); // no face detection

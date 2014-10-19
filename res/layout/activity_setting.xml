@@ -105,7 +105,15 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/main_list_bg"
                 android:orientation="vertical" >
+				<include
+                    android:id="@+id/setting_flit_close"
+                    layout="@layout/cell_setting_check" >
+                </include>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/divider_color" />
                 <include
                     android:id="@+id/setting_clear"
                     layout="@layout/cell_setting_click" >

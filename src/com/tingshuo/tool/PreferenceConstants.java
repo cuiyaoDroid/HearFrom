@@ -6,6 +6,9 @@ public class PreferenceConstants {
 	public static final String TOKEN = "token";
 	public static final String USER_ID = "user_id";
 	public static final String AUTHENTICATION = "authentication";
+	public static final String DEFUALT_ROLE_ID = "default_role_id";
+	
+	public final static String SETTING_FLIT_CLOSE= "setting_flit_close";
 	
 	public static final String GMAIL_SERVER = "talk.google.com";
 	public final static String ISNEEDLOG = "isneedlog";

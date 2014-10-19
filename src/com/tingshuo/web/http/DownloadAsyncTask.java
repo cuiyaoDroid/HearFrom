@@ -20,7 +20,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.CoreProtocolPNames;
 
 import com.tingshuo.hearfrom.HearFromApp;
-import com.tingshuo.tool.FileNameTool;
+import com.tingshuo.tool.FileTool;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.db.DBHelper;
 
@@ -74,7 +74,7 @@ public class DownloadAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				downloadFile = new File(HearFromApp.appPath
-						+ FileNameTool.getExtensionName(params[0]));
+						+ FileTool.getExtensionName(params[0]));
 				// bar.setMax(response.getHeaders(name));
 				downloadFile.createNewFile();
 				InputStream inputStream = entity.getContent();

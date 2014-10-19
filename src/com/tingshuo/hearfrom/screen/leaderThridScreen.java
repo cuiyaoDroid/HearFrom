@@ -21,13 +21,8 @@ public class leaderThridScreen extends BaseScreen{
 	private GridView gridView;
 	private GridListAdapter adapter;
 	private ArrayList<Map<String,Object>>gridData;
-	public static int role_id=1;
 
-	private final int[] role_pic={
-			R.drawable.role_junren,R.drawable.role_dubi,R.drawable.role_chengxuyuan,R.drawable.role_haitama
-			,R.drawable.role_xuesheng,R.drawable.role_shejishi,R.drawable.role_daifu,R.drawable.role_lvshi
-			,R.drawable.role_maoxianjia,R.drawable.role_nvshen,R.drawable.role_gongren,R.drawable.role_zhufu};
-	@Override  
+		@Override  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
 		L.i("onCreateView");
@@ -42,7 +37,7 @@ public class leaderThridScreen extends BaseScreen{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				role_id=(Integer) gridData.get(position).get("id");
+				RoleUtil.role_id=(Integer) gridData.get(position).get("id");
 				listener.changeToScreen(4);
 			}
 		});
@@ -56,7 +51,7 @@ public class leaderThridScreen extends BaseScreen{
 			Map<String,Object>data=new HashMap<String, Object>();
 			data.put("id", RoleUtil.role_ids[i]);
 			data.put("name", RoleUtil.role_names[i]);
-			data.put("pic",role_pic[i]);
+			data.put("pic",RoleUtil.role_pic[i]);
 			gridData.add(data);
 		}
 		

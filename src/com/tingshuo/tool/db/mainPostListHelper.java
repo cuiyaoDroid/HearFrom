@@ -74,7 +74,11 @@ public class mainPostListHelper extends DBHelper {
 		cv.put(ROLE, content.getRole());
 		return db.replace(TABLE_NAME, null, cv);
 	}
-
+	public long updataZanCount(int topic_id,int ZanCount, SQLiteDatabase db) {
+		ContentValues cv = new ContentValues();
+		cv.put(ZAN_COUNT, ZanCount);
+		return db.update(TABLE_NAME, cv, ID+"=?", new String[]{String.valueOf(topic_id)});
+	}
 	private mainPostListHolder getDataCursor(Cursor cursor) {
 		int id_column = cursor.getColumnIndex(ID);
 		int user_id_column = cursor.getColumnIndex(USER_ID);

@@ -21,7 +21,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.CoreProtocolPNames;
 
 import com.tingshuo.hearfrom.HearFromApp;
-import com.tingshuo.tool.FileNameTool;
+import com.tingshuo.tool.FileTool;
 import com.tingshuo.tool.L;
 
 import android.os.AsyncTask;
@@ -66,7 +66,7 @@ public class DownloadAllAsyncTask extends
 					Charset.forName("UTF-8"));
 			for (String path : params[0]) {
 				downloadFile = new File(HearFromApp.appPath
-						+ FileNameTool.getExtensionName(path));
+						+ FileTool.getExtensionName(path));
 				// bar.setMax(response.getHeaders(name));
 				if (downloadFile.exists()) {
 					continue;

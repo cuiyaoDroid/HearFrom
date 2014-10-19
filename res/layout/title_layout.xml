@@ -12,8 +12,21 @@
 		    android:layout_centerVertical="true"
 		    android:textColor="@color/title_txt_bg"
 		    android:clickable="true"
+		    android:visibility="gone"
 		    android:padding="10dp"
 		    android:text="想听谁说" />
+		<ImageButton 
+		    android:id="@+id/title_img_back"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@null"
+		    android:scaleType="fitCenter"
+		    android:padding="5dp"
+		    android:visibility="gone"
+		    android:src="@drawable/btn_top_back_bg"
+		    android:layout_alignParentLeft="true"
+		    android:layout_marginLeft="5dp"
+		    android:layout_centerVertical="true"/>
 
 		<TextView
 		    android:id="@+id/title_txt_middle"
@@ -25,7 +38,18 @@
 		    android:text="听说"
 		    android:textStyle="bold"
 		    android:textAppearance="?android:attr/textAppearanceMedium" />
-
+		<ImageButton 
+		    android:id="@+id/title_right_imgbtn"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@null"
+		    android:src="@drawable/btn_top_add_bg"
+		    android:layout_alignParentRight="true"
+		    android:layout_marginRight="10dp"
+		    android:visibility="gone"
+		    android:scaleType="fitCenter"
+		    android:padding="5dp"
+		    android:layout_centerVertical="true"/>
 		<TextView
 		    android:id="@+id/title_txt_right"
 		    android:layout_width="wrap_content"
@@ -34,7 +58,7 @@
 		    android:layout_alignParentRight="true"
 		    android:textColor="@color/title_txt_bg"
 		    android:clickable="true"
-		    android:padding="10dp"
+		    android:padding="5dp"
 		    android:visibility="gone"
 		    android:text="添加" />
 

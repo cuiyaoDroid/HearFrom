@@ -4,18 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/main_list_bg"
-    android:orientation="vertical"
     android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
     android:padding="10dp" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <com.tingshuo.tool.view.RoundAngleImageView
             android:id="@+id/head_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="@color/app_bg"
             android:src="@drawable/abs__ab_bottom_solid_inverse_holo"
             tingshuo:roundHeight="10dp"
             tingshuo:roundWidth="10dp" />
@@ -57,15 +58,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:cacheColorHint="@android:color/transparent"
-        android:columnWidth="90dip"
+        android:columnWidth="90dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center"
         android:horizontalSpacing="5dip"
         android:listSelector="@android:color/transparent"
-        android:numColumns="auto_fit"
+        android:numColumns="3"
         android:scrollbars="none"
-        android:stretchMode="columnWidth"
+        android:stretchMode="none"
         android:verticalSpacing="5dip" >
     </com.tingshuo.tool.view.MyGridView>
 
@@ -84,6 +85,7 @@
             android:button="@drawable/zan_check_bg"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:padding="5dp"
             android:paddingStart="3dp"
             android:text="赞"
             android:textColor="@android:color/black"
@@ -95,9 +97,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:button="@drawable/icon_bottom_comment_s_1"
+            android:button="@drawable/icon_bottom_comment_s"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:padding="5dp"
             android:paddingStart="3dp"
             android:text="回复"
             android:textColor="@android:color/black"

@@ -15,10 +15,10 @@ import android.widget.ImageView;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.ShowImageActivity;
-import com.tingshuo.tool.imagescan.MyImageView;
-import com.tingshuo.tool.imagescan.MyImageView.OnMeasureListener;
-import com.tingshuo.tool.imagescan.NativeImageLoader;
-import com.tingshuo.tool.imagescan.NativeImageLoader.NativeImageCallBack;
+import com.tingshuo.tool.view.imagescan.MyImageView;
+import com.tingshuo.tool.view.imagescan.NativeImageLoader;
+import com.tingshuo.tool.view.imagescan.MyImageView.OnMeasureListener;
+import com.tingshuo.tool.view.imagescan.NativeImageLoader.NativeImageCallBack;
 
 
 public class HeadAdapter extends BaseAdapter {
@@ -87,7 +87,7 @@ public class HeadAdapter extends BaseAdapter {
 			return convertView;
 		}
 		//利用NativeImageLoader类加载本地图片
-		Bitmap bitmap = NativeImageLoader.getInstance().loadNativeImage(path, mPoint, new NativeImageCallBack() {
+		Bitmap bitmap = NativeImageLoader.getInstance(context).loadNativeImage(path, mPoint, new NativeImageCallBack() {
 			
 			@Override
 			public void onImageLoader(Bitmap bitmap, String path) {

@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+<include 
+	    android:id="@+id/titleLayout" 
+	    layout="@layout/title_layout" />  
+    <ExpandableListView
+        android:id="@+id/expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout"
+        android:groupIndicator="@null" />
+
+    <com.tingshuo.tool.view.SideBar
+        android:id="@+id/side_bar"
+        android:layout_width="14dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/titleLayout"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/tView_letter"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        android:visibility="gone"
+        tools:text="A" />
+
+</RelativeLayout>

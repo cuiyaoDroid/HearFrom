@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/main_list_bg" >
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/framelayout"
         android:layout_width="100dp"
         android:layout_height="100dp" >
 
-        <com.tingshuo.tool.imagescan.MyImageView
+        <com.tingshuo.tool.view.imagescan.MyImageView
             android:id="@+id/group_image"
-            android:background="@drawable/albums_bg"
             android:src="@drawable/friends_sends_pictures_no"
             android:padding="15dp"
             android:scaleType="fitCenter"

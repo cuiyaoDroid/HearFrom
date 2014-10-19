@@ -13,6 +13,7 @@ import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
+import com.tingshuo.tool.RoleUtil;
 import com.tingshuo.tool.T;
 import com.tingshuo.web.http.HttpJsonTool;
 
@@ -44,7 +45,7 @@ public class leaderFourthScreen extends BaseScreen{
 			@Override
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
-				return HttpJsonTool.getInstance().register(getActivity(),leaderThridScreen.role_id
+				return HttpJsonTool.getInstance().register(getActivity(),RoleUtil.role_id
 						, leaderSecondScreen.i_sex);
 			}
 			@Override

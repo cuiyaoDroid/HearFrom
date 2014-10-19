@@ -31,7 +31,9 @@ public class ImageDialog extends AlertDialog {
 		this.imgs = pic_data;
 		this.index=index;
 	}
-
+	public void setPosition(int position){
+		gallery.setSelection(index);
+	}
 	public ImageDialog(Context context) {
 		super(context);
 	}

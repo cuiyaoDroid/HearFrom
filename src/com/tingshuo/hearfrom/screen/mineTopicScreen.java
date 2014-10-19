@@ -21,7 +21,7 @@ import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.Pager;
 import com.tingshuo.tool.db.mainPostListHelper;
 import com.tingshuo.tool.db.mainPostListHolder;
-import com.tingshuo.tool.view.adapter.mainPostAdapter;
+import com.tingshuo.tool.view.adapter.ScreenTopicAdapter;
 import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase;
 import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
@@ -33,7 +33,7 @@ public class mineTopicScreen extends BaseScreen implements
 	private Pager mPager;
 	private PullToRefreshListView mainpostListView;
 	private ArrayList<Map<String, Object>> listData;
-	private mainPostAdapter adapter;
+	private ScreenTopicAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +47,7 @@ public class mineTopicScreen extends BaseScreen implements
 	protected void initContentView(View settingLayout) {
 		listData = new ArrayList<Map<String, Object>>();
 		mPager = new Pager(0, Pager.Default_Page);
-		adapter = new mainPostAdapter(getActivity(), listData);
+		adapter = new ScreenTopicAdapter(getActivity(), listData);
 		mainpostListView = (PullToRefreshListView) settingLayout.findViewById(R.id.main_post_list);
 		mainpostListView.setMode(Mode.BOTH);
 		mainpostListView.setOnRefreshListener(this);
