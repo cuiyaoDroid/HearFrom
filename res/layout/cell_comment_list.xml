@@ -3,21 +3,21 @@
     xmlns:tingshuo="http://schemas.android.com/apk/res/com.tingshuo.hearfrom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
     android:padding="10dp" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <com.tingshuo.tool.view.RoundAngleImageView
             android:id="@+id/head_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="@color/app_bg"
             android:src="@drawable/abs__ab_bottom_solid_inverse_holo"
             tingshuo:roundHeight="10dp"
-            android:background="@color/app_bg"
             tingshuo:roundWidth="10dp" />
 
         <TextView
@@ -67,6 +67,9 @@
             android:button="@drawable/zan_check_bg"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:paddingStart="3dp"
             android:text="赞"
             android:textColor="@android:color/black"
@@ -81,11 +84,13 @@
             android:button="@drawable/icon_bottom_comment_s"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:paddingStart="3dp"
             android:text="回复"
             android:textColor="@android:color/black"
             android:textSize="@dimen/small_txt_size" />
     </LinearLayout>
-
 
 </LinearLayout>

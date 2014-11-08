@@ -111,7 +111,8 @@ public class HearFromTabMainActivity extends TabActivity implements
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK&&event.getAction() == KeyEvent.ACTION_DOWN) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
 			long curtime = System.currentTimeMillis();
 			if (curtime - pressTime <= 3000) {
 				finish();
@@ -122,5 +123,19 @@ public class HearFromTabMainActivity extends TabActivity implements
 			return true;
 		}
 		return super.dispatchKeyEvent(event);
+	}
+
+	@Override
+	public void startActivity(Intent intent) {
+		// TODO Auto-generated method stub
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		super.startActivity(intent);
+	}
+
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode) {
+		// TODO Auto-generated method stub
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		super.startActivityForResult(intent, requestCode);
 	}
 }

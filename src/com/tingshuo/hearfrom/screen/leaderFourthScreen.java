@@ -1,5 +1,6 @@
 package com.tingshuo.hearfrom.screen;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,11 +37,12 @@ public class leaderFourthScreen extends BaseScreen{
 			}
 		});
         return settingLayout;  
-    }  
+    }
+	AsyncTask<Void, Void, String>task;
 	private void register(){
 		progressBar.setVisibility(View.VISIBLE);
 //		listener.startMainPage();
-		AsyncTask<Void, Void, String>task=new AsyncTask<Void, Void, String>(){
+		task=new AsyncTask<Void, Void, String>(){
 
 			@Override
 			protected String doInBackground(Void... params) {
@@ -54,7 +56,10 @@ public class leaderFourthScreen extends BaseScreen{
 				super.onPostExecute(result);
 				progressBar.setVisibility(View.GONE);
 				if(result.startsWith(HttpJsonTool.ERROR)){
-					T.showLong(getActivity(), result.replace(HttpJsonTool.ERROR, ""));
+					Context context=getActivity();
+					if(context!=null){
+						T.showLong(context, result.replace(HttpJsonTool.ERROR, ""));
+					}
 					return;
 				}else if(result.startsWith(HttpJsonTool.SUCCESS)){
 					PreferenceUtils.setPrefBoolean(getActivity()
@@ -66,6 +71,14 @@ public class leaderFourthScreen extends BaseScreen{
 			}
 		};
 		task.execute();
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		if(task!=null){
+			task.cancel(true);
+		}
 	}
 	
 }

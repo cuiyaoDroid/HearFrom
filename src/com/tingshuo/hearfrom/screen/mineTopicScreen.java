@@ -69,7 +69,7 @@ public class mineTopicScreen extends BaseScreen implements
 			@Override
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
-				return HttpJsonTool.getInstance().getTingshuoList(
+				return HttpJsonTool.getInstance().getMyTingshuoList(
 						getActivity(), maxId, minId, page,-1,-1);
 			}
 
@@ -109,10 +109,10 @@ public class mineTopicScreen extends BaseScreen implements
 		ArrayList<mainPostListHolder> holders;
 		if (more) {
 			L.i(mPager.curpage * mPager.pagesize + "");
-			holders = helper.selectData(mPager.curpage * mPager.pagesize,
-					mPager.pagesize,-1,-1);
+			holders = helper.selectMyData(mPager.curpage * mPager.pagesize,
+					mPager.pagesize,-1,-1,HearFromApp.user_id);
 		} else {
-			holders = helper.selectData(0, mPager.pagesize,-1,-1);
+			holders = helper.selectMyData(0, mPager.pagesize,-1,-1,HearFromApp.user_id);
 		}
 		helper.close();
 		for (mainPostListHolder holder : holders) {

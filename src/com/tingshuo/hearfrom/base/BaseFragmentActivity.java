@@ -3,6 +3,7 @@ package com.tingshuo.hearfrom.base;
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.R.id;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -30,5 +31,17 @@ public class BaseFragmentActivity extends FragmentActivity implements OnClickLis
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void startActivity(Intent intent) {
+		// TODO Auto-generated method stub
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);    
+		super.startActivity(intent);
+	}
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode) {
+		// TODO Auto-generated method stub
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);    
+		super.startActivityForResult(intent, requestCode);
 	}
 }

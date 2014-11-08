@@ -1,5 +1,6 @@
 package com.tingshuo.hearfrom.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,5 +47,17 @@ public class BaseAcivity extends SherlockActivity implements OnClickListener{
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void startActivity(Intent intent) {
+		// TODO Auto-generated method stub
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);    
+		super.startActivity(intent);
+	}
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode) {
+		// TODO Auto-generated method stub
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);    
+		super.startActivityForResult(intent, requestCode);
 	}
 }

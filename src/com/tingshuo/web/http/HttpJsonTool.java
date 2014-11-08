@@ -204,7 +204,7 @@ public class HttpJsonTool {
 		}
 		helper.close();
 	}
-
+	
 	public synchronized String login(Context context, String account,
 			String password) {
 		try {
@@ -259,7 +259,69 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
-
+	public synchronized String changuserInfo(Context context, String nickname,
+			int sex,String phonenum) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/my/changuserInfo/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			if(nickname.length()>0){
+				params.add(new BasicNameValuePair("nickname", nickname));
+			}
+			if(sex!=-1){
+				params.add(new BasicNameValuePair("sex", String.valueOf(sex)));
+			}
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			if(phonenum.length()>0){
+				params.add(new BasicNameValuePair("phonenum", phonenum));
+			}
+			
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			insertUserTable(context,json,true);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		}
+		return SUCCESS;
+	}
+	
 	public synchronized String getTingshuoList(Context context, int max_id,
 			int min_id, int page, int role_id, int sex) {
 		try {
@@ -271,6 +333,67 @@ public class HttpJsonTool {
 			StringBuilder builder = new StringBuilder();
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/mainpost/getpost/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			if (max_id != -1) {
+				params.add(new BasicNameValuePair("max_id", String
+						.valueOf(max_id)));
+			}
+			if (min_id != -1) {
+				params.add(new BasicNameValuePair("min_id", String
+						.valueOf(min_id)));
+			}
+			params.add(new BasicNameValuePair("page", String.valueOf(page)));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONArray list = jsonObject.getJSONArray("data");
+			insertTingshuoList(context, list);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} 
+		return SUCCESS;
+	}
+	public synchronized String getMyTingshuoList(Context context, int max_id,
+			int min_id, int page, int role_id, int sex) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/my/getmypost/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			if (max_id != -1) {
 				params.add(new BasicNameValuePair("max_id", String

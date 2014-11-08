@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <TextView
@@ -10,7 +10,8 @@
         android:layout_height="40dp"
         android:text="还没有回复"
         android:layout_gravity="center"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/big_txt_size"/>
+        android:gravity="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="@dimen/normal_txt_size"/>
 
 </LinearLayout>

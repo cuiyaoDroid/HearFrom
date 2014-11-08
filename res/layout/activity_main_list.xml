@@ -20,6 +20,8 @@
         android:dividerHeight="5dp"
         android:scrollbarStyle="outsideOverlay"
         ptr:ptrMode="both" 
+        ptr:ptrShowIndicator="false"
+        android:overScrollMode="never"
         >
     </com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView>
 

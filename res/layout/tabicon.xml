@@ -20,8 +20,6 @@
         android:layout_width="23dp"
         android:layout_height="23dp"
         android:gravity="center"
-        android:paddingRight="1dp"
-        android:paddingBottom="1dp"
         android:text="0"
         android:layout_alignRight="@+id/icon"
         android:singleLine="true"

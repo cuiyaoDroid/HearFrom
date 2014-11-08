@@ -127,6 +127,19 @@ public class mainPostListHelper extends DBHelper {
 		cursor.close();
 		return holderlist;
 	}
+	public ArrayList<mainPostListHolder> selectMyData(int from,int pagesize,int role_id,int sex,int user_id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLE_NAME, null, USER_ID+"=?"
+				,new String[]{String.valueOf(user_id)}, null, null, ID + " desc limit "
+						+ from + "," + pagesize);
+		ArrayList<mainPostListHolder> holderlist = new ArrayList<mainPostListHolder>();
+		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+			mainPostListHolder holder=getDataCursor(cursor);
+			holderlist.add(holder);
+		}
+		cursor.close();
+		return holderlist;
+	}
 	public ArrayList<mainPostListHolder> selectSearchData(String num) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_NAME, null, CONTENT

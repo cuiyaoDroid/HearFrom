@@ -112,7 +112,7 @@ public class SelectHeadImageActivity extends BaseSelectImageActivity {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.title_txt_left:
+		case R.id.title_img_back:
 			finish();
 			break;
 		case R.id.title_txt_right:
