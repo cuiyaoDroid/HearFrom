@@ -93,4 +93,12 @@
             android:textSize="@dimen/small_txt_size" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/respone_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:orientation="vertical" >
+    </LinearLayout>
+
 </LinearLayout>

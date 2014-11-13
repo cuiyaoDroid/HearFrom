@@ -1,8 +1,5 @@
 package com.tingshuo.hearfrom;
 
-import com.tingshuo.tool.L;
-import com.tingshuo.tool.T;
-
 import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -14,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.tingshuo.tool.T;
 
 @SuppressWarnings("deprecation")
 public class HearFromTabMainActivity extends TabActivity implements

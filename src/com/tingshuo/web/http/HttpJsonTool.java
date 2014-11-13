@@ -45,6 +45,8 @@ import com.tingshuo.tool.RoleUtil;
 import com.tingshuo.tool.StatusTool;
 import com.tingshuo.tool.db.CommentHelper;
 import com.tingshuo.tool.db.CommentHolder;
+import com.tingshuo.tool.db.ResponseListHelper;
+import com.tingshuo.tool.db.ResponseListHolder;
 import com.tingshuo.tool.db.UserInfoHelper;
 import com.tingshuo.tool.db.UserInfoHolder;
 import com.tingshuo.tool.db.lock;
@@ -59,8 +61,8 @@ public class HttpJsonTool {
 	};
 
 	// public static String ServerUrl = "http://v.cc-railway.xzh-soft.com:8083";
-	public static String imgServerUrl = "http://192.168.1.111:9999/";
-	public static String ServerUrl = "http://192.168.1.111/tingshuo/index.php";
+	public static String imgServerUrl = "http://192.168.43.235:9999/";
+	public static String ServerUrl = "http://192.168.43.235:8081/tingshuo/index.php";
 	// public static String ServerUrl2 =
 	// "http://192.168.1.118/tingshuo/index.php";
 	// public static final String ServerUrl = "http://192.168.137.1:8080";
@@ -624,20 +626,22 @@ public class HttpJsonTool {
 	private void insertCommentList(Context context, JSONArray list)
 			throws JSONException {
 		CommentHelper helper = new CommentHelper(context);
+		ResponseListHelper reHelper=new ResponseListHelper(context);
 		synchronized (lock.Lock) {
 			SQLiteDatabase db = helper.getWritableDatabase();
 			db.beginTransaction();
 			for (int i = 0; i < list.length(); i++) {
 				JSONObject json = (JSONObject) list.get(i);
-				insertComment(json, helper, db);
+				insertComment(json, helper,reHelper, db);
 			}
 			db.setTransactionSuccessful();
 			db.endTransaction();
 		}
 		helper.close();
+		reHelper.close();
 	}
-	private void insertComment(JSONObject json, CommentHelper helper,
-			SQLiteDatabase db) {
+	private void insertComment(JSONObject json, CommentHelper helper,ResponseListHelper reHelper,
+			SQLiteDatabase db) throws JSONException {
 		int id = json.optInt("id");
 		int user_id = json.optInt("user_id");
 		int post_id = json.optInt("post_id");
@@ -653,7 +657,37 @@ public class HttpJsonTool {
 		int cai_count = json.optInt("cai_count");
 		int role_id = json.optInt("role_id");
 		String role = json.optString("role");
+		
+		JSONArray re_json=json.optJSONArray("comment");
+		if(re_json!=null){
+			for(int i=0;i<re_json.length();i++){
+				JSONObject object=re_json.getJSONObject(i);
+				insertRespone(object, reHelper, db);
+			}
+		}
 		CommentHolder holder = new CommentHolder(id, user_id,post_id,
+				nickname, head, content, image, longitude, latitude, time,
+				comment_count, zan_count, cai_count, role_id, role, 0);
+		helper.insert(holder, db);
+	}
+	private void insertRespone(JSONObject json, ResponseListHelper helper,
+			SQLiteDatabase db) {
+		int id = json.optInt("id");
+		int user_id = json.optInt("user_id");
+		int post_id = json.optInt("second_id");
+		String nickname = json.optString("nickname");
+		String head = json.optString("head");
+		String content = json.optString("content");
+		String image = json.optString("image");
+		String longitude = json.optString("longitude");
+		String latitude = json.optString("latitude");
+		Long time = json.optLong("time");
+		int comment_count = json.optInt("comment_count");
+		int zan_count = json.optInt("zan_count");
+		int cai_count = json.optInt("cai_count");
+		int role_id = json.optInt("role_id");
+		String role = json.optString("role");
+		ResponseListHolder holder = new ResponseListHolder(id, user_id,post_id,
 				nickname, head, content, image, longitude, latitude, time,
 				comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
@@ -716,9 +750,71 @@ public class HttpJsonTool {
 			}
 			JSONObject json = jsonObject.getJSONObject("data");
 			CommentHelper helper = new CommentHelper(context);
+			ResponseListHelper reHelper=new ResponseListHelper(context);
 			synchronized (lock.Lock) {
 				SQLiteDatabase db = helper.getWritableDatabase();
-				insertComment(json, helper, db);
+				insertComment(json, helper,reHelper, db);
+			}
+			helper.close();
+			reHelper.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} 
+		return SUCCESS;
+	}
+	public synchronized String sendResponse(Context context,
+			ResponseListHolder holder) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/comment/comment/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("content", holder.getContent()));
+			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("second_id", String.valueOf(holder.getPost_id())));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			ResponseListHelper helper = new ResponseListHelper(context);
+			synchronized (lock.Lock) {
+				SQLiteDatabase db = helper.getWritableDatabase();
+				insertRespone(json, helper, db);
 			}
 			helper.close();
 		} catch (UnsupportedEncodingException e) {

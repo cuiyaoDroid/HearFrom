@@ -1,6 +1,7 @@
 package com.tingshuo.tool.view;
 
 import android.content.Context;
+import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
@@ -9,6 +10,7 @@ public class ResizeLayout extends RelativeLayout {
 
 	public interface OnResizeListener {
 		void OnResize(int w, int h, int oldw, int oldh);
+		void OnLayout(int l, int t, int r, int b);
 	}
 
 	public void setOnResizeListener(OnResizeListener l) {
@@ -27,4 +29,11 @@ public class ResizeLayout extends RelativeLayout {
 			mListener.OnResize(w, h, oldw, oldh);
 		}
 	}
+	@Override   
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {   
+        super.onLayout(changed, l, t, r, b);   
+        if (mListener != null&&changed) {
+			mListener.OnLayout(l, t, r, b);
+		}
+    }  
 }

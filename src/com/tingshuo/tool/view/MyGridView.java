@@ -1,7 +1,5 @@
 package com.tingshuo.tool.view;
 
-import com.tingshuo.tool.L;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
