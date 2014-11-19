@@ -40,7 +40,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="com.tingshuo.hearfrom.RegisterFastActivity" >
+        <activity android:name="io.rong.imkit.demo.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -128,52 +128,130 @@
             android:name="com.tingshuo.hearfrom.ResearchActivity"
             android:theme="@style/Theme.MyTheme" >
         </activity>
-        <!-- Required SDK核心功能 -->
+        
+        
+        
+        
+        
+        
         <activity
-            android:name="cn.jpush.android.ui.PushActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:name="io.rong.imkit.demo.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.rong.imkit.demo.FunctionListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.rong.imkit.demo.GroupListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.rong.imkit.demo.TestFragmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.rong.imkit.demo.TestFragment2Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.rong.imkit.RongActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="cn.jpush.android.ui.PushActivity" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.tingshuo.hearfrom" />
+
+                <data
+                    android:host="com.tingshuo.hearfrom"
+                    android:pathPrefix="/conversationsetting/"
+                    android:scheme="rong" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.tingshuo.hearfrom"
+                    android:path="/grouplist"
+                    android:scheme="rong" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.tingshuo.hearfrom"
+                    android:path="/conversationgrouplist"
+                    android:scheme="rong" />
             </intent-filter>
         </activity>
-        <!-- Required  SDK核心功能 -->
-        <service
-            android:name="cn.jpush.android.service.DownloadService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
-
-        <!-- Required SDK 核心功能 -->
-        <service
-            android:name="cn.jpush.android.service.PushService"
-            android:enabled="true"
-            android:exported="false" >
+        <activity
+            android:name="io.rong.imkit.RongSingleActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTER" />
-                <action android:name="cn.jpush.android.intent.REPORT" />
-                <action android:name="cn.jpush.android.intent.PushService" />
-                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
-            </intent-filter>
-        </service>
+                <action android:name="android.intent.action.VIEW" />
 
-        <!-- Required SDK核心功能 -->
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.tingshuo.hearfrom"
+                    android:path="/conversationlist"
+                    android:scheme="rong" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="io.rong.imkit.RongSecActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.tingshuo.hearfrom"
+                    android:pathPrefix="/conversation/"
+                    android:scheme="rong" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="io.rong.voipkit.activity.CallSideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.rong.voipkit.activity.CalledSideActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="io.rong.voipkit.calledSideActivity.action" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.tingshuo.hearfrom"
+                    android:path="/calledsideactivity"
+                    android:scheme="rong" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="io.rong.imkit.service.RongIMService"
+            android:enabled="true"
+            android:exported="false"
+            android:priority="1000" />
+        <service
+            android:name="io.rong.imlib.PushService"
+            android:process="io.rong.push.service" />
+        <service android:name="io.rong.imlib.RongService" />
+
         <receiver
-            android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true" >
-            <intent-filter android:priority="1000" >
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
- <!-- Required  显示通知栏 -->
-                <category android:name="com.tingshuo.hearfrom" />
+            android:name="io.rong.imlib.PushReceiver"
+            android:process="io.rong.push.service" >
+            <intent-filter>
+                <action android:name="io.rong.imlib.action.push.heartbeat" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-            <!-- Optional -->
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -182,56 +260,12 @@
             </intent-filter>
         </receiver>
 
-        <!-- Required SDK核心功能 -->
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
-
-        <!-- User defined.  For test only  用户自定义的广播接收器 -->
-        <receiver
-            android:name="com.tingshuo.hearfrom.JPushReceiver"
-            android:enabled="true" >
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" />
- <!-- Required  用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
- <!-- Required  用户接收SDK消息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
- <!-- Required  用户接收SDK通知栏信息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
- <!-- Required  用户打开自定义通知栏的intent -->
-                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
- <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
-                <action android:name="cn.jpush.android.intent.CONNECTION" />
- <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.tingshuo.hearfrom" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
+            android:name="UMENG_APPKEY"
+            android:value="5445066cfd98c5e32d007a8f" />
         <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="1c6efa7a9bb79155d4b428de" />
- <!-- </>值来自开发者平台取得的AppKey -->
-
-        <service android:name="com.tingshuo.service.XXService" />
-
-        <receiver android:name="com.tingshuo.hearfrom.XXBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name="com.tingshuo.tool.db.ChatProvider"
-            android:authorities="com.tingshuo.hearfrom.provider.Chats" />
-        <provider
-            android:name="com.tingshuo.tool.db.RosterProvider"
-            android:authorities="com.tingshuo.hearfrom.provider.Roster" />
+            android:name="UMENG_CHANNEL"
+            android:value="DEMO_GITHUB" />
     </application>
 
 </manifest>

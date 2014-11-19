@@ -9,4 +9,10 @@
     <color name="title_trans_color">#9966CD00</color>
     <color name="title_text_press">#458B00</color>
 	<color name="holo_blue_dark">#ff0099cc</color>
+	
+	
+	
+	<color name="welcome_onrange">#FF6402</color>
+    <color name="title_bg">#3498DB</color>
+    <color name="item_function_list_divider">#E4E4E4</color>
 </resources>

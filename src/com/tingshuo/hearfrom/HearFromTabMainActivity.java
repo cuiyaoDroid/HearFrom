@@ -3,6 +3,7 @@ package com.tingshuo.hearfrom;
 import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -47,14 +48,19 @@ public class HearFromTabMainActivity extends TabActivity implements
 		host.addTab(host.newTabSpec("tab_item1").setIndicator(view)
 				.setContent(new Intent(this, MainListActivity.class)));
 
+		
+		
+		
 		View view2 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount2 = (TextView) view2.findViewById(R.id.txtCount);
 		txtCount2.setVisibility(View.GONE);
 		ImageView icon2 = (ImageView) view2.findViewById(R.id.icon);
 		icon2.setImageResource(R.drawable.tab_item2);
 		host.addTab(host.newTabSpec("tab_item2").setIndicator(view2)
-				.setContent(new Intent(this, ContactsActivity.class)));
-
+				.setContent(new Intent(Intent.ACTION_VIEW
+						,Uri.parse("rong://com.tingshuo.hearfrom/conversationlist"))));
+				//new Intent(this, ContactsActivity.class)));
+		
 		View view3 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount3 = (TextView) view3.findViewById(R.id.txtCount);
 		txtCount3.setVisibility(View.GONE);

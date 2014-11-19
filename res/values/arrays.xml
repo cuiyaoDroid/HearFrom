@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="function_list">
+        <item>"会话列表"</item>
+        <item>"客服"</item>
+        <item>"会话页面"</item>
+        <item>"群组列表"</item>
+        <item>自定义测试</item>
+        <item>自定义测试2</item>
+        <item>聊天室</item>
+    </string-array>
+
+
+
+</resources>
