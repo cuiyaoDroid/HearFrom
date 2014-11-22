@@ -76,18 +76,17 @@ public class ShowerImageView extends ImageView {
 		super.onDraw(canvas);
 	}
 
-	public ShowerImageView(Context context, int imageWidth, int imageHeight) {
+	public ShowerImageView(Context context) {
 		super(context);
-		this.imageHeight = imageHeight;
-		this.imageWidth = imageWidth;
+		this.imageHeight = 0;
+		this.imageWidth = 0;
 		init();
 	}
 
-	public ShowerImageView(Context context, AttributeSet attrs, int imageWidth,
-			int imageHeight) {
+	public ShowerImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.imageHeight = imageHeight;
-		this.imageWidth = imageWidth;
+		this.imageHeight = 0;
+		this.imageWidth = 0;
 		init();
 	}
 

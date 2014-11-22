@@ -1,20 +1,19 @@
 package io.rong.imkit.demo;
 
-import android.os.Bundle;
-import android.util.Log;
-
-import com.sea_monster.core.exception.BaseException;
-import com.sea_monster.core.network.AbstractHttpRequest;
-import com.sea_monster.core.network.ApiCallback;
+import io.rong.imkit.RongActivity;
+import io.rong.imkit.RongIM;
+import io.rong.imkit.demo.model.User;
+import io.rong.imlib.RongIMClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.rong.imkit.RongActivity;
-import io.rong.imkit.RongIM;
-import io.rong.imkit.demo.model.User;
-import io.rong.imlib.RongIMClient;
+import android.os.Bundle;
+
+import com.sea_monster.core.exception.BaseException;
+import com.sea_monster.core.network.AbstractHttpRequest;
+import com.sea_monster.core.network.ApiCallback;
 
 /**
  * Created by DragonJ on 14/11/4.

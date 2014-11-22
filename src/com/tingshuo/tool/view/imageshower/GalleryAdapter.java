@@ -9,6 +9,7 @@ package com.tingshuo.tool.view.imageshower;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -69,14 +70,16 @@ public class GalleryAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return 0;
 	}
-
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ShowerImageView view;
+		View cell=mInflater.inflate(R.layout.galler_cell_pic, null);
 		try {
 			String path = images.get(position);
-			view = new ShowerImageView(context, 0, 0);
-			view.setLayoutParams(new Gallery.LayoutParams(
+//			view = new ShowerImageView(context, 0, 0);
+			cell.setLayoutParams(new Gallery.LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			
+			view=(ShowerImageView) cell.findViewById(R.id.shower_img);
 			view.setTag(path);
 			// 利用NativeImageLoader类加载本地图片
 			if (isWeb) {
@@ -97,7 +100,6 @@ public class GalleryAdapter extends BaseAdapter {
 				Bitmap bitmap = NativeImageLoader.getInstance(context)
 						.loadBigNativeImage(path, null,
 								new NativeImageCallBack() {
-
 									@Override
 									public void onImageLoader(Bitmap bitmap,
 											String path) {
@@ -124,8 +126,10 @@ public class GalleryAdapter extends BaseAdapter {
 					// view.layoutToCenter();
 				}
 			}
-			return view;
+			return cell;
 		} catch (OutOfMemoryError e) {
+			mImageCache.clearMemorCaches();
+			e.printStackTrace();
 		} catch (NullPointerException e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -134,7 +138,7 @@ public class GalleryAdapter extends BaseAdapter {
 			e.printStackTrace();
 		} finally {
 		}
-		return parent;
+		return cell;
 	}
 
 }

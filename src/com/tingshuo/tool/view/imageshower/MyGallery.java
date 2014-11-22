@@ -9,6 +9,7 @@ package com.tingshuo.tool.view.imageshower;
 
 
 
+import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.L;
 
 import android.content.Context;
@@ -46,7 +47,7 @@ public class MyGallery extends Gallery {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				View view = MyGallery.this.getSelectedView();
+				View view = MyGallery.this.getSelectedView().findViewById(R.id.shower_img);
 				if (view instanceof ShowerImageView) {
 					imageView = (ShowerImageView) view;
 
@@ -78,7 +79,7 @@ public class MyGallery extends Gallery {
 	}
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-		View view = MyGallery.this.getSelectedView();
+		View view = MyGallery.this.getSelectedView().findViewById(R.id.shower_img);
 		if (view instanceof ShowerImageView) {
 			imageView = (ShowerImageView) view;
 
@@ -159,7 +160,7 @@ public class MyGallery extends Gallery {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// 判断上下边界是否越界
-			View view = MyGallery.this.getSelectedView();
+			View view = MyGallery.this.getSelectedView().findViewById(R.id.shower_img);
 			if (view instanceof ShowerImageView) {
 				imageView = (ShowerImageView) view;
 				float width = imageView.getScale() * imageView.getImageWidth();
@@ -193,7 +194,7 @@ public class MyGallery extends Gallery {
 	private class MySimpleGesture extends SimpleOnGestureListener {
 		// 按两下的第二下Touch down时触发
 		public boolean onDoubleTap(MotionEvent e) {
-			View view = MyGallery.this.getSelectedView();
+			View view = MyGallery.this.getSelectedView().findViewById(R.id.shower_img);
 			if (view instanceof ShowerImageView) {
 				imageView = (ShowerImageView) view;
 				if (imageView.getScale() > imageView.getScaleRate()) {

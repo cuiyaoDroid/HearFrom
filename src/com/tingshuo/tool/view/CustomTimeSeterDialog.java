@@ -6,11 +6,13 @@ import java.util.Locale;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.view.wheel.NumericWheelAdapter;
+import com.tingshuo.tool.view.wheel.OnWheelChangedListener;
 import com.tingshuo.tool.view.wheel.WheelView;
 
 
@@ -72,6 +74,7 @@ public class CustomTimeSeterDialog extends Dialog {
 	private Calendar calendar;
 	private final int START_YEAR=1900;
 	private NumericWheelAdapter dayAdapter;
+	int moth_days=31;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,13 +96,24 @@ public class CustomTimeSeterDialog extends Dialog {
 		month.setCyclic(true);
 
 		final WheelView day = (WheelView) findViewById(R.id.day);
-		dayAdapter = new NumericWheelAdapter(context, 1,
-				59, "%02d");
-		dayAdapter.setItemResource(R.layout.wheel_text_item);
-		dayAdapter.setItemTextResource(R.id.text);
-		day.setViewAdapter(dayAdapter);
-		day.setCyclic(true);
 		
+		day.setCyclic(true);
+		OnWheelChangedListener changerlistener=new OnWheelChangedListener() {
+			
+			@Override
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+				// TODO Auto-generated method stub
+				int i_month=month.getCurrentItem();
+				moth_days=getDaysByYearMonth(year.getCurrentItem(),i_month);
+				dayAdapter = new NumericWheelAdapter(context, 1,
+						moth_days, "%02d");
+				dayAdapter.setItemResource(R.layout.wheel_text_item);
+				dayAdapter.setItemTextResource(R.id.text);
+				day.setViewAdapter(dayAdapter);
+			}
+		};
+		month.addChangingListener(changerlistener);
+		year.addChangingListener(changerlistener);
 		// set current time
 		calendar = Calendar.getInstance(Locale.CHINA);
 		if(milltime!=0){
@@ -133,5 +147,14 @@ public class CustomTimeSeterDialog extends Dialog {
 			}
 		});
 	}
-
+	public static int getDaysByYearMonth(int year, int month) {  
+        
+        Calendar a = Calendar.getInstance();  
+        a.set(Calendar.YEAR, year);  
+        a.set(Calendar.MONTH, month+1);  
+        a.set(Calendar.DATE, 1);  
+        a.add(Calendar.DATE, -1);  
+        int maxDate = a.get(Calendar.DATE);  
+        return maxDate;  
+    }  
 }
