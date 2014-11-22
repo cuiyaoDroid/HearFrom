@@ -10,12 +10,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.tingshuo.hearfrom.HearFromApp;
 import com.tingshuo.hearfrom.LoginActivity;
+import com.tingshuo.hearfrom.MainListActivity;
 import com.tingshuo.hearfrom.R;
+import com.tingshuo.hearfrom.TopicDetailActivity;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.Pager;
@@ -30,10 +34,10 @@ import com.tingshuo.web.http.HttpJsonTool;
 
 public class mineTopicScreen extends BaseScreen implements
 		OnRefreshListener2<ListView> {
-	private Pager mPager;
-	private PullToRefreshListView mainpostListView;
-	private ArrayList<Map<String, Object>> listData;
-	private ScreenTopicAdapter adapter;
+	protected Pager mPager;
+	protected PullToRefreshListView mainpostListView;
+	protected ArrayList<Map<String, Object>> listData;
+	protected ScreenTopicAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,14 +56,28 @@ public class mineTopicScreen extends BaseScreen implements
 		mainpostListView.setMode(Mode.BOTH);
 		mainpostListView.setOnRefreshListener(this);
 		mainpostListView.setAdapter(adapter);
-		refreshList(-1, -1, mPager.pagesize, false);
+		mainpostListView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				position = position - mainpostListView.getRefreshableView().getHeaderViewsCount();
+				Intent intent=new Intent(getActivity(),TopicDetailActivity.class);
+				intent.putExtra(mainPostListHelper.ID
+						, (Integer)(listData.get(position).get(mainPostListHelper.ID)));
+				intent.putExtra("hidekeyboard", true);
+				startActivity(intent);
+			}
+		});
+		refreshList(-1, -1, mPager.pagesize, false);
+		L.i("mineTopicScreen", "initContentView");
 	}
 
 
 	AsyncTask<Void, Void, String> mainpostDatetask = null;
 
-	private void refreshList(final int maxId, final int minId, final int page,
+	protected void refreshList(final int maxId, final int minId, final int page,
 			final boolean more) {
 		if (more) {
 			mPager.curpage++;
@@ -81,8 +99,8 @@ public class mineTopicScreen extends BaseScreen implements
 				if (result.startsWith(HttpJsonTool.ERROR403)) {
 					gotoLoginView();
 				} else if (result.startsWith(HttpJsonTool.ERROR)) {
-					T.showLong(getActivity(),
-							result.replace(HttpJsonTool.ERROR, ""));
+					//T.showLong(getActivity(),
+							//result.replace(HttpJsonTool.ERROR, ""));
 				} else if (result.startsWith(HttpJsonTool.SUCCESS)) {
 					hasmore = refreshData(more);
 				}
@@ -100,7 +118,7 @@ public class mineTopicScreen extends BaseScreen implements
 		mainpostDatetask.execute();
 	}
 
-	private boolean refreshData(boolean more) {
+	protected boolean refreshData(boolean more) {
 		if (!more) {
 			listData.clear();
 		}
@@ -123,7 +141,7 @@ public class mineTopicScreen extends BaseScreen implements
 
 	}
 
-	private void insertHolderData(mainPostListHolder holder) {
+	protected void insertHolderData(mainPostListHolder holder) {
 		mPager.minId = holder.getId();
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(mainPostListHelper.HEAD, holder.getHead());
@@ -139,7 +157,7 @@ public class mineTopicScreen extends BaseScreen implements
 		listData.add(data);
 	}
 
-	private void gotoLoginView() {
+	protected void gotoLoginView() {
 		HearFromApp.token = "";
 		try {
 			Intent intent = new Intent(getActivity(),

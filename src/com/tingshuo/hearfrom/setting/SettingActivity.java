@@ -1,10 +1,18 @@
 package com.tingshuo.hearfrom.setting;
 
+import java.text.SimpleDateFormat;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Selection;
+import android.text.Spannable;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -15,10 +23,15 @@ import com.tingshuo.hearfrom.HearFromApp;
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.SelectHeadImageActivity;
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
+import com.tingshuo.tool.DensityUtil;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
+import com.tingshuo.tool.SexTool;
+import com.tingshuo.tool.db.UserInfoHelper;
+import com.tingshuo.tool.db.UserInfoHolder;
 import com.tingshuo.tool.view.CustomTimeSeterDialog;
 import com.tingshuo.tool.view.CustomTimeSeterDialog.TimeDialogListener;
+import com.tingshuo.web.http.HttpJsonTool;
 
 public class SettingActivity extends BaseSwipeBaceActivity {
 	private View setting_commit;
@@ -47,10 +60,11 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 	private View setting_password;
 	private TextView setting_password_title;
 	private CustomTimeSeterDialog dialog;
-	
+
 	private View setting_filtclose;
 	private TextView setting_filtclose_title;
 	private CheckBox setting_filtclose_check;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -65,6 +79,8 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 	protected void initContentView() {
 		super.initContentView();
 		titleback.setVisibility(View.VISIBLE);
+		title_right.setVisibility(View.VISIBLE);
+		title_right.setText("完成");
 		title_middle.setText("设置");
 
 		PreferenceUtils.getPrefBoolean(getApplicationContext(),
@@ -91,8 +107,7 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 		setting_nick_name_title.setText("昵称");
 		setting_nick_name_editer = (EditText) setting_nick_name
 				.findViewById(R.id.editer);
-		setting_nick_name_editer.setText("逗比");
-		setting_nick_name_editer.setHint("输入昵称");
+		setting_nick_name_editer.setText("");
 
 		setting_sex = findViewById(R.id.setting_sex);
 		setting_sex_title = (TextView) setting_sex.findViewById(R.id.title);
@@ -107,7 +122,8 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 		setting_birthday_title.setText("生日");
 		setting_birthday_content = (TextView) setting_birthday
 				.findViewById(R.id.content);
-		setting_birthday_content.setText("19900618");
+		setting_birthday_content.setText("1990年01月01日");
+		setting_birthday_content.setHint("设置生日");
 		setting_birthday.setOnClickListener(this);
 
 		setting_clear = findViewById(R.id.setting_clear);
@@ -137,8 +153,9 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 		setting_password_title.setText("修改密码");
 		setting_password.setOnClickListener(this);
 
-		boolean isFlitClose=PreferenceUtils.getPrefBoolean(getApplicationContext()
-				, PreferenceConstants.SETTING_FLIT_CLOSE, true);
+		boolean isFlitClose = PreferenceUtils.getPrefBoolean(
+				getApplicationContext(),
+				PreferenceConstants.SETTING_FLIT_CLOSE, true);
 		setting_filtclose = findViewById(R.id.setting_flit_close);
 		setting_filtclose_title = (TextView) setting_filtclose
 				.findViewById(R.id.title);
@@ -146,16 +163,19 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 		setting_filtclose_check = (CheckBox) setting_filtclose
 				.findViewById(R.id.checker);
 		setting_filtclose_check.setChecked(isFlitClose);
-		setting_filtclose_check.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
-				PreferenceUtils.setPrefBoolean(getApplicationContext()
-						, PreferenceConstants.SETTING_FLIT_CLOSE, isChecked);
-				HearFromApp.isFlitClose = isChecked;
-				setSwipeBackEnable(isChecked);
-			}
-		});
+		setting_filtclose_check
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+						PreferenceUtils.setPrefBoolean(getApplicationContext(),
+								PreferenceConstants.SETTING_FLIT_CLOSE,
+								isChecked);
+						HearFromApp.isFlitClose = isChecked;
+						setSwipeBackEnable(isChecked);
+					}
+				});
 		setting_filtclose.setOnClickListener(this);
 	}
 
@@ -163,6 +183,24 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		refreshInfo();
+	}
+
+	private void refreshInfo() {
+		UserInfoHelper helper = new UserInfoHelper(getApplicationContext());
+		UserInfoHolder holder = helper.selectData_Id(HearFromApp.user_id);
+		helper.close();
+		if (holder == null) {
+			return;
+		}
+		setting_nick_name_editer.setText(holder.getNickname());
+		setting_account_content.setText(holder.getAccount());
+		setting_sex_content.setText(holder.getSex() == SexTool.FEMELA ? "女"
+				: "男");
+		setting_birthday_content
+				.setText(holder.getBrithday().equals("null") ? "1990年01月01日" : holder
+						.getBrithday());
+
 	}
 
 	@Override
@@ -171,8 +209,31 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 		super.onPause();
 	}
 
+	private void changuserInfo(final String nickname, final int sex,
+			final String phonenum,final String birthday) {
+		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				return HttpJsonTool.getInstance().changuserInfo(
+						getApplicationContext(), nickname, sex, phonenum,birthday);
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+				if (result.startsWith(HttpJsonTool.SUCCESS)) {
+					refreshInfo();
+				}
+			}
+		};
+		task.execute();
+	}
+
 	public static final int SETTINGHEAD = 10;
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -181,6 +242,11 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 			finish();
 			break;
 		case R.id.title_txt_right:
+			String nick_name=setting_nick_name_editer.getText().toString();
+			int sex=setting_sex_content.getText().equals("男")?SexTool.MELA:SexTool.FEMELA;
+			String birthday = setting_birthday_content.getText().toString();
+			changuserInfo(nick_name,sex,null,birthday);
+			finish();
 			break;
 		case R.id.setting_commit:
 			Intent intent = new Intent(getApplicationContext(),
@@ -195,19 +261,22 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 			startActivityForResult(intent, SETTINGHEAD);
 			break;
 		case R.id.setting_nick_name:
+			//ShowEditDialog(setting_nick_name_editer.getText().toString());
 			break;
 		case R.id.setting_sex:
 			ShowDialog(new String[] { "男", "女" }, setting_sex_content);
 			break;
 		case R.id.setting_birthday:
-			if(dialog==null){
-				dialog = new CustomTimeSeterDialog(
-						SettingActivity.this, R.style.customDialog,
-						R.layout.dialog_time_seter, System.currentTimeMillis());
+			if (dialog == null) {
+				dialog = new CustomTimeSeterDialog(SettingActivity.this,
+						R.style.customDialog, R.layout.dialog_time_seter,
+						System.currentTimeMillis());
 				dialog.setTimeDialogListener(new TimeDialogListener() {
 					@Override
 					public void getTimeInMill(long time) {
 						// TODO Auto-generated method stub
+						SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日");
+						setting_birthday_content.setText(format.format(time));
 					}
 				});
 			}
@@ -225,7 +294,8 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 					R.anim.slide_left_out);
 			break;
 		case R.id.setting_flit_close:
-			setting_filtclose_check.setChecked(!setting_filtclose_check.isChecked());
+			setting_filtclose_check.setChecked(!setting_filtclose_check
+					.isChecked());
 			break;
 		default:
 			break;
@@ -264,4 +334,52 @@ public class SettingActivity extends BaseSwipeBaceActivity {
 		});
 		builder.create().show();
 	}
+
+	/*private void ShowEditDialog(final String content) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				SettingActivity.this);
+		final EditText edit = new EditText(SettingActivity.this);
+		builder.setTitle("修改昵称");
+		builder.setView(edit);
+		int padding=DensityUtil.dip2px(getApplicationContext(), 10);
+		edit.setPadding(padding, padding*3, padding, padding*3);
+		edit.setText(content);
+		
+		edit.setBackgroundResource(android.R.color.transparent);
+		CharSequence text = edit.getText();
+		if (text instanceof Spannable) {
+		    Spannable spanText = (Spannable)text;
+		    Selection.setSelection(spanText, text.length());
+		}
+		edit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String edited_content=edit.getText().toString().trim();
+				if(!content.equals(edited_content)){
+					setting_nick_name_editer.setText(edited_content);
+					changuserInfo(edited_content,-1,null);
+				}
+			}
+		});
+		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+
+			}
+		});
+		AlertDialog dialog = builder.create();
+		dialog.setOnShowListener(new OnShowListener() {
+			
+			@Override
+			public void onShow(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				edit.requestFocus();
+				InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);     
+
+				imm.toggleSoftInputFromWindow(
+						edit.getWindowToken(), 0,
+						InputMethodManager.HIDE_NOT_ALWAYS);  
+			}
+		});
+		dialog.show();
+	}*/
 }

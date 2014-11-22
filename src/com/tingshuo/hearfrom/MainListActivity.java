@@ -123,8 +123,9 @@ public class MainListActivity extends BaseAcivity implements
 				if (result.startsWith(HttpJsonTool.ERROR403)) {
 					ActivityTool.gotoLoginView(getApplicationContext());
 				} else if (result.startsWith(HttpJsonTool.ERROR)) {
-					T.showLong(getApplicationContext(),
-							result.replace(HttpJsonTool.ERROR, ""));
+					//T.showLong(getApplicationContext(),
+							//result.replace(HttpJsonTool.ERROR, ""));
+					hasmore = refreshData(more);
 				} else if (result.startsWith(HttpJsonTool.SUCCESS)) {
 					hasmore = refreshData(more);
 				}

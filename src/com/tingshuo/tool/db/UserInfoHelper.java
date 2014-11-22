@@ -67,7 +67,7 @@ public class UserInfoHelper extends DBHelper {
 		cv.put(LOGIN_TIME, content.getLogin_time());
 		cv.put(BRITHDAY, content.getBrithday());
 		cv.put(PHONENUM, content.getPhonenum());
-		cv.put(LEVEL_SCORE, content.getLevel());
+		cv.put(LEVEL_SCORE, content.getLevel_score());
 		cv.put(LEVEL, content.getLevel());
 		cv.put(IS_VIP, content.getIs_vip());
 		cv.put(VIP_SCORE, content.getVip_score());

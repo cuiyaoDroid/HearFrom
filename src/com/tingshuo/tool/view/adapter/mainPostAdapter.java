@@ -9,6 +9,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -131,7 +132,7 @@ public class mainPostAdapter extends BaseAdapter {
 		String headpath=(String) list.get(position).get(mainPostListHelper.HEAD);
 		mImageFetcher.loadImage(HttpJsonTool.imgServerUrl+headpath, viewHolder.head_img);
 		String content=(String) list.get(position).get(mainPostListHelper.CONTENT);
-		viewHolder.content_txt.setText(content);
+		viewHolder.content_txt.setText(Html.fromHtml(content));
 		String name=(String) list.get(position).get(mainPostListHelper.NICK_NAME);
 		viewHolder.name_txt.setText(name);
 		long time=(Long) list.get(position).get(mainPostListHelper.TIME);

@@ -45,6 +45,7 @@ import com.tingshuo.tool.RoleUtil;
 import com.tingshuo.tool.StatusTool;
 import com.tingshuo.tool.db.CommentHelper;
 import com.tingshuo.tool.db.CommentHolder;
+import com.tingshuo.tool.db.MyCommitedMainPostListHelper;
 import com.tingshuo.tool.db.ResponseListHelper;
 import com.tingshuo.tool.db.ResponseListHolder;
 import com.tingshuo.tool.db.UserInfoHelper;
@@ -61,8 +62,8 @@ public class HttpJsonTool {
 	};
 
 	// public static String ServerUrl = "http://v.cc-railway.xzh-soft.com:8083";
-	public static String imgServerUrl = "http://192.168.43.235:9999/";
-	public static String ServerUrl = "http://192.168.43.235:8081/tingshuo/index.php";
+	public static String imgServerUrl = "http://192.168.1.5:9999/";
+	public static String ServerUrl = "http://192.168.1.5/tingshuo/index.php";
 	// public static String ServerUrl2 =
 	// "http://192.168.1.118/tingshuo/index.php";
 	// public static final String ServerUrl = "http://192.168.137.1:8080";
@@ -77,8 +78,7 @@ public class HttpJsonTool {
 	public static final String SUCCESS = "<success>";
 	public static final String ERROR403 = "<error403>";
 
-	public static final int MELA = 1;
-	public static final int FEMELA = 0;
+	
 
 	public static synchronized HttpJsonTool getInstance() {
 		if (httpjsontool == null) {
@@ -261,8 +261,57 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+	public synchronized String getRoleList() {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/user/getRoleList");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		}
+		return SUCCESS;
+	}
 	public synchronized String changuserInfo(Context context, String nickname,
-			int sex,String phonenum) {
+			int sex,String phonenum,String birthday) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -273,17 +322,19 @@ public class HttpJsonTool {
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/my/changuserInfo/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			if(nickname.length()>0){
+			if(nickname!=null){
 				params.add(new BasicNameValuePair("nickname", nickname));
 			}
 			if(sex!=-1){
 				params.add(new BasicNameValuePair("sex", String.valueOf(sex)));
 			}
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
-			if(phonenum.length()>0){
+			if(phonenum!=null){
 				params.add(new BasicNameValuePair("phonenum", phonenum));
 			}
-			
+			if(birthday!=null){
+				params.add(new BasicNameValuePair("brithday", birthday));
+			}
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -335,16 +386,26 @@ public class HttpJsonTool {
 			StringBuilder builder = new StringBuilder();
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/mainpost/getpost/");
+//			L.i(ServerUrl
+//					+ "/mainpost/getpost/?token="+HearFromApp.token+"&start="+min_id+"&limit="+page);
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			if (max_id != -1) {
 				params.add(new BasicNameValuePair("max_id", String
 						.valueOf(max_id)));
 			}
+			if (role_id != -1) {
+				params.add(new BasicNameValuePair("role_id", String
+						.valueOf(role_id)));
+			}
 			if (min_id != -1) {
-				params.add(new BasicNameValuePair("min_id", String
+				params.add(new BasicNameValuePair("start", String
 						.valueOf(min_id)));
 			}
-			params.add(new BasicNameValuePair("page", String.valueOf(page)));
+			if (sex != -1) {
+				params.add(new BasicNameValuePair("sex", String
+						.valueOf(sex)));
+			}
+			params.add(new BasicNameValuePair("limit", String.valueOf(page)));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -353,6 +414,7 @@ public class HttpJsonTool {
 				httpjsontool = null;
 				return ERROR403;
 			}
+			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent()));
 			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
@@ -385,6 +447,7 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	
 	public synchronized String getMyTingshuoList(Context context, int max_id,
 			int min_id, int page, int role_id, int sex) {
 		try {
@@ -402,10 +465,10 @@ public class HttpJsonTool {
 						.valueOf(max_id)));
 			}
 			if (min_id != -1) {
-				params.add(new BasicNameValuePair("min_id", String
+				params.add(new BasicNameValuePair("start", String
 						.valueOf(min_id)));
 			}
-			params.add(new BasicNameValuePair("page", String.valueOf(page)));
+			params.add(new BasicNameValuePair("limit", String.valueOf(page)));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -446,6 +509,68 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	public synchronized String getMyTingshuoList_Commit(Context context, int max_id,
+			int min_id, int page, int role_id, int sex) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/my/getmysecond/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			if (max_id != -1) {
+				params.add(new BasicNameValuePair("max_id", String
+						.valueOf(max_id)));
+			}
+			if (min_id != -1) {
+				params.add(new BasicNameValuePair("start", String
+						.valueOf(min_id)));
+			}
+			params.add(new BasicNameValuePair("limit", String.valueOf(page)));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONArray list = jsonObject.getJSONArray("data");
+			insertMyCommitedTingshuoList(context, list);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} 
+		return SUCCESS;
+	}
+	
 	public synchronized String getCommentList(Context context, int max_id,
 			int start, int limit , int post_id) {
 		try {
@@ -508,6 +633,114 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	public synchronized String editPassword(Context context, String oldpassword,String newpassword) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/my/updatePassword/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("oldpassword", oldpassword));
+			params.add(new BasicNameValuePair("newpassword", newpassword));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				String error_detail=jsonObject.optString("msg");
+				return ERROR+error_detail;
+			}
+//			JSONArray list = jsonObject.getJSONArray("data");
+//			insertCommentList(context, list);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} 
+		return SUCCESS;
+	}
+	public synchronized String identifUser(Context context, String account,String password) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/user/identifUser/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("account", account));
+			params.add(new BasicNameValuePair("password", password));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+//			JSONArray list = jsonObject.getJSONArray("data");
+//			insertCommentList(context, list);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} 
+		return SUCCESS;
+	}
+	
 	public synchronized String setZanMainPost(Context context,int post_id,boolean isZan) {
 		try {
 			HttpClient client = getHttpClient();
@@ -623,6 +856,21 @@ public class HttpJsonTool {
 		}
 		helper.close();
 	}
+	private void insertMyCommitedTingshuoList(Context context, JSONArray list)
+			throws JSONException {
+		MyCommitedMainPostListHelper helper = new MyCommitedMainPostListHelper(context);
+		synchronized (lock.Lock) {
+			SQLiteDatabase db = helper.getWritableDatabase();
+			db.beginTransaction();
+			for (int i = 0; i < list.length(); i++) {
+				JSONObject json = (JSONObject) list.get(i);
+				insertCommitedTingshuo(json, helper, db);
+			}
+			db.setTransactionSuccessful();
+			db.endTransaction();
+		}
+		helper.close();
+	}
 	private void insertCommentList(Context context, JSONArray list)
 			throws JSONException {
 		CommentHelper helper = new CommentHelper(context);
@@ -713,7 +961,27 @@ public class HttpJsonTool {
 				comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
 	}
-	
+	private void insertCommitedTingshuo(JSONObject json, MyCommitedMainPostListHelper helper,
+			SQLiteDatabase db) {
+		int id = json.optInt("id");
+		int user_id = json.optInt("user_id");
+		String nickname = json.optString("nickname");
+		String head = json.optString("head");
+		String content = json.optString("content");
+		String image = json.optString("image");
+		String longitude = json.optString("longitude");
+		String latitude = json.optString("latitude");
+		Long time = json.optLong("time");
+		int comment_count = json.optInt("comment_count");
+		int zan_count = json.optInt("zan_count");
+		int cai_count = json.optInt("cai_count");
+		int role_id = json.optInt("role_id");
+		String role = json.optString("role");
+		mainPostListHolder holder = new mainPostListHolder(id, user_id,
+				nickname, head, content, image, longitude, latitude, time,
+				comment_count, zan_count, cai_count, role_id, role, 0);
+		helper.insert(holder, db);
+	}
 	public synchronized String sendComment(Context context,
 			CommentHolder holder) {
 		try {

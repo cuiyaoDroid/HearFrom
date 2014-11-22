@@ -213,8 +213,9 @@ public class publishTopickActivity extends BaseAcivity{
 					i++;
 				}
 				
-				mainPostListHolder holder=new mainPostListHolder(-1, -1, "", "", content
-						, imgs, "", "", 0, 0, 0, 0, 1, "",0);
+				mainPostListHolder holder=new mainPostListHolder(-1, -1, "", ""
+						, content.replaceAll("\n", "<br></br>")
+						, imgs, "", "", 0, 0, 0, 0, role_id, "",0);
 				return HttpJsonTool.getInstance().publicsTopic(getApplicationContext(),holder, mProgressDialog);
 			}
 			@Override

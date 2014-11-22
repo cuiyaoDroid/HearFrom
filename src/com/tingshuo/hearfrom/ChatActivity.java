@@ -1,5 +1,8 @@
 package com.tingshuo.hearfrom;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.AsyncQueryHandler;
 import android.content.ComponentName;
 import android.content.Intent;

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class ScreenTopicAdapter extends BaseAdapter {
 		}
 		String images=(String) list.get(position).get(mainPostListHelper.IMAGE);
 		String content=(String) list.get(position).get(mainPostListHelper.CONTENT);
-		viewHolder.content_txt.setText(content);
+		viewHolder.content_txt.setText(Html.fromHtml(content));
 		if(images.trim().length()>0){
 			String[] img=images.split(",");
 			if(img.length>0){

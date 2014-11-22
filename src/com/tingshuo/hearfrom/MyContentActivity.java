@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tingshuo.hearfrom.base.BaseSwipeFragmentActivity;
+import com.tingshuo.hearfrom.screen.mineSecondScreen;
 import com.tingshuo.hearfrom.screen.mineTopicScreen;
 import com.tingshuo.tool.view.SplitViewPager;
 import com.tingshuo.tool.view.SplitViewPager.OnPageScroll;
@@ -130,13 +131,20 @@ public class MyContentActivity extends BaseSwipeFragmentActivity  {
 		});
 		fragmentList = new ArrayList<Fragment>();
 		titleList = new ArrayList<String>();// 标题数据
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
             mineTopicScreen mViewPagerFragment = new mineTopicScreen();
             Bundle bundle = new Bundle();
             mViewPagerFragment.setArguments(bundle);// 设置参数
             titleList.add("Title " + (i+1));
             fragmentList.add(mViewPagerFragment);
         }
+		
+		 mineSecondScreen mViewPagerFragment = new mineSecondScreen();
+         Bundle bundle = new Bundle();
+         mViewPagerFragment.setArguments(bundle);// 设置参数
+         titleList.add("Title " + 3);
+         fragmentList.add(mViewPagerFragment);
+		
 		mPager.setAdapter(new PagerFragmentAdapter(getSupportFragmentManager(),fragmentList,titleList));
 		mPager.setCurrentItem(0);
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());

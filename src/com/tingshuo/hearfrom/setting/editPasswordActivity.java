@@ -1,14 +1,21 @@
 package com.tingshuo.hearfrom.setting;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.base.BaseAcivity;
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
+import com.tingshuo.tool.ActivityTool;
+import com.tingshuo.tool.T;
+import com.tingshuo.web.http.HttpJsonTool;
+import com.tingshuo.web.http.HttpStringMD5;
 
 public class editPasswordActivity extends BaseSwipeBaceActivity{
 	private View setting_old_password;
@@ -22,7 +29,7 @@ public class editPasswordActivity extends BaseSwipeBaceActivity{
 	private View setting_new_password_re;
 	private TextView setting_new_password_re_title;
 	private EditText setting_new_password_re_editer;
-	
+	private ProgressDialog progreeDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -34,6 +41,7 @@ public class editPasswordActivity extends BaseSwipeBaceActivity{
 	@Override
 	protected void initContentView() {
 		super.initContentView();
+		initProgressDialog();
 		titleback.setVisibility(View.VISIBLE);
 		title_middle.setText("修改密码");
 		title_right.setVisibility(View.VISIBLE);
@@ -73,7 +81,39 @@ public class editPasswordActivity extends BaseSwipeBaceActivity{
 		super.onPause();
 	}
 
-
+	private void editPassWord(){
+		final String new_pass = setting_new_password_editer.getText().toString();
+		String new_pass_re = setting_new_password_re_editer.getText().toString();
+		final String old_pass = setting_old_password_editer.getText().toString();
+		if(!new_pass.equals(new_pass_re)){
+			T.show(getApplicationContext(), "两次输入的密码不同", Toast.LENGTH_LONG);
+			return;
+		}
+		progreeDialog.show();
+		AsyncTask<Void, Void, String>task=new AsyncTask<Void, Void, String>(){
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				return HttpJsonTool.getInstance().editPassword(getApplicationContext()
+						, HttpStringMD5.md5(old_pass), HttpStringMD5.md5(new_pass));
+			}
+			@Override
+			protected void onPostExecute(String result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+				progreeDialog.dismiss();
+				if(result.startsWith(HttpJsonTool.SUCCESS)){
+					T.show(getApplicationContext(), "修改密码成功", Toast.LENGTH_LONG);
+					finishActivity();
+				}else if(result.startsWith(HttpJsonTool.ERROR403)){
+					ActivityTool.gotoLoginView(getApplicationContext());
+				}else if(result.startsWith(HttpJsonTool.ERROR)){
+					T.show(getApplicationContext(), result.replace(HttpJsonTool.ERROR, ""), Toast.LENGTH_LONG);
+				}
+			}
+		};
+		task.execute();
+	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -82,11 +122,17 @@ public class editPasswordActivity extends BaseSwipeBaceActivity{
 			finishActivity();
 			break;
 		case R.id.title_txt_right:
-			finishActivity();
+			editPassWord();
 			break;
 		default:
 			break;
 		}
+	}
+	private void initProgressDialog() {
+		progreeDialog = new ProgressDialog(this);
+		progreeDialog.setTitle("");
+		progreeDialog.setMessage("正在提交请求...");
+		progreeDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
 	@Override
 	public void onBackPressed() {

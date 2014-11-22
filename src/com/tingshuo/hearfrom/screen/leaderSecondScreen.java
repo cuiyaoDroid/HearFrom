@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.L;
+import com.tingshuo.tool.SexTool;
 import com.tingshuo.web.http.HttpJsonTool;
 
 public class leaderSecondScreen extends BaseScreen{
@@ -26,7 +27,7 @@ public class leaderSecondScreen extends BaseScreen{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				i_sex=HttpJsonTool.MELA;
+				i_sex=SexTool.MELA;
 				listener.changeToScreen(3);
 			}
 		});
@@ -35,7 +36,7 @@ public class leaderSecondScreen extends BaseScreen{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				i_sex=HttpJsonTool.FEMELA;
+				i_sex=SexTool.FEMELA;
 				listener.changeToScreen(3);
 			}
 		});

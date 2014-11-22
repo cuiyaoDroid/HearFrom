@@ -183,8 +183,8 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				if (result.startsWith(HttpJsonTool.ERROR403)) {
 					ActivityTool.gotoLoginView(getApplicationContext());
 				} else if (result.startsWith(HttpJsonTool.ERROR)) {
-					T.showLong(getApplicationContext(),
-							result.replace(HttpJsonTool.ERROR, ""));
+					//T.showLong(getApplicationContext(),
+							//result.replace(HttpJsonTool.ERROR, ""));
 				} else if (result.startsWith(HttpJsonTool.SUCCESS)) {
 					hasmore = refreshData(more);
 				}
@@ -386,6 +386,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			if (send.trim().length() > 0) {
 				send_edit.setText("");
 				toggleSoftInputFromWindow();
+				send=send.replaceAll("\n", "<br></br>");
 				if (commitTYPE == COMMENTBTN) {
 					CommentHolder holder = new CommentHolder(-1,
 							HearFromApp.user_id, topick_id, "", "", send, "",

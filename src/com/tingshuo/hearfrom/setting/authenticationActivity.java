@@ -1,14 +1,21 @@
 package com.tingshuo.hearfrom.setting;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.base.BaseAcivity;
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
+import com.tingshuo.tool.ActivityTool;
+import com.tingshuo.tool.T;
+import com.tingshuo.web.http.HttpJsonTool;
+import com.tingshuo.web.http.HttpStringMD5;
 
 public class authenticationActivity extends BaseSwipeBaceActivity{
 	private View setting_account;
@@ -29,6 +36,7 @@ public class authenticationActivity extends BaseSwipeBaceActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_authentication);
 		initContentView();
+		initProgressDialog();
 	}
 
 	@Override
@@ -72,7 +80,46 @@ public class authenticationActivity extends BaseSwipeBaceActivity{
 		super.onPause();
 	}
 
-
+	private void identifUser(){
+		final String account = setting_account_editer.getText().toString();
+		final String pass = setting_password_editer.getText().toString();
+		final String pass_re = setting_password_re_editer.getText().toString();
+		if(!pass.equals(pass_re)){
+			T.show(getApplicationContext(), "两次输入的密码不同", Toast.LENGTH_LONG);
+			return;
+		}
+		progreeDialog.show();
+		AsyncTask<Void, Void, String>task=new AsyncTask<Void, Void, String>(){
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				return HttpJsonTool.getInstance().identifUser(getApplicationContext()
+						, account, HttpStringMD5.md5(pass));
+			}
+			@Override
+			protected void onPostExecute(String result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+				progreeDialog.dismiss();
+				if(result.startsWith(HttpJsonTool.SUCCESS)){
+					T.show(getApplicationContext(), "认证成功", Toast.LENGTH_LONG);
+					finishActivity();
+				}else if(result.startsWith(HttpJsonTool.ERROR403)){
+					ActivityTool.gotoLoginView(getApplicationContext());
+				}else if(result.startsWith(HttpJsonTool.ERROR)){
+					T.show(getApplicationContext(), "认证失败，请求超时", Toast.LENGTH_LONG);
+				}
+			}
+		};
+		task.execute();
+	}
+	ProgressDialog progreeDialog;
+	private void initProgressDialog() {
+		progreeDialog = new ProgressDialog(this);
+		progreeDialog.setTitle("");
+		progreeDialog.setMessage("正在提交请求...");
+		progreeDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -81,7 +128,8 @@ public class authenticationActivity extends BaseSwipeBaceActivity{
 			finishActivity();
 			break;
 		case R.id.title_txt_right:
-			finishActivity();
+			identifUser();
+			
 			break;
 		default:
 			break;

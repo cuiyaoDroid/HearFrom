@@ -7,8 +7,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class mainPostListHelper extends DBHelper {
-	private final static String TABLE_NAME = "mainPostList_order";
+public class MyCommitedMainPostListHelper extends DBHelper {
+	private final static String TABLE_NAME = "myCommit_mainPostList_order";
 	public final static String ID = "_id";
 	public final static String USER_ID = "user_id";
 	public final static String NICK_NAME = "nickname";
@@ -24,7 +24,7 @@ public class mainPostListHelper extends DBHelper {
 	public final static String ROLE_ID = "role_id";
 	public final static String ROLE = "role";
 	
-	public mainPostListHelper(Context context) {
+	public MyCommitedMainPostListHelper(Context context) {
 		super(context);
 	}
 
@@ -116,18 +116,9 @@ public class mainPostListHelper extends DBHelper {
 	}
 	public ArrayList<mainPostListHolder> selectData(int from,int pagesize,int role_id,int sex) {
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor;
-		if(role_id!=-1){
-			cursor = db.query(TABLE_NAME, null, ROLE_ID+"=?"
-				,new String[]{String.valueOf(role_id)}, null, null, ID + " desc limit "
+		Cursor cursor = db.query(TABLE_NAME, null, null
+				,null, null, null, ID + " desc limit "
 						+ from + "," + pagesize);
-		}else if(sex!=-1){
-			cursor = db.query(TABLE_NAME, null, null,null, null, null, ID + " desc limit "
-					+ from + "," + pagesize);
-		}else{
-			cursor = db.query(TABLE_NAME, null, null,null, null, null, ID + " desc limit "
-							+ from + "," + pagesize);
-		}
 		ArrayList<mainPostListHolder> holderlist = new ArrayList<mainPostListHolder>();
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 			mainPostListHolder holder=getDataCursor(cursor);
@@ -137,6 +128,19 @@ public class mainPostListHelper extends DBHelper {
 		return holderlist;
 	}
 	public ArrayList<mainPostListHolder> selectMyData(int from,int pagesize,int role_id,int sex,int user_id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLE_NAME, null, USER_ID+"=?"
+				,new String[]{String.valueOf(user_id)}, null, null, ID + " desc limit "
+						+ from + "," + pagesize);
+		ArrayList<mainPostListHolder> holderlist = new ArrayList<mainPostListHolder>();
+		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+			mainPostListHolder holder=getDataCursor(cursor);
+			holderlist.add(holder);
+		}
+		cursor.close();
+		return holderlist;
+	}
+	public ArrayList<mainPostListHolder> selectMyCommitData(int from,int pagesize,int role_id,int sex,int user_id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_NAME, null, USER_ID+"=?"
 				,new String[]{String.valueOf(user_id)}, null, null, ID + " desc limit "

@@ -1,9 +1,5 @@
 package com.tingshuo.hearfrom.screen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +16,6 @@ import com.tingshuo.tool.view.adapter.GridListAdapter;
 public class leaderThridScreen extends BaseScreen{
 	private GridView gridView;
 	private GridListAdapter adapter;
-	private ArrayList<Map<String,Object>>gridData;
 
 		@Override  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  
@@ -28,7 +23,6 @@ public class leaderThridScreen extends BaseScreen{
 		L.i("onCreateView");
     	View settingLayout = inflater.inflate(R.layout.screen_leader_third,  
                 container, false);  
-    	gridData=new ArrayList<Map<String,Object>>();
     	gridView=(GridView)settingLayout.findViewById(R.id.gridView);
     	initGridView();
     	gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -37,24 +31,15 @@ public class leaderThridScreen extends BaseScreen{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				RoleUtil.role_id=(Integer) gridData.get(position).get("id");
+				RoleUtil.role_id=(Integer) RoleUtil.getInstance().getRoleData().get(position).get(RoleUtil.ROLE_ID);
 				listener.changeToScreen(4);
 			}
 		});
         return settingLayout;  
     }  
 	private void initGridView(){
-		gridData.clear();
-		adapter=new GridListAdapter(getActivity(), gridData, R.layout.cell_role_grid
-				, new String[]{"name","pic"}, new int[]{R.id.name_txt,R.id.head_img});
-		for(int i=0;i<RoleUtil.role_ids.length;i++){
-			Map<String,Object>data=new HashMap<String, Object>();
-			data.put("id", RoleUtil.role_ids[i]);
-			data.put("name", RoleUtil.role_names[i]);
-			data.put("pic",RoleUtil.role_pic[i]);
-			gridData.add(data);
-		}
-		
+		adapter=new GridListAdapter(getActivity(), RoleUtil.getInstance().getRoleData(), R.layout.cell_role_grid
+				, new String[]{RoleUtil.ROLE_NAME,RoleUtil.ROLE_PIC}, new int[]{R.id.name_txt,R.id.head_img});
 		gridView.setAdapter(adapter);
 		
 	}

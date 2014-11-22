@@ -147,7 +147,7 @@ public class commitAdapter extends BaseAdapter {
 				viewHolder.head_img);
 		String content = (String) list.get(position).get(
 				CommentHelper.CONTENT);
-		viewHolder.content_txt.setText(content);
+		viewHolder.content_txt.setText(Html.fromHtml(content));
 		String name = (String) list.get(position).get(
 				CommentHelper.NICK_NAME);
 		viewHolder.name_txt.setText(name);
@@ -241,7 +241,7 @@ public class commitAdapter extends BaseAdapter {
 				viewHolder.head_img);
 		String content = (String) list.get(position).get(
 				mainPostListHelper.CONTENT);
-		viewHolder.content_txt.setText(content);
+		viewHolder.content_txt.setText(Html.fromHtml(content));
 		String name = (String) list.get(position).get(
 				mainPostListHelper.NICK_NAME);
 		viewHolder.name_txt.setText(name);

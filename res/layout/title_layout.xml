@@ -14,6 +14,7 @@
 		    android:clickable="true"
 		    android:visibility="gone"
 		    android:padding="10dp"
+		    android:layout_marginLeft="5dp"
 		    android:text="想听谁说" />
 		<ImageButton 
 		    android:id="@+id/title_img_back"
@@ -56,6 +57,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_centerVertical="true"
 		    android:layout_alignParentRight="true"
+		    android:layout_marginRight="5dp"
 		    android:textColor="@color/title_txt_bg"
 		    android:clickable="true"
 		    android:padding="5dp"

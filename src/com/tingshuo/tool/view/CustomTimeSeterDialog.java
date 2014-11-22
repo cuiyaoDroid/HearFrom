@@ -104,7 +104,7 @@ public class CustomTimeSeterDialog extends Dialog {
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				// TODO Auto-generated method stub
 				int i_month=month.getCurrentItem();
-				moth_days=getDaysByYearMonth(year.getCurrentItem(),i_month);
+				moth_days=getDaysByYearMonth(year.getCurrentItem()+START_YEAR,i_month);
 				dayAdapter = new NumericWheelAdapter(context, 1,
 						moth_days, "%02d");
 				dayAdapter.setItemResource(R.layout.wheel_text_item);
@@ -129,8 +129,8 @@ public class CustomTimeSeterDialog extends Dialog {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				calendar.set(Calendar.MONTH,month.getCurrentItem());
-				calendar.set(Calendar.DAY_OF_MONTH,day.getCurrentItem());
-				calendar.set(Calendar.YEAR, year.getCurrentItem());
+				calendar.set(Calendar.DAY_OF_MONTH,day.getCurrentItem()+1);
+				calendar.set(Calendar.YEAR, year.getCurrentItem()+START_YEAR);
 				if(listener!=null){
 					listener.getTimeInMill(calendar.getTimeInMillis());
 				}
