@@ -57,9 +57,9 @@ public class HearFromTabMainActivity extends TabActivity implements
 		ImageView icon2 = (ImageView) view2.findViewById(R.id.icon);
 		icon2.setImageResource(R.drawable.tab_item2);
 		host.addTab(host.newTabSpec("tab_item2").setIndicator(view2)
-				.setContent(new Intent(Intent.ACTION_VIEW
-						,Uri.parse("rong://com.tingshuo.hearfrom/conversationlist"))));
-				//new Intent(this, ContactsActivity.class)));
+				.setContent(/*new Intent(Intent.ACTION_VIEW
+						,Uri.parse("rong://com.tingshuo.hearfrom/conversationlist"))));*/
+				new Intent(this, ContactsActivity.class)));
 		
 		View view3 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount3 = (TextView) view3.findViewById(R.id.txtCount);

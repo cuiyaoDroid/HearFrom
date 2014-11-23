@@ -1,9 +1,13 @@
 package com.tingshuo.hearfrom;
 
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -30,6 +34,7 @@ public class ContactsActivity extends BaseAcivity {
         initContentView();
         //test data;
         //由于是演示就不是用真实数据了
+        
         ArrayList<String> names = new ArrayList<String>();
         names.add("heheh");
         names.add("我了个");
