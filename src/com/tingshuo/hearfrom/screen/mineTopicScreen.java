@@ -151,7 +151,7 @@ public class mineTopicScreen extends BaseScreen implements
 		data.put(mainPostListHelper.COMMENT_COUNT, holder.getComment_count());
 		data.put(mainPostListHelper.ZAN_COUNT, holder.getZan_count());
 		data.put(mainPostListHelper.NICK_NAME, holder.getNickname());
-		data.put(mainPostListHelper.ID, holder.getNickname());
+		data.put(mainPostListHelper.ID, holder.getId());
 		data.put(mainPostListHelper.USER_ID, holder.getUser_id());
 		data.put(mainPostListHelper.TIME, holder.getTime());
 		listData.add(data);

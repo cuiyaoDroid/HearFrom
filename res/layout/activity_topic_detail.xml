@@ -12,6 +12,7 @@
         android:id="@+id/titleLayout"
         layout="@layout/title_layout" />
 
+    <!--
     <com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/topic_respones_list"
@@ -28,14 +29,31 @@
         ptr:ptrDrawable="@drawable/refresh_arrow_2"
         ptr:ptrMode="both" >
     </com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView>
+    -->
+
+    <com.tingshuo.tool.view.PullDownListView
+        android:id="@+id/topic_respones_list"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleLayout" >
+
+        <ListView
+            android:id="@+id/receive_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/divider_color"
+            android:dividerHeight="1px"
+            android:listSelector="@android:color/transparent" >
+        </ListView>
+    </com.tingshuo.tool.view.PullDownListView>
 
     <ProgressBar
         android:id="@+id/commentlist_progressbar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/send_layout"

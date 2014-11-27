@@ -55,4 +55,11 @@
     <!-- custom service  activity-->
     <string name="custom_service_get_list_failure">"获取客服失改"</string>
     <string name="custom_service_people_list">"客服人员列表"</string>
+    
+	
+	<string name="drop_dowm">下拉刷新</string>
+    <string name="release_update">松开刷新</string>
+    <string name="loading">正在加载...</string>
+    <string name="seen_more">更多</string>
+    <string name="no_more">无更多回复</string>
 </resources>

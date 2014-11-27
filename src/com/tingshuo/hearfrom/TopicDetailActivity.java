@@ -15,16 +15,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
 import com.tingshuo.tool.ActivityTool;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.RoleUtil;
-import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.CommentHelper;
 import com.tingshuo.tool.db.CommentHolder;
 import com.tingshuo.tool.db.CommentZanHelper;
@@ -37,23 +34,21 @@ import com.tingshuo.tool.db.TopicZanHolder;
 import com.tingshuo.tool.db.lock;
 import com.tingshuo.tool.db.mainPostListHelper;
 import com.tingshuo.tool.db.mainPostListHolder;
+import com.tingshuo.tool.view.PullDownListView;
+import com.tingshuo.tool.view.PullDownListView.OnRefreshListioner;
 import com.tingshuo.tool.view.ResizeLayout;
 import com.tingshuo.tool.view.ResizeLayout.OnResizeListener;
 import com.tingshuo.tool.view.adapter.commentBtnClickListener;
 import com.tingshuo.tool.view.adapter.commitAdapter;
 import com.tingshuo.tool.view.adapter.resposeBtnClickListener;
-import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase;
-import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase.Mode;
-import com.tingshuo.tool.view.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
-import com.tingshuo.tool.view.pulltorefresh.PullToRefreshListView;
 import com.tingshuo.web.http.HttpJsonTool;
 
 public class TopicDetailActivity extends BaseSwipeBaceActivity implements
-		OnRefreshListener2<ListView>, commentBtnClickListener,
+		OnRefreshListioner, commentBtnClickListener,
 		OnResizeListener, resposeBtnClickListener,
 		commitAdapter.ItemClickListener {
 	private Pager mPager;
-	private PullToRefreshListView mainpostListView;
+	private PullDownListView mainpostListView;
 	private ArrayList<Map<String, Object>> listData;
 	private commitAdapter adapter;
 	private int topick_id;
@@ -62,15 +57,15 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	private EditText send_edit;
 	private Button send_btn;
 	private ProgressBar commentlist_progressbar;
-	private View footView;
-	private TextView footTxt;
+//	private View footView;
+//	private TextView footTxt;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_topic_detail);
-		isfirst = getIntent().getBooleanExtra("hidekeyboard", true);
+		hidekeyboard = getIntent().getBooleanExtra("hidekeyboard", true);
 		topick_id = getIntent().getIntExtra(mainPostListHelper.ID, -1);
 		initContentView();
 		refreshList(-1, mPager.minId, mPager.pagesize, false);
@@ -89,15 +84,15 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		adapter.setItemClickListener(this);
 		adapter.setCommentlistener(this);
 		adapter.setResposeBtnClickListener(this);
-		mainpostListView = (PullToRefreshListView) findViewById(R.id.topic_respones_list);
+		mainpostListView = (PullDownListView) findViewById(R.id.topic_respones_list);
 		if (topick_id == -1) {
 			return;
 		}
 
-		mainpostListView.setMode(Mode.PULL_FROM_END);
-		mainpostListView.setOnRefreshListener(this);
-		mainpostListView.setAdapter(adapter);
-		mainpostListView.setOnItemClickListener(new OnItemClickListener() {
+		mainpostListView.setAutoLoadMore(true);
+		mainpostListView.setRefreshListioner(this);
+		mainpostListView.mListView.setAdapter(adapter);
+		mainpostListView.mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -107,6 +102,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			}
 		});
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		
 		resize_layout = (ResizeLayout) findViewById(R.id.resize_layout);
 		resize_layout.setOnResizeListener(this);
 		send_layout = (LinearLayout) findViewById(R.id.send_layout);
@@ -115,11 +111,11 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		send_btn.setOnClickListener(this);
 
 		commentlist_progressbar = (ProgressBar) findViewById(R.id.commentlist_progressbar);
-		footView = getLayoutInflater().inflate(
-				R.layout.cell_footview_nonecomment, null);
-		mainpostListView.getRefreshableView().addFooterView(footView);
-		footView.setVisibility(View.GONE);
-		footTxt = (TextView) footView.findViewById(R.id.txt);
+//		footView = getLayoutInflater().inflate(
+//				R.layout.cell_footview_nonecomment, null);
+//		mainpostListView.getRefreshableView().addFooterView(footView);
+//		footView.setVisibility(View.GONE);
+//		footTxt = (TextView) footView.findViewById(R.id.txt);
 	}
 
 	@Override
@@ -129,11 +125,13 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	}
 
 	InputMethodManager mInputMethodManager;
-
+	
 	private void toggleSoftInputFromWindow() {
 		mInputMethodManager.toggleSoftInputFromWindow(
 				send_edit.getWindowToken(), 0,
 				InputMethodManager.HIDE_NOT_ALWAYS);
+		send_layout.setVisibility(mInputMethodManager.isActive()?View.VISIBLE:View.GONE);
+		send_edit.requestFocus();
 	}
 
 	@Override
@@ -163,7 +161,8 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		if (more) {
 			mPager.curpage++;
 		} else {
-			commentlist_progressbar.setVisibility(View.VISIBLE);
+			mainpostListView.onLoadMore();
+			//commentlist_progressbar.setVisibility(View.VISIBLE);
 		}
 		mainpostDatetask = new AsyncTask<Void, Void, String>() {
 
@@ -178,7 +177,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			protected void onPostExecute(String result) {
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
-				commentlist_progressbar.setVisibility(View.GONE);
+				//commentlist_progressbar.setVisibility(View.GONE);
 				boolean hasmore = false;
 				if (result.startsWith(HttpJsonTool.ERROR403)) {
 					ActivityTool.gotoLoginView(getApplicationContext());
@@ -194,10 +193,9 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				} else {
 					mainpostListView.onRefreshComplete();
 				}
-				footView.setVisibility(!hasmore ? View.VISIBLE : View.GONE);
-				footTxt.setText(listData.size() < 2 ? "还没有回复" : "没有更多回复");
-				mainpostListView.setMode(hasmore ? Mode.PULL_FROM_END
-						: Mode.DISABLED);
+//				footView.setVisibility(!hasmore ? View.VISIBLE : View.GONE);
+//				footTxt.setText(listData.size() < 2 ? "还没有回复" : "没有更多回复");
+				mainpostListView.setMore(hasmore);
 				adapter.notifyDataSetChanged();
 			}
 		};
@@ -234,7 +232,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
 				L.i(result);
-				refreshData(false);
+				mainpostListView.setMore(refreshData(false));
 				adapter.notifyDataSetChanged();
 			}
 
@@ -257,7 +255,8 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
 				L.i(result);
-				refreshData(false);
+				mainpostListView.setMore(refreshData(false));
+				
 				adapter.notifyDataSetChanged();
 			}
 
@@ -326,7 +325,6 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 
 	private void insertmainHolderData(mainPostListHolder holder,
 			TopicZanHolder zanholder, int type) {
-		mPager.minId = holder.getId();
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(mainPostListHelper.HEAD, holder.getHead());
 		data.put(mainPostListHelper.IMAGE, holder.getImage());
@@ -347,9 +345,18 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		mainpostListView.setMode(refreshData(false) ? Mode.PULL_FROM_END
-				: Mode.DISABLED);
+		mainpostListView.setMore(refreshData(false));
 		adapter.notifyDataSetChanged();
+		if(!hidekeyboard){
+			mainpostListView.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					toggleSoftInputFromWindow();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -361,16 +368,6 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		}
 	}
 
-	@Override
-	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-		// TODO Auto-generated method stub
-		refreshList(-1, mPager.minId, mPager.pagesize, true);
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -385,7 +382,9 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			String send = send_edit.getText().toString();
 			if (send.trim().length() > 0) {
 				send_edit.setText("");
-				toggleSoftInputFromWindow();
+				if(mInputMethodManager.isActive()){
+					toggleSoftInputFromWindow();
+				}
 				send=send.replaceAll("\n", "<br></br>");
 				if (commitTYPE == COMMENTBTN) {
 					CommentHolder holder = new CommentHolder(-1,
@@ -501,15 +500,15 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		
 	}
 
-	private boolean isfirst = true;
+	private boolean hidekeyboard = true;
 	private static final int BIGGER = 1;
 	private static final int SMALLER = 2;
-
+	private boolean first = true;
 	@Override
 	public void OnResize(int w, int h, int oldw, int oldh) {
 		// TODO Auto-generated method stub
-		if (isfirst) {
-			isfirst = false;
+		if (first) {
+			first = false;
 			return;
 		}
 		int change = BIGGER;
@@ -518,7 +517,6 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		}
 		send_layout.setVisibility(change==SMALLER?View.VISIBLE:View.GONE);
 		send_edit.requestFocus();
-		
 	}
 
 	@Override
@@ -528,5 +526,17 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 //		if(t <0){
 //			send_edit.requestFocus();
 //		}
+	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		mainpostListView.onRefreshComplete();
+	}
+
+	@Override
+	public void onLoadMore() {
+		// TODO Auto-generated method stub
+		refreshList(-1, mPager.minId, mPager.pagesize, true);
 	}
 }

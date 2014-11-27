@@ -62,8 +62,8 @@ public class HttpJsonTool {
 	};
 
 	// public static String ServerUrl = "http://v.cc-railway.xzh-soft.com:8083";
-	public static String imgServerUrl = "http://192.168.1.5:9999/";
-	public static String ServerUrl = "http://192.168.1.5/tingshuo/index.php";
+	public static String imgServerUrl = "http://192.168.43.235:9999/";
+	public static String ServerUrl = "http://192.168.43.235:8888/tingshuo/index.php";
 	// public static String ServerUrl2 =
 	// "http://192.168.1.118/tingshuo/index.php";
 	// public static final String ServerUrl = "http://192.168.137.1:8080";
