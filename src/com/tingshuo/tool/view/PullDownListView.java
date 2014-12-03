@@ -156,6 +156,7 @@ public class PullDownListView extends FrameLayout implements
 		public abstract void onRefresh();
 
 		public abstract void onLoadMore();
+		public abstract void onHideKeyBoard();
 	}
 
 	/**
@@ -449,7 +450,7 @@ public class PullDownListView extends FrameLayout implements
 		mState = SCROLL_TO_CLOSE;
 		mArrow.setImageResource(R.drawable.default_ptr_flip);
 		mProgressBar2.setVisibility(View.GONE);
-		updateCommon();
+		//updateCommon();
 		scrollToClose();
 	}
 
@@ -555,6 +556,9 @@ public class PullDownListView extends FrameLayout implements
 			super.dispatchTouchEvent(e);
 			break;
 		case MotionEvent.ACTION_DOWN:
+			if(mRefreshListioner!=null){
+				mRefreshListioner.onHideKeyBoard();
+			}
 			downEvent = e;
 			mLongPressing = false;
 			// 长按的时间间隔
@@ -672,6 +676,7 @@ public class PullDownListView extends FrameLayout implements
 						isEnd = true;
 					else
 						isEnd = false;
+					
 				}
 			});
 			foot.setOnClickListener(null);

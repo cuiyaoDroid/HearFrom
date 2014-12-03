@@ -211,5 +211,19 @@ public class MyGallery extends Gallery {
 			// return super.onDoubleTap(e);
 			return true;
 		}
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			// TODO Auto-generated method stub
+			if(listener!=null)
+				listener.onSingleTapConfirmed();
+			return super.onSingleTapConfirmed(e);
+		}
+	}
+	public void setSingleTapListener(singleTapListener listener){
+		this.listener=listener;
+	}
+	private singleTapListener listener;
+	interface singleTapListener{
+		void onSingleTapConfirmed();
 	}
 }

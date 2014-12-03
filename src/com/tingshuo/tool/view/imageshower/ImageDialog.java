@@ -12,9 +12,10 @@ import android.widget.TextView;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.DensityUtil;
+import com.tingshuo.tool.view.imageshower.MyGallery.singleTapListener;
 
 
-public class ImageDialog extends AlertDialog {
+public class ImageDialog extends AlertDialog implements singleTapListener{
 	// 屏幕宽度
 	public static int screenWidth;
 	// 屏幕高度
@@ -56,6 +57,7 @@ public class ImageDialog extends AlertDialog {
 		gallery.setAdapter(galleryAdapter);
 		gallery.setSelection(index);
 		gallery.setOnItemSelectedListener(new GalleryChangeListener());
+		gallery.setSingleTapListener(this);
 	}
 
 	float beforeLenght = 0.0f; // 两触点距离
@@ -91,5 +93,10 @@ public class ImageDialog extends AlertDialog {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+	}
+	@Override
+	public void onSingleTapConfirmed() {
+		// TODO Auto-generated method stub
+		dismiss();
 	}
 }

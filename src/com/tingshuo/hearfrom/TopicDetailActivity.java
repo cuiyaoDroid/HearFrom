@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -15,7 +16,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
@@ -56,10 +56,10 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	private LinearLayout send_layout;
 	private EditText send_edit;
 	private Button send_btn;
-	private ProgressBar commentlist_progressbar;
+//	private ProgressBar commentlist_progressbar;
 //	private View footView;
 //	private TextView footTxt;
-
+	private Handler mHandler=new Handler();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -110,7 +110,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		send_btn = (Button) findViewById(R.id.send_btn);
 		send_btn.setOnClickListener(this);
 
-		commentlist_progressbar = (ProgressBar) findViewById(R.id.commentlist_progressbar);
+//		commentlist_progressbar = (ProgressBar) findViewById(R.id.commentlist_progressbar);
 //		footView = getLayoutInflater().inflate(
 //				R.layout.cell_footview_nonecomment, null);
 //		mainpostListView.getRefreshableView().addFooterView(footView);
@@ -126,14 +126,22 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 
 	InputMethodManager mInputMethodManager;
 	
-	private void toggleSoftInputFromWindow() {
+	private void toggleSoftInputFromWindow(int commitTYPE) {
 		mInputMethodManager.toggleSoftInputFromWindow(
 				send_edit.getWindowToken(), 0,
 				InputMethodManager.HIDE_NOT_ALWAYS);
-		send_layout.setVisibility(mInputMethodManager.isActive()?View.VISIBLE:View.GONE);
+		if(commitTYPE==COMMENTBTN){
+			send_edit.setHint("发表回复");
+		}else if(commitTYPE==RESPONESBTN){
+			send_edit.setHint("@"+clickCommentName);
+		}
+		L.i("mInputMethodManager.isActive() "+mInputMethodManager.isActive());
+		send_layout.setVisibility(View.VISIBLE);
 		send_edit.requestFocus();
 	}
-
+	public void hideKeyboard() {  
+		mInputMethodManager.hideSoftInputFromWindow(send_edit.getWindowToken(), 0);  
+    }  
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		// TODO Auto-generated method stub
@@ -189,9 +197,9 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				}
 				if (more) {
 					adapter.notifyDataSetChanged();
-					mainpostListView.onRefreshComplete();
+					mainpostListView.onLoadMoreComplete();
 				} else {
-					mainpostListView.onRefreshComplete();
+					mainpostListView.onLoadMoreComplete();
 				}
 //				footView.setVisibility(!hasmore ? View.VISIBLE : View.GONE);
 //				footTxt.setText(listData.size() < 2 ? "还没有回复" : "没有更多回复");
@@ -353,7 +361,8 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					toggleSoftInputFromWindow();
+					commitTYPE = COMMENTBTN;
+					toggleSoftInputFromWindow(commitTYPE);
 				}
 			});
 		}
@@ -383,7 +392,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			if (send.trim().length() > 0) {
 				send_edit.setText("");
 				if(mInputMethodManager.isActive()){
-					toggleSoftInputFromWindow();
+					hideKeyboard();
 				}
 				send=send.replaceAll("\n", "<br></br>");
 				if (commitTYPE == COMMENTBTN) {
@@ -484,11 +493,12 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	public static final int RESPONESBTN = 1;
 	private int commitTYPE = COMMENTBTN;
 	private int clickCommentId=1;
+	private String clickCommentName="";
 	@Override
 	public void onCommentBtnClickClick(int position) {
 		// TODO Auto-generated method stub
 		commitTYPE = COMMENTBTN;
-		toggleSoftInputFromWindow();
+		toggleSoftInputFromWindow(commitTYPE);
 	}
 	
 	@Override
@@ -496,7 +506,8 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		// TODO Auto-generated method stub
 		commitTYPE = RESPONESBTN;
 		clickCommentId=(Integer) listData.get(position).get(CommentHelper.ID);
-		toggleSoftInputFromWindow();
+		clickCommentName=(String) listData.get(position).get(CommentHelper.NICK_NAME);
+		toggleSoftInputFromWindow(commitTYPE);
 		
 	}
 
@@ -518,25 +529,37 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		send_layout.setVisibility(change==SMALLER?View.VISIBLE:View.GONE);
 		send_edit.requestFocus();
 	}
-
+	
 	@Override
 	public void OnLayout(int l, int t, int r, int b) {
 		// TODO Auto-generated method stub
-//		send_layout.setVisibility(t <0 ? View.GONE : View.VISIBLE);
-//		if(t <0){
-//			send_edit.requestFocus();
-//		}
 	}
 
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		mainpostListView.onRefreshComplete();
+		mHandler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mainpostListView.onRefreshComplete();
+				commitTYPE = COMMENTBTN;
+				toggleSoftInputFromWindow(commitTYPE);
+			}
+		});
 	}
 
 	@Override
 	public void onLoadMore() {
 		// TODO Auto-generated method stub
 		refreshList(-1, mPager.minId, mPager.pagesize, true);
+	}
+
+	@Override
+	public void onHideKeyBoard() {
+		// TODO Auto-generated method stub
+		L.i("onHideKeyBoard");
+		hideKeyboard();
 	}
 }
