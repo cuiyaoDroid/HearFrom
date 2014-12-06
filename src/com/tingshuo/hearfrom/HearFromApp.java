@@ -12,10 +12,12 @@ import java.io.File;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.tingshuo.service.NotificationService;
 import com.tingshuo.tool.CrashHandler;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
@@ -79,6 +81,5 @@ public class HearFromApp extends Application {
 				PreferenceConstants.REPORT_CRASH, false))
 			CrashHandler.getInstance().init(this);
 		RongIMClient.init(this, APP_KEY, R.drawable.ic_launcher);
-		RongIMTool.getInstance().connect("Cuiyao", "cuiyao", "head");
 	}
 }

@@ -62,8 +62,8 @@ public class HttpJsonTool {
 	};
 
 	// public static String ServerUrl = "http://v.cc-railway.xzh-soft.com:8083";
-	public static String imgServerUrl = "http://192.168.43.235:9999/";
-	public static String ServerUrl = "http://192.168.43.235:8888/tingshuo/index.php";
+	public static String imgServerUrl = "http://192.168.199.101:9999/";
+	public static String ServerUrl = "http://192.168.199.101:8888/tingshuo/index.php";
 	// public static String ServerUrl2 =
 	// "http://192.168.1.118/tingshuo/index.php";
 	// public static final String ServerUrl = "http://192.168.137.1:8080";
@@ -1343,13 +1343,13 @@ public class HttpJsonTool {
 			if (status != StatusTool.STATUS_OK) {
 				return ERROR;
 			}
-			JSONObject json = jsonObject.getJSONObject("data");
-			ResponseListHelper helper = new ResponseListHelper(context);
-			synchronized (lock.Lock) {
-				SQLiteDatabase db = helper.getWritableDatabase();
-				insertRespone(json, helper, db);
-			}
-			helper.close();
+//			JSONObject json = jsonObject.getJSONObject("data");
+//			ResponseListHelper helper = new ResponseListHelper(context);
+//			synchronized (lock.Lock) {
+//				SQLiteDatabase db = helper.getWritableDatabase();
+//				insertRespone(json, helper, db);
+//			}
+//			helper.close();
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1384,6 +1384,68 @@ public class HttpJsonTool {
 			StringBuilder builder = new StringBuilder();
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/addfriend/getfromme/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			ResponseListHelper helper = new ResponseListHelper(context);
+			synchronized (lock.Lock) {
+				SQLiteDatabase db = helper.getWritableDatabase();
+				insertRespone(json, helper, db);
+			}
+			helper.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} 
+		return SUCCESS;
+	}
+	/**
+	 * ÎÒ·¢ËÍµÄºÃÓÑÇëÇó
+	 * @param context
+	 * @return
+	 */
+	public synchronized String friend_gettome(Context context) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/addfriend/gettome/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));

@@ -14,10 +14,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
-import com.tingshuo.hearfrom.base.BaseFragmentActivity;
+import com.tingshuo.hearfrom.base.BaseSwipeFragmentActivity;
 import com.tingshuo.tool.view.ImgListView;
 
-public class UserDetailActivity extends BaseFragmentActivity{
+public class UserDetailActivity extends BaseSwipeFragmentActivity{
 	private ImgListView xListView;
 	private SimpleAdapter adapter;
 	private List<Map<String,Object>>adapterData=new ArrayList<Map<String,Object>>();

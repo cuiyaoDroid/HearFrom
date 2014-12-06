@@ -3,7 +3,6 @@ package com.tingshuo.hearfrom;
 import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tingshuo.service.NotificationService;
 import com.tingshuo.tool.T;
 
 @SuppressWarnings("deprecation")
@@ -25,8 +25,12 @@ public class HearFromTabMainActivity extends TabActivity implements
 		setContentView(R.layout.tab_main);
 		initContentView();
 		initTabHost();
+		startServices();
 	}
-
+	private void startServices(){
+		Intent services=new Intent(getApplicationContext(), NotificationService.class);
+		startService(services);
+	}
 	private void initContentView() {
 	}
 
@@ -59,7 +63,7 @@ public class HearFromTabMainActivity extends TabActivity implements
 		host.addTab(host.newTabSpec("tab_item2").setIndicator(view2)
 				.setContent(/*new Intent(Intent.ACTION_VIEW
 						,Uri.parse("rong://com.tingshuo.hearfrom/conversationlist"))));*/
-				new Intent(this, ContactsActivity.class)));
+				new Intent(this, messageCenterActivity.class)));
 		
 		View view3 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount3 = (TextView) view3.findViewById(R.id.txtCount);

@@ -65,9 +65,25 @@
     <style name="Theme.MyTheme" parent="Theme.Sherlock.Light">
         <item name="actionBarStyle">@style/Theme.MyTheme.ActionBar</item>
         <item name="android:actionBarStyle">@style/Theme.MyTheme.ActionBar</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>  
+        <!-- <item name="android:windowIsTranslucent">true</item> -->
+        <item name="android:windowAnimationStyle">@style/actAnimation</item>
+        <!-- <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>   -->
     </style>
+    <style name="Default.SwipeBack" parent="@style/Theme.MyTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    
+    <style name="actAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_new</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_back</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_finish</item>
+        <item name="android:taskOpenEnterAnimation">@anim/activity_new</item>
+        <item name="android:taskOpenExitAnimation">@anim/activity_out</item>
+        <item name="android:taskCloseEnterAnimation">@anim/activity_back</item>
+        <item name="android:taskCloseExitAnimation">@anim/activity_finish</item>
+    </style>
+    
     <style name="Theme.MyTheme.ActionBar2" parent="Widget.Sherlock.ActionBar">
         <item name="android:visibility">gone</item>
     </style>

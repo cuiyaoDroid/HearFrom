@@ -4,6 +4,7 @@ package com.tingshuo.hearfrom;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.tingshuo.hearfrom.base.BaseAcivity;
+import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
 import com.tingshuo.tool.view.SideBar;
 
 
-public class ContactsActivity extends BaseAcivity {
+public class ContactsActivity extends BaseSwipeBaceActivity {
 
     ExpandableListView expandableListView;
     TextView tViewShowLetter;
@@ -79,7 +80,7 @@ public class ContactsActivity extends BaseAcivity {
     	title_middle.setText("∫√”—");
     	titleRight.setVisibility(View.VISIBLE);
     	titleRight.setImageResource(R.drawable.btn_top_add_bg);
-    	titleback.setVisibility(View.GONE);
+    	titleback.setVisibility(View.VISIBLE);
     }
     class ContactsExpandableAdapter extends BaseExpandableListAdapter {
 
@@ -164,5 +165,18 @@ public class ContactsActivity extends BaseAcivity {
             }
         }
     }
-
+    @Override
+    public void onClick(View v) {
+    	// TODO Auto-generated method stub
+    	switch (v.getId()) {
+		case R.id.title_right_imgbtn:
+			Intent intent=new Intent(getApplicationContext(),AddFriendsActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.title_img_back:
+			finish();
+		default:
+			break;
+		}
+    }
 }
