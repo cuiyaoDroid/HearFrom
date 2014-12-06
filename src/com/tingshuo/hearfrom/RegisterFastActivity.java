@@ -137,7 +137,7 @@ public class RegisterFastActivity extends FragmentActivity implements
 		Intent intent = new Intent(RegisterFastActivity.this,
 				HearFromTabMainActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+		//overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
 		finish();
 	}
 	private void startLoginPage() {
@@ -145,7 +145,7 @@ public class RegisterFastActivity extends FragmentActivity implements
 		Intent intent = new Intent(RegisterFastActivity.this,
 				LoginActivity.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+		//overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
 		finish();
 	}
 }

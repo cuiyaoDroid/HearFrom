@@ -47,10 +47,10 @@ public class MyContentActivity extends BaseSwipeFragmentActivity  {
 	@Override
 	protected void initContentView() {
 		super.initContentView();
-		titleLeft.setVisibility(View.VISIBLE);
-		titleLeft.setText("返回");
+		titleLeft.setVisibility(View.GONE);
 		title_right.setVisibility(View.GONE);
 		title_middle.setText("我的主题");
+		titleback.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -72,6 +72,8 @@ public class MyContentActivity extends BaseSwipeFragmentActivity  {
 		case R.id.title_txt_right:
 			break;
 		case R.id.title_txt_left:
+			break;
+		case R.id.title_img_back:
 			finish();
 			break;
 		default:

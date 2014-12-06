@@ -44,9 +44,8 @@ import com.tingshuo.tool.view.adapter.resposeBtnClickListener;
 import com.tingshuo.web.http.HttpJsonTool;
 
 public class TopicDetailActivity extends BaseSwipeBaceActivity implements
-		OnRefreshListioner, commentBtnClickListener,
-		OnResizeListener, resposeBtnClickListener,
-		commitAdapter.ItemClickListener {
+		OnRefreshListioner, commentBtnClickListener, OnResizeListener,
+		resposeBtnClickListener, commitAdapter.ItemClickListener {
 	private Pager mPager;
 	private PullDownListView mainpostListView;
 	private ArrayList<Map<String, Object>> listData;
@@ -56,10 +55,11 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	private LinearLayout send_layout;
 	private EditText send_edit;
 	private Button send_btn;
-//	private ProgressBar commentlist_progressbar;
-//	private View footView;
-//	private TextView footTxt;
-	private Handler mHandler=new Handler();
+	// private ProgressBar commentlist_progressbar;
+	// private View footView;
+	// private TextView footTxt;
+	private Handler mHandler = new Handler();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -71,13 +71,23 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		refreshList(-1, mPager.minId, mPager.pagesize, false);
 	}
 
+	private void ShareTopic() {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_SUBJECT, "分享");
+		intent.putExtra(Intent.EXTRA_TEXT,
+				"I would like to share this with you...");
+		startActivity(Intent.createChooser(intent, getTitle()));
+	}
+
 	@Override
 	protected void initContentView() {
 		super.initContentView();
 
 		title_middle.setText("正文");
 		titleback.setVisibility(View.VISIBLE);
-		title_right.setVisibility(View.GONE);
+		title_right.setVisibility(View.VISIBLE);
+		title_right.setText("分享");
 		listData = new ArrayList<Map<String, Object>>();
 		mPager = new Pager(0, Pager.Default_Page);
 		adapter = new commitAdapter(TopicDetailActivity.this, listData);
@@ -92,17 +102,18 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		mainpostListView.setAutoLoadMore(true);
 		mainpostListView.setRefreshListioner(this);
 		mainpostListView.mListView.setAdapter(adapter);
-		mainpostListView.mListView.setOnItemClickListener(new OnItemClickListener() {
+		mainpostListView.mListView
+				.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						// TODO Auto-generated method stub
 
-			}
-		});
+					}
+				});
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		
+
 		resize_layout = (ResizeLayout) findViewById(R.id.resize_layout);
 		resize_layout.setOnResizeListener(this);
 		send_layout = (LinearLayout) findViewById(R.id.send_layout);
@@ -110,12 +121,13 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		send_btn = (Button) findViewById(R.id.send_btn);
 		send_btn.setOnClickListener(this);
 
-//		commentlist_progressbar = (ProgressBar) findViewById(R.id.commentlist_progressbar);
-//		footView = getLayoutInflater().inflate(
-//				R.layout.cell_footview_nonecomment, null);
-//		mainpostListView.getRefreshableView().addFooterView(footView);
-//		footView.setVisibility(View.GONE);
-//		footTxt = (TextView) footView.findViewById(R.id.txt);
+		// commentlist_progressbar = (ProgressBar)
+		// findViewById(R.id.commentlist_progressbar);
+		// footView = getLayoutInflater().inflate(
+		// R.layout.cell_footview_nonecomment, null);
+		// mainpostListView.getRefreshableView().addFooterView(footView);
+		// footView.setVisibility(View.GONE);
+		// footTxt = (TextView) footView.findViewById(R.id.txt);
 	}
 
 	@Override
@@ -125,23 +137,26 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	}
 
 	InputMethodManager mInputMethodManager;
-	
+
 	private void toggleSoftInputFromWindow(int commitTYPE) {
 		mInputMethodManager.toggleSoftInputFromWindow(
 				send_edit.getWindowToken(), 0,
 				InputMethodManager.HIDE_NOT_ALWAYS);
-		if(commitTYPE==COMMENTBTN){
+		if (commitTYPE == COMMENTBTN) {
 			send_edit.setHint("发表回复");
-		}else if(commitTYPE==RESPONESBTN){
-			send_edit.setHint("@"+clickCommentName);
+		} else if (commitTYPE == RESPONESBTN) {
+			send_edit.setHint("@" + clickCommentName);
 		}
-		L.i("mInputMethodManager.isActive() "+mInputMethodManager.isActive());
+		L.i("mInputMethodManager.isActive() " + mInputMethodManager.isActive());
 		send_layout.setVisibility(View.VISIBLE);
 		send_edit.requestFocus();
 	}
-	public void hideKeyboard() {  
-		mInputMethodManager.hideSoftInputFromWindow(send_edit.getWindowToken(), 0);  
-    }  
+
+	public void hideKeyboard() {
+		mInputMethodManager.hideSoftInputFromWindow(send_edit.getWindowToken(),
+				0);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		// TODO Auto-generated method stub
@@ -170,7 +185,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			mPager.curpage++;
 		} else {
 			mainpostListView.onLoadMore();
-			//commentlist_progressbar.setVisibility(View.VISIBLE);
+			// commentlist_progressbar.setVisibility(View.VISIBLE);
 		}
 		mainpostDatetask = new AsyncTask<Void, Void, String>() {
 
@@ -185,13 +200,13 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			protected void onPostExecute(String result) {
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
-				//commentlist_progressbar.setVisibility(View.GONE);
+				// commentlist_progressbar.setVisibility(View.GONE);
 				boolean hasmore = false;
 				if (result.startsWith(HttpJsonTool.ERROR403)) {
 					ActivityTool.gotoLoginView(getApplicationContext());
 				} else if (result.startsWith(HttpJsonTool.ERROR)) {
-					//T.showLong(getApplicationContext(),
-							//result.replace(HttpJsonTool.ERROR, ""));
+					// T.showLong(getApplicationContext(),
+					// result.replace(HttpJsonTool.ERROR, ""));
 				} else if (result.startsWith(HttpJsonTool.SUCCESS)) {
 					hasmore = refreshData(more);
 				}
@@ -201,8 +216,8 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				} else {
 					mainpostListView.onLoadMoreComplete();
 				}
-//				footView.setVisibility(!hasmore ? View.VISIBLE : View.GONE);
-//				footTxt.setText(listData.size() < 2 ? "还没有回复" : "没有更多回复");
+				// footView.setVisibility(!hasmore ? View.VISIBLE : View.GONE);
+				// footTxt.setText(listData.size() < 2 ? "还没有回复" : "没有更多回复");
 				mainpostListView.setMore(hasmore);
 				adapter.notifyDataSetChanged();
 			}
@@ -247,7 +262,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		};
 		task.execute();
 	}
-	
+
 	private void sendResponse(final ResponseListHolder holder) {
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 
@@ -264,7 +279,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 				super.onPostExecute(result);
 				L.i(result);
 				mainpostListView.setMore(refreshData(false));
-				
+
 				adapter.notifyDataSetChanged();
 			}
 
@@ -289,16 +304,18 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		helper.close();
 		CommentZanHelper zanhelper = new CommentZanHelper(
 				getApplicationContext());
-		ResponseListHelper respone_helper=new ResponseListHelper(getApplicationContext());
+		ResponseListHelper respone_helper = new ResponseListHelper(
+				getApplicationContext());
 		for (CommentHolder holder : holders) {
 			CommentZanHolder zanholder = zanhelper
 					.selectData_Id(holder.getId());
-			ArrayList<ResponseListHolder>response_holders=respone_helper.selectData_commentid(holder.getId());
+			ArrayList<ResponseListHolder> response_holders = respone_helper
+					.selectData_commentid(holder.getId());
 			if (zanholder == null) {
 				zanholder = new CommentZanHolder(holder.getId(), topick_id,
 						CommentZanHolder.STATUS_CAI);
 			}
-			insertHolderData(holder, zanholder,response_holders, TYPE_COMMIT);
+			insertHolderData(holder, zanholder, response_holders, TYPE_COMMIT);
 		}
 		zanhelper.close();
 		respone_helper.close();
@@ -311,9 +328,10 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	public static final String TYPE = "type";
 
 	private void insertHolderData(CommentHolder holder,
-			CommentZanHolder zanholder,ArrayList<ResponseListHolder> response_holders, int type) {
+			CommentZanHolder zanholder,
+			ArrayList<ResponseListHolder> response_holders, int type) {
 		mPager.minId = holder.getId();
-		L.i(holder.getNickname()+":"+holder.getContent());
+		L.i(holder.getNickname() + ":" + holder.getContent());
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(CommentHelper.HEAD, holder.getHead());
 		data.put(CommentHelper.IMAGE, holder.getImage());
@@ -326,7 +344,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		data.put(CommentHelper.USER_ID, holder.getUser_id());
 		data.put(CommentHelper.TIME, holder.getTime());
 		data.put(CommentZanHelper.STATUS, zanholder.getStatus());
-		data.put("ResponseListHolders",response_holders);
+		data.put("ResponseListHolders", response_holders);
 		data.put(TYPE, type);
 		listData.add(data);
 	}
@@ -355,9 +373,10 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		super.onResume();
 		mainpostListView.setMore(refreshData(false));
 		adapter.notifyDataSetChanged();
-		if(!hidekeyboard){
+		if (!hidekeyboard) {
+			hidekeyboard=true;
 			mainpostListView.post(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
@@ -377,7 +396,6 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		}
 	}
 
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -386,15 +404,16 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			finish();
 			break;
 		case R.id.title_txt_right:
+			ShareTopic();
 			break;
 		case R.id.send_btn:
 			String send = send_edit.getText().toString();
 			if (send.trim().length() > 0) {
 				send_edit.setText("");
-				if(mInputMethodManager.isActive()){
+				if (mInputMethodManager.isActive()) {
 					hideKeyboard();
 				}
-				send=send.replaceAll("\n", "<br></br>");
+				send = send.replaceAll("\n", "<br></br>");
 				if (commitTYPE == COMMENTBTN) {
 					CommentHolder holder = new CommentHolder(-1,
 							HearFromApp.user_id, topick_id, "", "", send, "",
@@ -402,10 +421,10 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 							RoleUtil.getDefaultRoleId(getApplicationContext()),
 							"", CommentZanHolder.STATUS_CAI);
 					sendComment(holder);
-				}else if(commitTYPE == RESPONESBTN){
+				} else if (commitTYPE == RESPONESBTN) {
 					ResponseListHolder holder = new ResponseListHolder(-1,
-							HearFromApp.user_id, clickCommentId, "", "", send, "",
-							"", "", 0, 0, 0, 0,
+							HearFromApp.user_id, clickCommentId, "", "", send,
+							"", "", "", 0, 0, 0, 0,
 							RoleUtil.getDefaultRoleId(getApplicationContext()),
 							"", CommentZanHolder.STATUS_CAI);
 					sendResponse(holder);
@@ -492,29 +511,32 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	public static final int COMMENTBTN = 0;
 	public static final int RESPONESBTN = 1;
 	private int commitTYPE = COMMENTBTN;
-	private int clickCommentId=1;
-	private String clickCommentName="";
+	private int clickCommentId = 1;
+	private String clickCommentName = "";
+
 	@Override
 	public void onCommentBtnClickClick(int position) {
 		// TODO Auto-generated method stub
 		commitTYPE = COMMENTBTN;
 		toggleSoftInputFromWindow(commitTYPE);
 	}
-	
+
 	@Override
 	public void onResposeBtnClick(int position) {
 		// TODO Auto-generated method stub
 		commitTYPE = RESPONESBTN;
-		clickCommentId=(Integer) listData.get(position).get(CommentHelper.ID);
-		clickCommentName=(String) listData.get(position).get(CommentHelper.NICK_NAME);
+		clickCommentId = (Integer) listData.get(position).get(CommentHelper.ID);
+		clickCommentName = (String) listData.get(position).get(
+				CommentHelper.NICK_NAME);
 		toggleSoftInputFromWindow(commitTYPE);
-		
+
 	}
 
 	private boolean hidekeyboard = true;
 	private static final int BIGGER = 1;
 	private static final int SMALLER = 2;
 	private boolean first = true;
+
 	@Override
 	public void OnResize(int w, int h, int oldw, int oldh) {
 		// TODO Auto-generated method stub
@@ -526,10 +548,10 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		if (h < oldh) {
 			change = SMALLER;
 		}
-		send_layout.setVisibility(change==SMALLER?View.VISIBLE:View.GONE);
+		send_layout.setVisibility(change == SMALLER ? View.VISIBLE : View.GONE);
 		send_edit.requestFocus();
 	}
-	
+
 	@Override
 	public void OnLayout(int l, int t, int r, int b) {
 		// TODO Auto-generated method stub
@@ -539,7 +561,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 	public void onRefresh() {
 		// TODO Auto-generated method stub
 		mHandler.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub

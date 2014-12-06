@@ -9,6 +9,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.hearfrom.TopicDetailActivity;
+import com.tingshuo.hearfrom.UserDetailActivity;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.TimeFormatTool;
 import com.tingshuo.tool.db.CommentHelper;
@@ -143,6 +145,17 @@ public class commitAdapter extends BaseAdapter {
 		viewHolder.zan_check.setText(zanCount<1?"до":String.valueOf(zanCount));
 		String headpath = (String) list.get(position).get(
 				CommentHelper.HEAD);
+		final int user_id=(Integer) list.get(position).get(CommentHelper.USER_ID);
+		viewHolder.head_img.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(context,UserDetailActivity.class);
+				intent.putExtra(mainPostListHelper.USER_ID, user_id);
+				context.startActivity(intent);
+			}
+		});
 		mImageFetcher.loadImage(HttpJsonTool.imgServerUrl + headpath,
 				viewHolder.head_img);
 		String content = (String) list.get(position).get(
@@ -237,6 +250,17 @@ public class commitAdapter extends BaseAdapter {
 		});
 		String headpath = (String) list.get(position).get(
 				mainPostListHelper.HEAD);
+		final int user_id=(Integer) list.get(position).get(mainPostListHelper.USER_ID);
+		viewHolder.head_img.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(context,UserDetailActivity.class);
+				intent.putExtra(mainPostListHelper.USER_ID, user_id);
+				context.startActivity(intent);
+			}
+		});
 		mImageFetcher.loadImage(HttpJsonTool.imgServerUrl + headpath,
 				viewHolder.head_img);
 		String content = (String) list.get(position).get(

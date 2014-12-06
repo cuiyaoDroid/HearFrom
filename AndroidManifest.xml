@@ -76,6 +76,10 @@
             android:theme="@style/Theme.MyTheme" >
         </activity>
         <activity
+            android:name="com.tingshuo.hearfrom.UserDetailActivity"
+            android:theme="@style/Theme.MyTheme" >
+        </activity>
+        <activity
             android:name="com.tingshuo.hearfrom.ShowImageActivity"
             android:theme="@style/Theme.MyTheme" >
         </activity>

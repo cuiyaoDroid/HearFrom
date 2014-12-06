@@ -114,7 +114,13 @@ public class HttpJsonTool {
 		};
 		th.start();
 	}
-
+	/**
+	 * 快速注册
+	 * @param context
+	 * @param role_id
+	 * @param sex
+	 * @return
+	 */
 	public synchronized String register(Context context, int role_id, int sex) {
 		try {
 			HttpClient client = getHttpClient();
@@ -206,7 +212,13 @@ public class HttpJsonTool {
 		}
 		helper.close();
 	}
-	
+	/**
+	 * 登陆
+	 * @param context
+	 * @param account
+	 * @param password
+	 * @return
+	 */
 	public synchronized String login(Context context, String account,
 			String password) {
 		try {
@@ -261,6 +273,10 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+	/**
+	 * 获得角色列表
+	 * @return
+	 */
 	public synchronized String getRoleList() {
 		try {
 			HttpClient client = getHttpClient();
@@ -310,6 +326,15 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+	/**
+	 * 修改用户信息
+	 * @param context
+	 * @param nickname
+	 * @param sex
+	 * @param phonenum
+	 * @param birthday
+	 * @return
+	 */
 	public synchronized String changuserInfo(Context context, String nickname,
 			int sex,String phonenum,String birthday) {
 		try {
@@ -374,7 +399,16 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
-	
+	/**
+	 * 主题列表
+	 * @param context
+	 * @param max_id
+	 * @param min_id
+	 * @param page
+	 * @param role_id
+	 * @param sex
+	 * @return
+	 */
 	public synchronized String getTingshuoList(Context context, int max_id,
 			int min_id, int page, int role_id, int sex) {
 		try {
@@ -447,7 +481,16 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
-	
+	/**
+	 * 我发布的主题列表
+	 * @param context
+	 * @param max_id
+	 * @param min_id
+	 * @param page
+	 * @param role_id
+	 * @param sex
+	 * @return
+	 */
 	public synchronized String getMyTingshuoList(Context context, int max_id,
 			int min_id, int page, int role_id, int sex) {
 		try {
@@ -509,6 +552,16 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	/**
+	 * 我评论的主题列表
+	 * @param context
+	 * @param max_id
+	 * @param min_id
+	 * @param page
+	 * @param role_id
+	 * @param sex
+	 * @return
+	 */
 	public synchronized String getMyTingshuoList_Commit(Context context, int max_id,
 			int min_id, int page, int role_id, int sex) {
 		try {
@@ -570,7 +623,15 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
-	
+	/**
+	 * 评论列表
+	 * @param context
+	 * @param max_id
+	 * @param start
+	 * @param limit
+	 * @param post_id
+	 * @return
+	 */
 	public synchronized String getCommentList(Context context, int max_id,
 			int start, int limit , int post_id) {
 		try {
@@ -633,6 +694,13 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	/**
+	 * 修改密码
+	 * @param context
+	 * @param oldpassword
+	 * @param newpassword
+	 * @return
+	 */
 	public synchronized String editPassword(Context context, String oldpassword,String newpassword) {
 		try {
 			HttpClient client = getHttpClient();
@@ -687,6 +755,13 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	/**
+	 * 认证
+	 * @param context
+	 * @param account
+	 * @param password
+	 * @return
+	 */
 	public synchronized String identifUser(Context context, String account,String password) {
 		try {
 			HttpClient client = getHttpClient();
@@ -740,7 +815,13 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
-	
+	/**
+	 * 主题点赞
+	 * @param context
+	 * @param post_id
+	 * @param isZan
+	 * @return
+	 */
 	public synchronized String setZanMainPost(Context context,int post_id,boolean isZan) {
 		try {
 			HttpClient client = getHttpClient();
@@ -791,6 +872,13 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	/**
+	 * 评论点赞
+	 * @param context
+	 * @param second_id
+	 * @param isZan
+	 * @return
+	 */
 	public synchronized String setZanComment(Context context,int second_id,boolean isZan) {
 		try {
 			HttpClient client = getHttpClient();
@@ -982,6 +1070,12 @@ public class HttpJsonTool {
 				comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
 	}
+	/**
+	 * 发送评论
+	 * @param context
+	 * @param holder
+	 * @return
+	 */
 	public synchronized String sendComment(Context context,
 			CommentHolder holder) {
 		try {
@@ -1044,6 +1138,12 @@ public class HttpJsonTool {
 		} 
 		return SUCCESS;
 	}
+	/**
+	 * 发送评论的回复
+	 * @param context
+	 * @param holder
+	 * @return
+	 */
 	public synchronized String sendResponse(Context context,
 			ResponseListHolder holder) {
 		try {
@@ -1105,7 +1205,13 @@ public class HttpJsonTool {
 		return SUCCESS;
 	}
 	private long filesize;
-
+	/**
+	 * 发布主题
+	 * @param context
+	 * @param holder 主题内容
+	 * @param progressDialog
+	 * @return
+	 */
 	public synchronized String publicsTopic(Context context,
 			mainPostListHolder holder, final ProgressDialog progressDialog) {
 		try {
@@ -1198,4 +1304,194 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+	/**
+	 * 添加好友
+	 * @param context
+	 * @param friend_id
+	 * @return
+	 */
+	public synchronized String friend_sendAdd(Context context,
+			int friend_id) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/addfriend/addfriend/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("to_id", String.valueOf(friend_id)));
+			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			ResponseListHelper helper = new ResponseListHelper(context);
+			synchronized (lock.Lock) {
+				SQLiteDatabase db = helper.getWritableDatabase();
+				insertRespone(json, helper, db);
+			}
+			helper.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} 
+		return SUCCESS;
+	}
+	/**
+	 * 我发送的好友请求
+	 * @param context
+	 * @return
+	 */
+	public synchronized String friend_getfromme(Context context) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/addfriend/getfromme/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			ResponseListHelper helper = new ResponseListHelper(context);
+			synchronized (lock.Lock) {
+				SQLiteDatabase db = helper.getWritableDatabase();
+				insertRespone(json, helper, db);
+			}
+			helper.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} 
+		return SUCCESS;
+	}
+	/**
+	 * 好友列表
+	 * @param context
+	 * @return
+	 */
+	public synchronized String friend_getlist(Context context) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/userfriend/getfriend/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			ResponseListHelper helper = new ResponseListHelper(context);
+			synchronized (lock.Lock) {
+				SQLiteDatabase db = helper.getWritableDatabase();
+				insertRespone(json, helper, db);
+			}
+			helper.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "网络错误";
+		} 
+		return SUCCESS;
+	}
+	
 }

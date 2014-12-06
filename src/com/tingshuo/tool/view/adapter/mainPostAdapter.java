@@ -9,6 +9,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tingshuo.hearfrom.R;
+import com.tingshuo.hearfrom.UserDetailActivity;
 import com.tingshuo.tool.TimeFormatTool;
 import com.tingshuo.tool.db.TopicZanHelper;
 import com.tingshuo.tool.db.TopicZanHolder;
@@ -130,7 +132,18 @@ public class mainPostAdapter extends BaseAdapter {
 			}
 		});
 		String headpath=(String) list.get(position).get(mainPostListHelper.HEAD);
+		final int user_id=(Integer) list.get(position).get(mainPostListHelper.USER_ID);
 		mImageFetcher.loadImage(HttpJsonTool.imgServerUrl+headpath, viewHolder.head_img);
+		viewHolder.head_img.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(context,UserDetailActivity.class);
+				intent.putExtra(mainPostListHelper.USER_ID, user_id);
+				context.startActivity(intent);
+			}
+		});
 		String content=(String) list.get(position).get(mainPostListHelper.CONTENT);
 		viewHolder.content_txt.setText(Html.fromHtml(content));
 		String name=(String) list.get(position).get(mainPostListHelper.NICK_NAME);
