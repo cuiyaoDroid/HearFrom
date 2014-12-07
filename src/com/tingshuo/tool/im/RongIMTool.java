@@ -1,4 +1,4 @@
-package com.tingshuo.tool;
+package com.tingshuo.tool.im;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tingshuo.hearfrom.HearFromApp;
+import com.tingshuo.tool.L;
 import com.tingshuo.web.http.ApiHttpClient;
 import com.tingshuo.web.http.FormatType;
 import com.tingshuo.web.http.SdkHttpResult;
@@ -159,12 +160,14 @@ public class RongIMTool {
 		}
 	}
 
-	public void sendMessage(String content,String toUserId) {
+	public void sendMessage(String type,String content,String toUserId) {
 		if(client==null){
 			return;
 		}
 		Message msg = new Message();
-		msg.setContent(new TextMessage(content));
+		TextMessage textContent=new TextMessage(content);
+		textContent.setExtra(type);
+		msg.setContent(textContent);
 		client.sendMessage(ConversationType.PRIVATE, toUserId,
 				msg.getContent(), new RongIMClient.SendMessageCallback() {
 

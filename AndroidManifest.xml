@@ -88,6 +88,10 @@
             android:theme="@style/Theme.MyTheme" >
         </activity>
         <activity
+            android:name="com.tingshuo.hearfrom.FriendsRequestListActivity"
+            android:theme="@style/Default.SwipeBack" >
+        </activity>
+        <activity
             android:name="com.tingshuo.hearfrom.ShowImageActivity"
             android:theme="@style/Default.SwipeBack" >
         </activity>

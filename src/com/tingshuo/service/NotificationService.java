@@ -4,11 +4,12 @@ import io.rong.imlib.RongIMClient.Message;
 import io.rong.message.TextMessage;
 
 import com.tingshuo.hearfrom.HearFromApp;
-import com.tingshuo.tool.RongIMTool;
-import com.tingshuo.tool.RongIMTool.ConnectListener;
-import com.tingshuo.tool.RongIMTool.MessageReceivelistener;
 import com.tingshuo.tool.db.UserInfoHelper;
 import com.tingshuo.tool.db.UserInfoHolder;
+import com.tingshuo.tool.im.RongIMTool;
+import com.tingshuo.tool.im.RongIMTool.ConnectListener;
+import com.tingshuo.tool.im.RongIMTool.MessageReceivelistener;
+import com.tingshuo.tool.im.RongMessageTYPE;
 
 public class NotificationService extends BaseRongYunService implements
 		MessageReceivelistener, ConnectListener {
@@ -55,7 +56,9 @@ public class NotificationService extends BaseRongYunService implements
 	public void onMessageReceive(Message msg, int status) {
 		// TODO Auto-generated method stub
 		TextMessage text_msg=(TextMessage) msg.getContent();
-		notifyClient(msg.getObjectName(), msg.getSenderUserId(), text_msg.getContent(), true);
+		if(text_msg.getExtra().equals(RongMessageTYPE.MESSAGE_TYPE_ADDFRIENDS)){
+			notifyClient(msg.getObjectName(), text_msg.getContent(), "", true);
+		}
 	}
 
 	@Override

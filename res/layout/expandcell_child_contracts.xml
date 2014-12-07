@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="@dimen/setting_padding"
-    android:background="@android:color/white" >
+    android:background="@drawable/setting_btn_bg" >
 
     <ImageView
         android:id="@+id/head_img"

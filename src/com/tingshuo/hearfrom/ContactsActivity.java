@@ -7,11 +7,13 @@ import java.util.HashMap;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.tingshuo.hearfrom.ContactsActivity.ContactsExpandableAdapter.ChildViewHolder;
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
 import com.tingshuo.tool.view.SideBar;
 
@@ -49,6 +51,7 @@ public class ContactsActivity extends BaseSwipeBaceActivity {
         }
         tViewShowLetter = (TextView) findViewById(R.id.tView_letter);
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        initHeadView();
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -72,6 +75,21 @@ public class ContactsActivity extends BaseSwipeBaceActivity {
             }
         });
         sideBar.setShowString(letters);
+    }
+    private void initHeadView(){
+    	View headview = getLayoutInflater().inflate(R.layout.expandcell_child_contracts, null);
+    	TextView tViewChildName = (TextView) headview.findViewById(R.id.tView_child_name);
+    	tViewChildName.setText("ÐÂµÄÅóÓÑ");
+        headview.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent(getApplicationContext(),FriendsRequestListActivity.class);
+				startActivity(intent);
+			}
+		});
+        expandableListView.addHeaderView(headview);
     }
     @Override
     protected void initContentView() {
@@ -143,12 +161,12 @@ public class ContactsActivity extends BaseSwipeBaceActivity {
             holder.tViewChildName.setText(lettersDivider.get(letters[groupPosition]).get(childPosition));
             return convertView;
         }
-
+        
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return false;
+            return true;
         }
-
+        
         class GroupViewHolder {
             TextView tViewGroupName;
 

@@ -45,6 +45,8 @@ import com.tingshuo.tool.RoleUtil;
 import com.tingshuo.tool.StatusTool;
 import com.tingshuo.tool.db.CommentHelper;
 import com.tingshuo.tool.db.CommentHolder;
+import com.tingshuo.tool.db.FriendsRequestHelper;
+import com.tingshuo.tool.db.FriendsRequestHolder;
 import com.tingshuo.tool.db.MyCommitedMainPostListHelper;
 import com.tingshuo.tool.db.ResponseListHelper;
 import com.tingshuo.tool.db.ResponseListHolder;
@@ -78,8 +80,6 @@ public class HttpJsonTool {
 	public static final String SUCCESS = "<success>";
 	public static final String ERROR403 = "<error403>";
 
-	
-
 	public static synchronized HttpJsonTool getInstance() {
 		if (httpjsontool == null) {
 			httpjsontool = new HttpJsonTool();
@@ -88,12 +88,15 @@ public class HttpJsonTool {
 	}
 
 	private static CookieStore cookieInfo = null;
-	private HttpClient getHttpClient(){
+
+	private HttpClient getHttpClient() {
 		HttpClient client = new DefaultHttpClient();
-		client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  20000);//连接时间20s
-		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  30000);
+		client.getParams().setParameter(
+				CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);// 连接时间20s
+		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
 		return client;
 	}
+
 	public void getCookieInfo() {
 		Thread th = new Thread() {
 			public void run() {
@@ -114,8 +117,10 @@ public class HttpJsonTool {
 		};
 		th.start();
 	}
+
 	/**
 	 * 快速注册
+	 * 
 	 * @param context
 	 * @param role_id
 	 * @param sex
@@ -154,10 +159,10 @@ public class HttpJsonTool {
 			}
 			JSONObject json = jsonObject.getJSONObject("data");
 			insertUserTable(context, json, true);
-		} catch(ConnectTimeoutException e){
+		} catch (ConnectTimeoutException e) {
 			e.printStackTrace();
 			return ERROR + "网络错误";
-        } catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
@@ -212,8 +217,10 @@ public class HttpJsonTool {
 		}
 		helper.close();
 	}
+
 	/**
 	 * 登陆
+	 * 
 	 * @param context
 	 * @param account
 	 * @param password
@@ -253,7 +260,7 @@ public class HttpJsonTool {
 				return ERROR;
 			}
 			JSONObject json = jsonObject.getJSONObject("data");
-			insertUserTable(context,json,true);
+			insertUserTable(context, json, true);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -273,8 +280,10 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 获得角色列表
+	 * 
 	 * @return
 	 */
 	public synchronized String getRoleList() {
@@ -285,8 +294,7 @@ public class HttpJsonTool {
 				((AbstractHttpClient) client).setCookieStore(cookieInfo);
 			}
 			StringBuilder builder = new StringBuilder();
-			HttpPost httpRequest = new HttpPost(ServerUrl
-					+ "/user/getRoleList");
+			HttpPost httpRequest = new HttpPost(ServerUrl + "/user/getRoleList");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -326,8 +334,10 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 修改用户信息
+	 * 
 	 * @param context
 	 * @param nickname
 	 * @param sex
@@ -336,7 +346,7 @@ public class HttpJsonTool {
 	 * @return
 	 */
 	public synchronized String changuserInfo(Context context, String nickname,
-			int sex,String phonenum,String birthday) {
+			int sex, String phonenum, String birthday) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -347,17 +357,17 @@ public class HttpJsonTool {
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/my/changuserInfo/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			if(nickname!=null){
+			if (nickname != null) {
 				params.add(new BasicNameValuePair("nickname", nickname));
 			}
-			if(sex!=-1){
+			if (sex != -1) {
 				params.add(new BasicNameValuePair("sex", String.valueOf(sex)));
 			}
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
-			if(phonenum!=null){
+			if (phonenum != null) {
 				params.add(new BasicNameValuePair("phonenum", phonenum));
 			}
-			if(birthday!=null){
+			if (birthday != null) {
 				params.add(new BasicNameValuePair("brithday", birthday));
 			}
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -379,7 +389,7 @@ public class HttpJsonTool {
 				return ERROR;
 			}
 			JSONObject json = jsonObject.getJSONObject("data");
-			insertUserTable(context,json,true);
+			insertUserTable(context, json, true);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -399,8 +409,10 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 主题列表
+	 * 
 	 * @param context
 	 * @param max_id
 	 * @param min_id
@@ -420,8 +432,9 @@ public class HttpJsonTool {
 			StringBuilder builder = new StringBuilder();
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/mainpost/getpost/");
-//			L.i(ServerUrl
-//					+ "/mainpost/getpost/?token="+HearFromApp.token+"&start="+min_id+"&limit="+page);
+			// L.i(ServerUrl
+			// +
+			// "/mainpost/getpost/?token="+HearFromApp.token+"&start="+min_id+"&limit="+page);
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			if (max_id != -1) {
 				params.add(new BasicNameValuePair("max_id", String
@@ -436,8 +449,7 @@ public class HttpJsonTool {
 						.valueOf(min_id)));
 			}
 			if (sex != -1) {
-				params.add(new BasicNameValuePair("sex", String
-						.valueOf(sex)));
+				params.add(new BasicNameValuePair("sex", String.valueOf(sex)));
 			}
 			params.add(new BasicNameValuePair("limit", String.valueOf(page)));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
@@ -448,7 +460,7 @@ public class HttpJsonTool {
 				httpjsontool = null;
 				return ERROR403;
 			}
-			
+
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent()));
 			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
@@ -478,11 +490,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 我发布的主题列表
+	 * 
 	 * @param context
 	 * @param max_id
 	 * @param min_id
@@ -500,8 +514,7 @@ public class HttpJsonTool {
 				((AbstractHttpClient) client).setCookieStore(cookieInfo);
 			}
 			StringBuilder builder = new StringBuilder();
-			HttpPost httpRequest = new HttpPost(ServerUrl
-					+ "/my/getmypost/");
+			HttpPost httpRequest = new HttpPost(ServerUrl + "/my/getmypost/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			if (max_id != -1) {
 				params.add(new BasicNameValuePair("max_id", String
@@ -549,11 +562,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 我评论的主题列表
+	 * 
 	 * @param context
 	 * @param max_id
 	 * @param min_id
@@ -562,8 +577,8 @@ public class HttpJsonTool {
 	 * @param sex
 	 * @return
 	 */
-	public synchronized String getMyTingshuoList_Commit(Context context, int max_id,
-			int min_id, int page, int role_id, int sex) {
+	public synchronized String getMyTingshuoList_Commit(Context context,
+			int max_id, int min_id, int page, int role_id, int sex) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -571,8 +586,7 @@ public class HttpJsonTool {
 				((AbstractHttpClient) client).setCookieStore(cookieInfo);
 			}
 			StringBuilder builder = new StringBuilder();
-			HttpPost httpRequest = new HttpPost(ServerUrl
-					+ "/my/getmysecond/");
+			HttpPost httpRequest = new HttpPost(ServerUrl + "/my/getmysecond/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			if (max_id != -1) {
 				params.add(new BasicNameValuePair("max_id", String
@@ -620,11 +634,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 评论列表
+	 * 
 	 * @param context
 	 * @param max_id
 	 * @param start
@@ -633,7 +649,7 @@ public class HttpJsonTool {
 	 * @return
 	 */
 	public synchronized String getCommentList(Context context, int max_id,
-			int start, int limit , int post_id) {
+			int start, int limit, int post_id) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -653,7 +669,8 @@ public class HttpJsonTool {
 						.valueOf(start)));
 			}
 			params.add(new BasicNameValuePair("limit", String.valueOf(limit)));
-			params.add(new BasicNameValuePair("post_id", String.valueOf(post_id)));
+			params.add(new BasicNameValuePair("post_id", String
+					.valueOf(post_id)));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -691,17 +708,20 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 修改密码
+	 * 
 	 * @param context
 	 * @param oldpassword
 	 * @param newpassword
 	 * @return
 	 */
-	public synchronized String editPassword(Context context, String oldpassword,String newpassword) {
+	public synchronized String editPassword(Context context,
+			String oldpassword, String newpassword) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -731,11 +751,11 @@ public class HttpJsonTool {
 			JSONObject jsonObject = new JSONObject(builder.toString());
 			int status = jsonObject.optInt(STATUS);
 			if (status != StatusTool.STATUS_OK) {
-				String error_detail=jsonObject.optString("msg");
-				return ERROR+error_detail;
+				String error_detail = jsonObject.optString("msg");
+				return ERROR + error_detail;
 			}
-//			JSONArray list = jsonObject.getJSONArray("data");
-//			insertCommentList(context, list);
+			// JSONArray list = jsonObject.getJSONArray("data");
+			// insertCommentList(context, list);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -752,17 +772,20 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 认证
+	 * 
 	 * @param context
 	 * @param account
 	 * @param password
 	 * @return
 	 */
-	public synchronized String identifUser(Context context, String account,String password) {
+	public synchronized String identifUser(Context context, String account,
+			String password) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -794,8 +817,8 @@ public class HttpJsonTool {
 			if (status != StatusTool.STATUS_OK) {
 				return ERROR;
 			}
-//			JSONArray list = jsonObject.getJSONArray("data");
-//			insertCommentList(context, list);
+			// JSONArray list = jsonObject.getJSONArray("data");
+			// insertCommentList(context, list);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -812,17 +835,20 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 主题点赞
+	 * 
 	 * @param context
 	 * @param post_id
 	 * @param isZan
 	 * @return
 	 */
-	public synchronized String setZanMainPost(Context context,int post_id,boolean isZan) {
+	public synchronized String setZanMainPost(Context context, int post_id,
+			boolean isZan) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -831,9 +857,10 @@ public class HttpJsonTool {
 			}
 			StringBuilder builder = new StringBuilder();
 			HttpPost httpRequest = new HttpPost(ServerUrl
-					+ (isZan?"/mainpost/zan/":"/mainpost/cancelzan"));
+					+ (isZan ? "/mainpost/zan/" : "/mainpost/cancelzan"));
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("post_id", String.valueOf(post_id)));
+			params.add(new BasicNameValuePair("post_id", String
+					.valueOf(post_id)));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -869,17 +896,20 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 评论点赞
+	 * 
 	 * @param context
 	 * @param second_id
 	 * @param isZan
 	 * @return
 	 */
-	public synchronized String setZanComment(Context context,int second_id,boolean isZan) {
+	public synchronized String setZanComment(Context context, int second_id,
+			boolean isZan) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -888,9 +918,10 @@ public class HttpJsonTool {
 			}
 			StringBuilder builder = new StringBuilder();
 			HttpPost httpRequest = new HttpPost(ServerUrl
-					+ (isZan?"/secondpost/zan/":"/secondpost/cancelzan"));
+					+ (isZan ? "/secondpost/zan/" : "/secondpost/cancelzan"));
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("second_id", String.valueOf(second_id)));
+			params.add(new BasicNameValuePair("second_id", String
+					.valueOf(second_id)));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -926,9 +957,10 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	private void insertTingshuoList(Context context, JSONArray list)
 			throws JSONException {
 		mainPostListHelper helper = new mainPostListHelper(context);
@@ -944,9 +976,11 @@ public class HttpJsonTool {
 		}
 		helper.close();
 	}
+
 	private void insertMyCommitedTingshuoList(Context context, JSONArray list)
 			throws JSONException {
-		MyCommitedMainPostListHelper helper = new MyCommitedMainPostListHelper(context);
+		MyCommitedMainPostListHelper helper = new MyCommitedMainPostListHelper(
+				context);
 		synchronized (lock.Lock) {
 			SQLiteDatabase db = helper.getWritableDatabase();
 			db.beginTransaction();
@@ -959,16 +993,17 @@ public class HttpJsonTool {
 		}
 		helper.close();
 	}
+
 	private void insertCommentList(Context context, JSONArray list)
 			throws JSONException {
 		CommentHelper helper = new CommentHelper(context);
-		ResponseListHelper reHelper=new ResponseListHelper(context);
+		ResponseListHelper reHelper = new ResponseListHelper(context);
 		synchronized (lock.Lock) {
 			SQLiteDatabase db = helper.getWritableDatabase();
 			db.beginTransaction();
 			for (int i = 0; i < list.length(); i++) {
 				JSONObject json = (JSONObject) list.get(i);
-				insertComment(json, helper,reHelper, db);
+				insertComment(json, helper, reHelper, db);
 			}
 			db.setTransactionSuccessful();
 			db.endTransaction();
@@ -976,8 +1011,10 @@ public class HttpJsonTool {
 		helper.close();
 		reHelper.close();
 	}
-	private void insertComment(JSONObject json, CommentHelper helper,ResponseListHelper reHelper,
-			SQLiteDatabase db) throws JSONException {
+
+	private void insertComment(JSONObject json, CommentHelper helper,
+			ResponseListHelper reHelper, SQLiteDatabase db)
+			throws JSONException {
 		int id = json.optInt("id");
 		int user_id = json.optInt("user_id");
 		int post_id = json.optInt("post_id");
@@ -993,19 +1030,20 @@ public class HttpJsonTool {
 		int cai_count = json.optInt("cai_count");
 		int role_id = json.optInt("role_id");
 		String role = json.optString("role");
-		
-		JSONArray re_json=json.optJSONArray("comment");
-		if(re_json!=null){
-			for(int i=0;i<re_json.length();i++){
-				JSONObject object=re_json.getJSONObject(i);
+
+		JSONArray re_json = json.optJSONArray("comment");
+		if (re_json != null) {
+			for (int i = 0; i < re_json.length(); i++) {
+				JSONObject object = re_json.getJSONObject(i);
 				insertRespone(object, reHelper, db);
 			}
 		}
-		CommentHolder holder = new CommentHolder(id, user_id,post_id,
+		CommentHolder holder = new CommentHolder(id, user_id, post_id,
 				nickname, head, content, image, longitude, latitude, time,
 				comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
 	}
+
 	private void insertRespone(JSONObject json, ResponseListHelper helper,
 			SQLiteDatabase db) {
 		int id = json.optInt("id");
@@ -1023,11 +1061,12 @@ public class HttpJsonTool {
 		int cai_count = json.optInt("cai_count");
 		int role_id = json.optInt("role_id");
 		String role = json.optString("role");
-		ResponseListHolder holder = new ResponseListHolder(id, user_id,post_id,
-				nickname, head, content, image, longitude, latitude, time,
-				comment_count, zan_count, cai_count, role_id, role, 0);
+		ResponseListHolder holder = new ResponseListHolder(id, user_id,
+				post_id, nickname, head, content, image, longitude, latitude,
+				time, comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
 	}
+
 	private void insertTingshuo(JSONObject json, mainPostListHelper helper,
 			SQLiteDatabase db) {
 		int id = json.optInt("id");
@@ -1049,8 +1088,9 @@ public class HttpJsonTool {
 				comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
 	}
-	private void insertCommitedTingshuo(JSONObject json, MyCommitedMainPostListHelper helper,
-			SQLiteDatabase db) {
+
+	private void insertCommitedTingshuo(JSONObject json,
+			MyCommitedMainPostListHelper helper, SQLiteDatabase db) {
 		int id = json.optInt("id");
 		int user_id = json.optInt("user_id");
 		String nickname = json.optString("nickname");
@@ -1070,14 +1110,65 @@ public class HttpJsonTool {
 				comment_count, zan_count, cai_count, role_id, role, 0);
 		helper.insert(holder, db);
 	}
+
+	/**
+	 * 添加好友请求列表,需修改
+	 * 
+	 * @param context
+	 * @param list
+	 * @param type
+	 * @throws JSONException
+	 */
+	private void insertfriendsRequest(Context context, JSONArray list, int type)
+			throws JSONException {
+		UserInfoHelper helper = new UserInfoHelper(context);
+		FriendsRequestHelper reHelper = new FriendsRequestHelper(context);
+		synchronized (lock.Lock) {
+			SQLiteDatabase db = helper.getWritableDatabase();
+			db.beginTransaction();
+			for (int i = 0; i < list.length(); i++) {
+				JSONObject json = (JSONObject) list.get(i);
+				int user_id = json.optInt("id");
+				String account = json.optString("account");
+				String nickname = json.optString("nickname");
+				String head = json.optString("head");
+				int sex = json.optInt("sex");
+				long login_time = json.optLong("login_time");
+				String brithday = json.optString("brithday");
+				String phonenum = json.optString("phonenum");
+				long level_score = json.optLong("level_score");
+				int level = json.optInt("level");
+				int is_vip = json.optInt("is_vip");
+				long vip_score = json.optLong("vip_score");
+				int vip_level = json.optInt("vip_level");
+				int status = json.optInt("status");
+				long request_time = json.optLong("request_time");
+				int request_id = json.optInt("request_id");
+				UserInfoHolder holder = new UserInfoHolder(user_id, account,
+						nickname, head, sex, login_time, brithday, phonenum,
+						level_score, level, is_vip, vip_score, vip_level,
+						status);
+				helper.insert(holder, helper.getWritableDatabase());
+				FriendsRequestHolder reholder = new FriendsRequestHolder(request_id,
+						user_id, request_time, type);
+				reHelper.insert(reholder, db);
+			}
+			db.setTransactionSuccessful();
+			db.endTransaction();
+		}
+		helper.close();
+		reHelper.close();
+
+	}
+
 	/**
 	 * 发送评论
+	 * 
 	 * @param context
 	 * @param holder
 	 * @return
 	 */
-	public synchronized String sendComment(Context context,
-			CommentHolder holder) {
+	public synchronized String sendComment(Context context, CommentHolder holder) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -1089,8 +1180,10 @@ public class HttpJsonTool {
 					+ "/secondpost/reply/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("content", holder.getContent()));
-			params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
-			params.add(new BasicNameValuePair("post_id", String.valueOf(holder.getPost_id())));
+			params.add(new BasicNameValuePair("role_id", String.valueOf(holder
+					.getRole_id())));
+			params.add(new BasicNameValuePair("post_id", String.valueOf(holder
+					.getPost_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -1112,10 +1205,10 @@ public class HttpJsonTool {
 			}
 			JSONObject json = jsonObject.getJSONObject("data");
 			CommentHelper helper = new CommentHelper(context);
-			ResponseListHelper reHelper=new ResponseListHelper(context);
+			ResponseListHelper reHelper = new ResponseListHelper(context);
 			synchronized (lock.Lock) {
 				SQLiteDatabase db = helper.getWritableDatabase();
-				insertComment(json, helper,reHelper, db);
+				insertComment(json, helper, reHelper, db);
 			}
 			helper.close();
 			reHelper.close();
@@ -1135,11 +1228,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 发送评论的回复
+	 * 
 	 * @param context
 	 * @param holder
 	 * @return
@@ -1153,12 +1248,13 @@ public class HttpJsonTool {
 				((AbstractHttpClient) client).setCookieStore(cookieInfo);
 			}
 			StringBuilder builder = new StringBuilder();
-			HttpPost httpRequest = new HttpPost(ServerUrl
-					+ "/comment/comment/");
+			HttpPost httpRequest = new HttpPost(ServerUrl + "/comment/comment/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("content", holder.getContent()));
-			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
-			params.add(new BasicNameValuePair("second_id", String.valueOf(holder.getPost_id())));
+			// params.add(new BasicNameValuePair("role_id",
+			// String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("second_id", String
+					.valueOf(holder.getPost_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -1201,14 +1297,18 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	private long filesize;
+
 	/**
 	 * 发布主题
+	 * 
 	 * @param context
-	 * @param holder 主题内容
+	 * @param holder
+	 *            主题内容
 	 * @param progressDialog
 	 * @return
 	 */
@@ -1304,14 +1404,15 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 添加好友
+	 * 
 	 * @param context
 	 * @param friend_id
 	 * @return
 	 */
-	public synchronized String friend_sendAdd(Context context,
-			int friend_id) {
+	public synchronized String friend_sendAdd(Context context, int friend_id) {
 		try {
 			HttpClient client = getHttpClient();
 			;
@@ -1322,8 +1423,10 @@ public class HttpJsonTool {
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/addfriend/addfriend/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("to_id", String.valueOf(friend_id)));
-			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			params.add(new BasicNameValuePair("to_id", String
+					.valueOf(friend_id)));
+			// params.add(new BasicNameValuePair("role_id",
+			// String.valueOf(holder.getRole_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -1343,13 +1446,13 @@ public class HttpJsonTool {
 			if (status != StatusTool.STATUS_OK) {
 				return ERROR;
 			}
-//			JSONObject json = jsonObject.getJSONObject("data");
-//			ResponseListHelper helper = new ResponseListHelper(context);
-//			synchronized (lock.Lock) {
-//				SQLiteDatabase db = helper.getWritableDatabase();
-//				insertRespone(json, helper, db);
-//			}
-//			helper.close();
+			// JSONObject json = jsonObject.getJSONObject("data");
+			// ResponseListHelper helper = new ResponseListHelper(context);
+			// synchronized (lock.Lock) {
+			// SQLiteDatabase db = helper.getWritableDatabase();
+			// insertRespone(json, helper, db);
+			// }
+			// helper.close();
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1366,11 +1469,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 我发送的好友请求
+	 * 
 	 * @param context
 	 * @return
 	 */
@@ -1385,7 +1490,8 @@ public class HttpJsonTool {
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/addfriend/getfromme/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			// params.add(new BasicNameValuePair("role_id",
+			// String.valueOf(holder.getRole_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -1405,13 +1511,9 @@ public class HttpJsonTool {
 			if (status != StatusTool.STATUS_OK) {
 				return ERROR;
 			}
-			JSONObject json = jsonObject.getJSONObject("data");
-			ResponseListHelper helper = new ResponseListHelper(context);
-			synchronized (lock.Lock) {
-				SQLiteDatabase db = helper.getWritableDatabase();
-				insertRespone(json, helper, db);
-			}
-			helper.close();
+			JSONArray json = jsonObject.getJSONArray("data");
+			insertfriendsRequest(context, json,
+					FriendsRequestHolder.TYPE_FROM_ME);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1428,11 +1530,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 我发送的好友请求
+	 * 
 	 * @param context
 	 * @return
 	 */
@@ -1447,7 +1551,8 @@ public class HttpJsonTool {
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/addfriend/gettome/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			// params.add(new BasicNameValuePair("role_id",
+			// String.valueOf(holder.getRole_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -1467,13 +1572,8 @@ public class HttpJsonTool {
 			if (status != StatusTool.STATUS_OK) {
 				return ERROR;
 			}
-			JSONObject json = jsonObject.getJSONObject("data");
-			ResponseListHelper helper = new ResponseListHelper(context);
-			synchronized (lock.Lock) {
-				SQLiteDatabase db = helper.getWritableDatabase();
-				insertRespone(json, helper, db);
-			}
-			helper.close();
+			JSONArray json = jsonObject.getJSONArray("data");
+			insertfriendsRequest(context, json, FriendsRequestHolder.TYPE_TO_ME);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1490,11 +1590,13 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
+
 	/**
 	 * 好友列表
+	 * 
 	 * @param context
 	 * @return
 	 */
@@ -1509,7 +1611,8 @@ public class HttpJsonTool {
 			HttpPost httpRequest = new HttpPost(ServerUrl
 					+ "/userfriend/getfriend/");
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			//params.add(new BasicNameValuePair("role_id", String.valueOf(holder.getRole_id())));
+			// params.add(new BasicNameValuePair("role_id",
+			// String.valueOf(holder.getRole_id())));
 			params.add(new BasicNameValuePair("token", HearFromApp.token));
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse response = client.execute(httpRequest);
@@ -1529,13 +1632,7 @@ public class HttpJsonTool {
 			if (status != StatusTool.STATUS_OK) {
 				return ERROR;
 			}
-			JSONObject json = jsonObject.getJSONObject("data");
-			ResponseListHelper helper = new ResponseListHelper(context);
-			synchronized (lock.Lock) {
-				SQLiteDatabase db = helper.getWritableDatabase();
-				insertRespone(json, helper, db);
-			}
-			helper.close();
+			JSONArray json = jsonObject.getJSONArray("data");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1552,8 +1649,8 @@ public class HttpJsonTool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ERROR + "网络错误";
-		} 
+		}
 		return SUCCESS;
 	}
-	
+
 }

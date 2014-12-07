@@ -1,6 +1,5 @@
 package com.tingshuo.hearfrom;
 
-import io.rong.imlib.RongIMClient;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,8 +8,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tingshuo.hearfrom.base.BaseSwipeFragmentActivity;
-import com.tingshuo.tool.RongIMTool;
 import com.tingshuo.tool.T;
+import com.tingshuo.tool.db.FriendsRequestHelper;
+import com.tingshuo.tool.im.RongIMTool;
+import com.tingshuo.tool.im.RongMessageTYPE;
 import com.tingshuo.web.http.HttpJsonTool;
 
 public class AddFriendsActivity extends BaseSwipeFragmentActivity {
@@ -67,6 +68,7 @@ public class AddFriendsActivity extends BaseSwipeFragmentActivity {
 			@Override
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
+				
 				return HttpJsonTool.getInstance().friend_sendAdd(
 						getApplicationContext(), Integer.parseInt(user_id));
 			}
@@ -79,7 +81,7 @@ public class AddFriendsActivity extends BaseSwipeFragmentActivity {
 				}else if(result.startsWith(HttpJsonTool.ERROR403)){
 					
 				}else if(result.startsWith(HttpJsonTool.SUCCESS)){
-					RongIMTool.getInstance().sendMessage("请求添加你为好友", String.valueOf(user_id));
+					RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_ADDFRIENDS,"您有一个好友请求", String.valueOf(user_id));
 					T.show(getApplicationContext(), "发送请求成功，等待对方答复", Toast.LENGTH_SHORT);
 					finish();
 				}

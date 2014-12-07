@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.tingshuo.hearfrom.R;
-import com.tingshuo.tool.RongIMTool;
+import com.tingshuo.tool.im.RongIMTool;
 
 public class leaderFirstScreen extends BaseScreen{
 	 @Override  

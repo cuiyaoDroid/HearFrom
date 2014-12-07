@@ -19,7 +19,7 @@ public class messageCenterActivity extends BaseAcivity {
 		setContentView(R.layout.activity_message_cent);
 		initContentView();
 		messageList = (ListView) findViewById(R.id.message_list);
-		getMessageDate();
+		//getMessageDate();
 	}
 
 	
@@ -44,7 +44,7 @@ public class messageCenterActivity extends BaseAcivity {
 	protected void initContentView() {
 		// TODO Auto-generated method stub
 		super.initContentView();
-		title_middle.setText("");
+		title_middle.setText("¡ƒÃÏ");
 		titleback.setVisibility(View.GONE);
 		title_right.setVisibility(View.VISIBLE);
 		title_right.setText("∫√”—");

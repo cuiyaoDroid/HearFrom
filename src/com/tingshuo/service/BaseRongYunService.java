@@ -3,6 +3,7 @@ package com.tingshuo.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tingshuo.hearfrom.FriendsRequestListActivity;
 import com.tingshuo.hearfrom.HearFromMainActivity;
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.L;
@@ -84,7 +85,7 @@ public abstract class BaseRongYunService extends Service {
 
 	private void addNotificationMGR() {
 		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mNotificationIntent = new Intent(this, HearFromMainActivity.class);
+		mNotificationIntent = new Intent(this, FriendsRequestListActivity.class);
 	}
 
 	protected void notifyClient(String fromJid, String fromUserName,
