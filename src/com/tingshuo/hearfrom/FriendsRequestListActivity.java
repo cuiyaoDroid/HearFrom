@@ -21,11 +21,13 @@ import com.tingshuo.tool.view.adapter.RequestListAdapter;
 import com.tingshuo.tool.view.adapter.RequestListAdapter.AgreeClicklistener;
 import com.tingshuo.web.http.HttpJsonTool;
 
-public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements AgreeClicklistener{
+public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements
+		AgreeClicklistener {
 	private ListView requestList;
 	private RequestListAdapter adapter;
-	private List<Map<String,Object>>data=new ArrayList<Map<String,Object>>();
+	private List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 	private ProgressBar progressBar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -34,71 +36,85 @@ public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements
 		initContentView();
 		requestList = (ListView) findViewById(R.id.request_list);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		adapter=new RequestListAdapter(getApplicationContext(), data);
+		adapter = new RequestListAdapter(getApplicationContext(), data);
 		adapter.setAgreeListener(this);
 		requestList.setAdapter(adapter);
 		getRequestData();
 	}
 
-	
-	private void getRequestData(){
+	private void getRequestData() {
 		progressBar.setVisibility(View.VISIBLE);
-		AsyncTask<Void, Void, String>task=new AsyncTask<Void, Void, String>(){
+		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 
 			@Override
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
-				FriendsRequestHelper reHelper = new FriendsRequestHelper(getApplicationContext());
+				FriendsRequestHelper reHelper = new FriendsRequestHelper(
+						getApplicationContext());
 				reHelper.clear();
 				reHelper.close();
-				HttpJsonTool.getInstance().friend_getfromme(getApplicationContext());
-				return HttpJsonTool.getInstance().friend_gettome(getApplicationContext());
+				HttpJsonTool.getInstance().friend_getfromme(
+						getApplicationContext());
+				return HttpJsonTool.getInstance().friend_gettome(
+						getApplicationContext());
 			}
+
 			@Override
 			protected void onPostExecute(String result) {
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
 				progressBar.setVisibility(View.GONE);
-				if(result.startsWith(HttpJsonTool.SUCCESS)){
+				if (result.startsWith(HttpJsonTool.SUCCESS)) {
 					refreshRequestData();
-				}else{
+				} else {
 				}
 			}
 		};
 		task.execute();
 	}
-	private void agreeFriendsAdd(){
+
+	private void agreeFriendsAdd(final int position) {
 		progressBar.setVisibility(View.VISIBLE);
-		AsyncTask<Void, Void, String>task=new AsyncTask<Void, Void, String>(){
+		final int request_id = (Integer) data.get(position).get(
+				FriendsRequestHelper.ID);
+		final int user_id = (Integer) data.get(position).get(
+				FriendsRequestHelper.USER_ID);
+		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 
 			@Override
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
-				return HttpJsonTool.getInstance().friend_gettome(getApplicationContext());
+
+				return HttpJsonTool.getInstance().friend_agree(
+						getApplicationContext(), request_id, user_id);
 			}
+
 			@Override
 			protected void onPostExecute(String result) {
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
 				progressBar.setVisibility(View.GONE);
-				if(result.startsWith(HttpJsonTool.SUCCESS)){
+				if (result.startsWith(HttpJsonTool.SUCCESS)) {
 					refreshRequestData();
-				}else{
+				} else {
 				}
 			}
 		};
 		task.execute();
 	}
-	private void refreshRequestData(){
+
+	private void refreshRequestData() {
 		data.clear();
-		FriendsRequestHelper helper=new FriendsRequestHelper(getApplicationContext());
-		ArrayList<FriendsRequestHolder>holders=helper.selectData();
+		FriendsRequestHelper helper = new FriendsRequestHelper(
+				getApplicationContext());
+		ArrayList<FriendsRequestHolder> holders = helper.selectData();
 		helper.close();
-		UserInfoHelper user_helper=new UserInfoHelper(getApplicationContext());
-		for(FriendsRequestHolder holder : holders){
-			Map<String,Object>map=new HashMap<String, Object>();
-			UserInfoHolder user_holder=user_helper.selectData_Id(holder.getUser_id());
-			if(user_holder==null){
+		UserInfoHelper user_helper = new UserInfoHelper(getApplicationContext());
+		for (FriendsRequestHolder holder : holders) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			UserInfoHolder user_holder = user_helper.selectData_Id(holder
+					.getUser_id());
+			if (user_holder == null) {
 				continue;
 			}
 			map.put(FriendsRequestHelper.ID, holder.getId());
@@ -112,6 +128,7 @@ public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements
 		user_helper.close();
 		adapter.notifyDataSetChanged();
 	}
+
 	@Override
 	protected void initContentView() {
 		// TODO Auto-generated method stub
@@ -119,7 +136,7 @@ public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements
 		title_middle.setText("∫√”—«Î«Û");
 		titleback.setVisibility(View.VISIBLE);
 		titleRight.setVisibility(View.VISIBLE);
-    	titleRight.setImageResource(R.drawable.btn_top_add_bg);
+		titleRight.setImageResource(R.drawable.btn_top_add_bg);
 	}
 
 	@Override
@@ -130,7 +147,8 @@ public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements
 			finish();
 			break;
 		case R.id.title_right_imgbtn:
-			Intent intent=new Intent(getApplicationContext(),AddFriendsActivity.class);
+			Intent intent = new Intent(getApplicationContext(),
+					AddFriendsActivity.class);
 			startActivity(intent);
 			break;
 		default:
@@ -138,10 +156,9 @@ public class FriendsRequestListActivity extends BaseSwipeBaceActivity implements
 		}
 	}
 
-
 	@Override
 	public void agree(int position) {
 		// TODO Auto-generated method stub
-		
+		agreeFriendsAdd(position);
 	}
 }

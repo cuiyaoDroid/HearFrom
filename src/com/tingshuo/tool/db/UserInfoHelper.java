@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class UserInfoHelper extends DBHelper {
-	private final static String TABLE_NAME = "userinfo_order";
+	public final static String TABLE_NAME = "userinfo_order";
 	public final static String ID = "_id";
 	public final static String ACCOUNT = "account";
 	public final static String NICK_NAME = "nickname";

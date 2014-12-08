@@ -14,7 +14,7 @@
     <dimen name="setting_height">40dp</dimen>
     <dimen name="setting_img_height">50dp</dimen>
     <dimen name="setting_padding">8dp</dimen>
-    
+    <dimen name="textSizeS4">12.0sp</dimen>
     
     <dimen name="updatebar_height">62.0dip</dimen>
     <dimen name="updatebar_content_height">60.0dip</dimen>

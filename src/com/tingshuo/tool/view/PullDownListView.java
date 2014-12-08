@@ -497,7 +497,12 @@ public class PullDownListView extends FrameLayout implements
 		mProgressBar2.setVisibility(View.GONE);
 		more.setText(R.string.loading);
 	}
-
+	public void setLoading(){
+		foot.setEnabled(false);
+		mState = STATE_REFRESH;
+		mProgressBar2.setVisibility(View.VISIBLE);
+		more.setText(R.string.loading);
+	}
 	public void onLoadMore() {
 		// onLoadMore ·½·¨Ö´ÐÐ
 		foot.setEnabled(false);

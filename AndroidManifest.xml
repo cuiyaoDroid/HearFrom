@@ -113,6 +113,15 @@
             android:theme="@style/Default.SwipeBack" >
         </activity>
         <activity
+            android:name="com.tingshuo.hearfrom.RongYunChatActivity"
+            android:theme="@style/Default.SwipeBack" 
+            android:alwaysRetainTaskState="true"
+            android:configChanges="locale|keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+        <activity
             android:name="com.tingshuo.hearfrom.SelectRoleActivity"
             android:theme="@style/Default.SwipeBack" >
         </activity>

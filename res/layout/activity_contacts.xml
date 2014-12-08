@@ -14,7 +14,8 @@
 
     <com.tingshuo.tool.view.SideBar
         android:id="@+id/side_bar"
-        android:layout_width="14dp"
+        android:layout_width="20dp"
+        android:layout_marginRight="2dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/titleLayout"
@@ -31,5 +32,12 @@
         android:textSize="35sp"
         android:visibility="gone"
         tools:text="A" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

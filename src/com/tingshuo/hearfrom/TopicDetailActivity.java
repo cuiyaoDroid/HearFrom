@@ -184,7 +184,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		if (more) {
 			mPager.curpage++;
 		} else {
-			mainpostListView.onLoadMore();
+			mainpostListView.setLoading();
 			// commentlist_progressbar.setVisibility(View.VISIBLE);
 		}
 		mainpostDatetask = new AsyncTask<Void, Void, String>() {
@@ -331,7 +331,6 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 			CommentZanHolder zanholder,
 			ArrayList<ResponseListHolder> response_holders, int type) {
 		mPager.minId = holder.getId();
-		L.i(holder.getNickname() + ":" + holder.getContent());
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(CommentHelper.HEAD, holder.getHead());
 		data.put(CommentHelper.IMAGE, holder.getImage());
@@ -372,6 +371,7 @@ public class TopicDetailActivity extends BaseSwipeBaceActivity implements
 		// TODO Auto-generated method stub
 		super.onResume();
 		mainpostListView.setMore(refreshData(false));
+		mainpostListView.setLoading();
 		adapter.notifyDataSetChanged();
 		if (!hidekeyboard) {
 			hidekeyboard=true;
