@@ -205,7 +205,7 @@ public class ImageCache {
      */
     public static class ImageCacheParams {
         public String uniqueName;
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory());
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory()/1024);
 		// 用最大内存的1/4来存储图片
 		final int cacheSize = maxMemory / 4;
         public int memCacheSize = cacheSize;

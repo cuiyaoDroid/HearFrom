@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@android:color/white" >
 
     <include
         android:id="@+id/titleLayout"
@@ -13,8 +14,15 @@
         android:layout_width="match_parent"
         android:listSelector="@android:color/transparent"
         android:dividerHeight="1px"
+        android:layout_below="@+id/titleLayout"
         android:divider="@color/divider_color"
         android:layout_height="wrap_content" >
     </ListView>
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

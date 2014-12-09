@@ -16,7 +16,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.tingshuo.hearfrom.base.BaseAcivity;
 import com.tingshuo.tool.ActivityTool;
 import com.tingshuo.tool.L;
-import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.Pager;
 import com.tingshuo.tool.db.TopicZanHelper;
 import com.tingshuo.tool.db.TopicZanHolder;

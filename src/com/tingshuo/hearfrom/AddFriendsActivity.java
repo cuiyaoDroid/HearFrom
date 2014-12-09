@@ -9,7 +9,8 @@ import android.widget.Toast;
 
 import com.tingshuo.hearfrom.base.BaseSwipeFragmentActivity;
 import com.tingshuo.tool.T;
-import com.tingshuo.tool.db.FriendsRequestHelper;
+import com.tingshuo.tool.db.UserInfoHelper;
+import com.tingshuo.tool.db.UserInfoHolder;
 import com.tingshuo.tool.im.RongIMTool;
 import com.tingshuo.tool.im.RongMessageTYPE;
 import com.tingshuo.web.http.HttpJsonTool;
@@ -63,6 +64,15 @@ public class AddFriendsActivity extends BaseSwipeFragmentActivity {
 			T.show(getApplicationContext(), "请输入对方账号",Toast.LENGTH_LONG);
 			return;
 		}
+		UserInfoHelper helper=new UserInfoHelper(getApplicationContext());
+		UserInfoHolder holder=helper.selectData_Id(HearFromApp.user_id);
+		helper.close();
+		final String nickname;
+		if(holder==null){
+			nickname="";
+		}else{
+			nickname=holder.getNickname();
+		}
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 
 			@Override
@@ -81,7 +91,7 @@ public class AddFriendsActivity extends BaseSwipeFragmentActivity {
 				}else if(result.startsWith(HttpJsonTool.ERROR403)){
 					
 				}else if(result.startsWith(HttpJsonTool.SUCCESS)){
-					RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_ADDFRIENDS,"您有一个好友请求", String.valueOf(user_id));
+					RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_ADDFRIENDS,nickname+"请求添加你为好友", String.valueOf(user_id));
 					T.show(getApplicationContext(), "发送请求成功，等待对方答复", Toast.LENGTH_SHORT);
 					finish();
 				}

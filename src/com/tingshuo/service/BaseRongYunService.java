@@ -33,7 +33,7 @@ public abstract class BaseRongYunService extends Service {
 
 	private NotificationManager mNotificationManager;
 	private Notification mNotification;
-	private Intent mNotificationIntent;
+	//private Intent mNotificationIntent;
 	private Vibrator mVibrator;
 	protected WakeLock mWakeLock;
 
@@ -85,16 +85,13 @@ public abstract class BaseRongYunService extends Service {
 
 	private void addNotificationMGR() {
 		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mNotificationIntent = new Intent(this, FriendsRequestListActivity.class);
+		//mNotificationIntent = new Intent(this, FriendsRequestListActivity.class);
 	}
 
 	protected void notifyClient(String fromJid, String fromUserName,
-			String message, boolean showNotification) {
-		if (!showNotification) {
-			return;
-		}
+			String message,Intent mNotificationIntent) {
 		mWakeLock.acquire();
-		setNotification(fromJid, fromUserName, message);
+		setNotification(fromJid, fromUserName, message,mNotificationIntent);
 		setLEDNotification();
 
 		int notifyId = 0;
@@ -119,7 +116,7 @@ public abstract class BaseRongYunService extends Service {
 	}
 
 	private void setNotification(String fromJid, String fromUserId,
-			String message) {
+			String message,Intent mNotificationIntent) {
 
 		int mNotificationCounter = 0;
 		if (mNotificationCount.containsKey(fromJid)) {
@@ -153,10 +150,6 @@ public abstract class BaseRongYunService extends Service {
 			ticker = author;
 		mNotification = new Notification(R.drawable.ic_launcher, ticker,
 				System.currentTimeMillis());
-		Uri userNameUri = Uri.parse(fromJid);
-		mNotificationIntent.setData(userNameUri);
-		mNotificationIntent.putExtra(HearFromMainActivity.INTENT_EXTRA_USERNAME,
-				fromUserId);
 		mNotificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		// need to set flag FLAG_UPDATE_CURRENT to get extras transferred

@@ -2,9 +2,9 @@ package com.tingshuo.tool.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
-public class ResizeLayout extends RelativeLayout {
+public class ResizeLinearLayout extends LinearLayout {
 	private OnResizeListener mListener;
 
 	public interface OnResizeListener {
@@ -16,7 +16,7 @@ public class ResizeLayout extends RelativeLayout {
 		mListener = l;
 	}
 
-	public ResizeLayout(Context context, AttributeSet attrs) {
+	public ResizeLinearLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
@@ -28,11 +28,4 @@ public class ResizeLayout extends RelativeLayout {
 			mListener.OnResize(w, h, oldw, oldh);
 		}
 	}
-	@Override   
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {   
-        super.onLayout(changed, l, t, r, b);   
-        if (mListener != null&&changed) {
-			mListener.OnLayout(l, t, r, b);
-		}
-    }  
 }

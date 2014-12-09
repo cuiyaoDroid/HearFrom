@@ -18,6 +18,7 @@ import com.tingshuo.tool.T;
 @SuppressWarnings("deprecation")
 public class HearFromTabMainActivity extends TabActivity implements
 		OnClickListener {
+	public static final String SELECT_TION="select_tion";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -99,6 +100,9 @@ public class HearFromTabMainActivity extends TabActivity implements
 		icon5.setImageResource(R.drawable.tab_item5);
 		host.addTab(host.newTabSpec("tab_item5").setIndicator(view5)
 				.setContent(new Intent(this, MyCenterActivity.class)));
+		
+		int selected=getIntent().getIntExtra(SELECT_TION , 0);
+		host.setCurrentTab(selected);
 	}
 
 	@Override

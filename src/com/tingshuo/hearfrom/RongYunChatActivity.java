@@ -1,7 +1,9 @@
 package com.tingshuo.hearfrom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
@@ -36,16 +39,30 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
+import com.tingshuo.tool.L;
+import com.tingshuo.tool.db.ChatMessageHelper;
+import com.tingshuo.tool.db.ChatMessageHolder;
+import com.tingshuo.tool.db.CurMessageListHelper;
+import com.tingshuo.tool.db.CurMessageListHolder;
+import com.tingshuo.tool.db.Pager;
 import com.tingshuo.tool.db.UserInfoHelper;
 import com.tingshuo.tool.db.UserInfoHolder;
+import com.tingshuo.tool.db.lock;
+import com.tingshuo.tool.im.RongIMTool;
+import com.tingshuo.tool.im.RongMessageTYPE;
+import com.tingshuo.tool.observer.Observable;
+import com.tingshuo.tool.observer.Observer;
 import com.tingshuo.tool.view.CirclePageIndicator;
 import com.tingshuo.tool.view.MsgListView;
 import com.tingshuo.tool.view.MsgListView.IXListViewListener;
+import com.tingshuo.tool.view.ResizeLinearLayout;
+import com.tingshuo.tool.view.ResizeLinearLayout.OnResizeListener;
 import com.tingshuo.tool.view.adapter.FaceAdapter;
 import com.tingshuo.tool.view.adapter.FacePageAdeapter;
+import com.tingshuo.tool.view.adapter.RongChatAdapter;
 
-public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouchListener,
-		OnClickListener, IXListViewListener {
+public class RongYunChatActivity extends BaseSwipeBaceActivity implements
+		OnTouchListener, OnClickListener, IXListViewListener, Observer,OnResizeListener {
 	public static final String INTENT_EXTRA_USERNAME = RongYunChatActivity.class
 			.getName() + ".username";// 昵称对应的key
 	private MsgListView mMsgListView;// 对话ListView
@@ -59,8 +76,13 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 	private WindowManager.LayoutParams mWindowNanagerParams;
 	private InputMethodManager mInputMethodManager;
 	private List<String> mFaceMapKeys;// 表情对应的字符串数组
-	private int user_id;
+	private int friend_id;
 	private UserInfoHolder userInfo;
+
+	private RongChatAdapter mChatAdapter;
+	private Pager mPage;
+	private List<Map<String, Object>> mChatData = new ArrayList<Map<String, Object>>();
+	private ResizeLinearLayout rootview;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,40 +91,85 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 		initData();// 初始化数据
 		initView();// 初始化view
 		initFacePage();// 初始化表情
-		
+
 	}
+
 	@Override
 	protected void initContentView() {
 		super.initContentView();
-		user_id=getIntent().getIntExtra(UserInfoHelper.ID, -1);
-		if(user_id==-1){
+		mPage = new Pager(0, Pager.Default_Page);
+		friend_id = getIntent().getIntExtra(UserInfoHelper.ID, -1);
+		if (friend_id == -1) {
 			finish();
 			return;
 		}
-		
-		UserInfoHelper helper= new UserInfoHelper(getApplicationContext());
-		userInfo=helper.selectData_Id(user_id);
-		if(userInfo==null){
+
+		UserInfoHelper helper = new UserInfoHelper(getApplicationContext());
+		userInfo = helper.selectData_Id(friend_id);
+		if (userInfo == null) {
 			finish();
 			return;
 		}
 		helper.close();
-		title_middle.setText("与"+userInfo.getNickname()+"聊天中");
+		title_middle.setText("与" + userInfo.getNickname() + "聊天中");
 		titleback.setVisibility(View.GONE);
 		titleback.setVisibility(View.VISIBLE);
 		title_right.setVisibility(View.GONE);
+		rootview = (ResizeLinearLayout)findViewById(R.id.root);
+		rootview.setOnResizeListener(this);
 	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
+		ChatMessageHelper.mObservable.addObserver(this);
+		refreshChatData(false);
+	}
+
+	private void refreshChatData(boolean more) {
+		if (more) {
+			mPage.curpage++;
+		} else {
+			mChatData.clear();
+		}
+		ChatMessageHelper helper = new ChatMessageHelper(
+				getApplicationContext());
+		ArrayList<ChatMessageHolder> holders = helper.selectData(friend_id,
+				mPage.curpage * mPage.pagesize, mPage.pagesize);
+		helper.close();
+		if (more) {
+			for (ChatMessageHolder holder:holders) {
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put(ChatMessageHelper.TABLE_NAME, holder);
+				data.put(UserInfoHelper.NICK_NAME, userInfo.getNickname());
+				data.put(UserInfoHelper.HEAD, userInfo.getHead());
+				mChatData.add(0,data);
+			}
+		} else {
+			for (int i = holders.size() - 1; i >= 0; i--) {
+				ChatMessageHolder holder = holders.get(i);
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put(ChatMessageHelper.TABLE_NAME, holder);
+				data.put(UserInfoHelper.NICK_NAME, userInfo.getNickname());
+				data.put(UserInfoHelper.HEAD, userInfo.getHead());
+				mChatData.add(data);
+			}
+		}
+		mChatAdapter.notifyDataSetChanged();
+		if (!more) {
+			mMsgListView.setSelection(mChatAdapter.getCount() - 1);
+		} else {
+			if (holders.size() > 0) {
+				mMsgListView.setSelection(holders.size());
+			}
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		ChatMessageHelper.mObservable.deleteObserver(this);
 	}
-
-
 
 	@Override
 	protected void onDestroy() {
@@ -116,12 +183,11 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 
 	private void initData() {
 		// 将表情map的key保存在数组中
-		
+
 		Set<String> keySet = HearFromApp.getInstance().getFaceMap().keySet();
 		mFaceMapKeys = new ArrayList<String>();
 		mFaceMapKeys.addAll(keySet);
 	}
-
 
 	private void initView() {
 		mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -132,7 +198,10 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 		mMsgListView.setOnTouchListener(this);
 		mMsgListView.setPullLoadEnable(false);
 		mMsgListView.setXListViewListener(this);
+		mChatAdapter = new RongChatAdapter(getApplicationContext(), mChatData);
+		mMsgListView.setAdapter(mChatAdapter);
 		mSendMsgBtn = (Button) findViewById(R.id.send);
+		mSendMsgBtn.setEnabled(false);
 		mFaceSwitchBtn = (ImageButton) findViewById(R.id.face_switch_btn);
 		mChatEditText = (EditText) findViewById(R.id.input);
 		mFaceRoot = (LinearLayout) findViewById(R.id.face_ll);
@@ -186,6 +255,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 
 	@Override
 	public void onRefresh() {
+		refreshChatData(true);
 		mMsgListView.stopRefresh();
 	}
 
@@ -218,6 +288,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 			}
 			break;
 		case R.id.send:// 发送消息
+			sendMessage();
 			break;
 		case R.id.title_img_back:
 			finish();
@@ -350,8 +421,8 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 						// 压缩后图片的宽和高以及kB大小均会变化
 						Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0,
 								rawWidth, rawHeigh, matrix, true);
-						ImageSpan imageSpan = new ImageSpan(RongYunChatActivity.this,
-								newBitmap);
+						ImageSpan imageSpan = new ImageSpan(
+								RongYunChatActivity.this, newBitmap);
 						String emojiStr = mFaceMapKeys.get(count);
 						SpannableString spannableString = new SpannableString(
 								emojiStr);
@@ -387,5 +458,73 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements OnTouc
 		};
 	}
 
+	private Handler mHandler = new Handler();
 
+	private void sendMessage() {
+		String content = mChatEditText.getText().toString();
+		RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_TEXT,
+				content, String.valueOf(friend_id));
+		ChatMessageHelper helper = new ChatMessageHelper(
+				getApplicationContext());
+		long time=System.currentTimeMillis();
+		ChatMessageHolder holder = new ChatMessageHolder(-1,
+				HearFromApp.user_id, time,
+				String.valueOf(HearFromApp.user_id), String.valueOf(friend_id),
+				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
+				ChatMessageHolder.STATUS_SENDING);
+		
+		CurMessageListHelper curhelper=new CurMessageListHelper(getApplicationContext());
+		CurMessageListHolder curholder=new CurMessageListHolder(friend_id,
+				HearFromApp.user_id, time,
+				String.valueOf(HearFromApp.user_id), String.valueOf(friend_id),
+				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
+				ChatMessageHolder.STATUS_SENDING);
+		
+		synchronized (lock.Lock) {
+			helper.insert(holder, helper.getWritableDatabase());
+			curhelper.insert(curholder, helper.getWritableDatabase());
+		}
+		helper.close();
+		curhelper.close();
+		mChatEditText.setText("");
+	}
+
+	@Override
+	public void update(Observable o, final Object msg) {
+		// TODO Auto-generated method stub
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				UserInfoHelper userHelper = new UserInfoHelper(
+						getApplicationContext());
+				ChatMessageHolder holder = (ChatMessageHolder) msg;
+				if (!(holder.getFrom_id().equals(String.valueOf(friend_id)) || holder
+						.getTo_id().equals(String.valueOf(friend_id)))) {
+					return;
+				}
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put(ChatMessageHelper.TABLE_NAME, holder);
+				data.put(UserInfoHelper.NICK_NAME, userInfo.getNickname());
+				data.put(UserInfoHelper.HEAD, userInfo.getHead());
+				mChatData.add(data);
+				userHelper.close();
+				mChatAdapter.notifyDataSetChanged();
+				mMsgListView.setSelection(mChatAdapter.getCount() - 1);
+			}
+		});
+	}
+
+	@Override
+	public void OnResize(int w, int h, int oldw, int oldh) {
+		// TODO Auto-generated method stub
+		L.i("================OnResize");
+		mMsgListView.setSelection(mChatAdapter.getCount() - 1);
+	}
+
+	@Override
+	public void OnLayout(int l, int t, int r, int b) {
+		// TODO Auto-generated method stub
+		
+	}
 }

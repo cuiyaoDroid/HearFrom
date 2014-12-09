@@ -7,13 +7,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.app.Application;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.view.View;
 
 import com.tingshuo.tool.CrashHandler;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
 import com.tingshuo.tool.db.DBHelper;
+import com.tingshuo.tool.db.UserInfoHelper;
+import com.tingshuo.web.http.HttpJsonTool;
 
 public class HearFromApp extends Application {
 	public static final int NUM_PAGE = 6;// 总共有多少页
@@ -63,6 +67,7 @@ public class HearFromApp extends Application {
 		user_id = PreferenceUtils.getPrefInt(this, PreferenceConstants.USER_ID,
 				-1);
 		upGradeDBifnessage();
+		
 		L.isDebug = PreferenceUtils.getPrefBoolean(this,
 				PreferenceConstants.ISNEEDLOG, true);
 		if (PreferenceUtils.getPrefBoolean(this,
@@ -70,13 +75,32 @@ public class HearFromApp extends Application {
 			CrashHandler.getInstance().init(this);
 		RongIMClient.init(this, APP_KEY, R.drawable.ic_launcher);
 		initFaceMap();
+		//getFriendsList();
 	}
 	public Map<String, Integer> getFaceMap() {
 		if (!mFaceMap.isEmpty())
 			return mFaceMap;
 		return null;
 	}
+	private void getFriendsList() {
+		AsyncTask<Void, Void, String> getFriendsListtask = new AsyncTask<Void, Void, String>() {
 
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				HttpJsonTool.getInstance().friend_getlist(
+						getApplicationContext());
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+			}
+		};
+		getFriendsListtask.execute();
+	}
 	private void initFaceMap() {
 		// TODO Auto-generated method stub
 		mFaceMap.put("[呲牙]", R.drawable.f_static_000);

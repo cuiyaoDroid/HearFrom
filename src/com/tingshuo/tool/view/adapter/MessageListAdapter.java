@@ -1,10 +1,8 @@
 package com.tingshuo.tool.view.adapter;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tingshuo.hearfrom.R;
+import com.tingshuo.tool.db.CurMessageListHelper;
+import com.tingshuo.tool.db.UserInfoHelper;
 import com.tingshuo.tool.db.mainPostListHelper;
 import com.tingshuo.web.http.HttpJsonTool;
 import com.tingshuo.web.img.fetcher.ImageCache;
@@ -42,7 +42,8 @@ public class MessageListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	public MessageListAdapter(Context context, List<? extends Map<String, Object>> list) {
+	public MessageListAdapter(Context context,
+			List<? extends Map<String, Object>> list) {
 		this.list = list;
 		mInflater = LayoutInflater.from(context);
 		ImageCache = new ImageCache(context, "tingshuo");
@@ -50,9 +51,6 @@ public class MessageListAdapter extends BaseAdapter {
 		mImageFetcher.setImageCache(ImageCache);
 		this.context = context;
 	}
-
-	@SuppressLint("SimpleDateFormat") 
-	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
@@ -64,26 +62,29 @@ public class MessageListAdapter extends BaseAdapter {
 					.findViewById(R.id.content_img);
 			viewHolder.content_txt = (TextView) convertView
 					.findViewById(R.id.content_txt);
-			viewHolder.title_txt = (TextView) convertView.findViewById(R.id.title_txt);
+			viewHolder.title_txt = (TextView) convertView
+					.findViewById(R.id.title_txt);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		String images=(String) list.get(position).get(mainPostListHelper.IMAGE);
-		String content=(String) list.get(position).get(mainPostListHelper.CONTENT);
-		viewHolder.content_txt.setText(Html.fromHtml(content));
-		if(images.trim().length()>0){
-			String[] img=images.split(",");
-			if(img.length>0){
-				mImageFetcher.loadImage(HttpJsonTool.imgServerUrl+img[0], viewHolder.content_img);
-			}else{
-				viewHolder.content_img.setImageBitmap(null);
-			}
-		}else{
+		String images = (String) list.get(position).get(
+				UserInfoHelper.HEAD);
+		String content = (String) list.get(position).get(
+				CurMessageListHelper.CONTENT);
+		String title = (String) list.get(position).get(
+				UserInfoHelper.NICK_NAME);
+		viewHolder.title_txt.setText(title);
+		viewHolder.content_txt.setText(content);
+		if (images.length() > 0) {
+			mImageFetcher.loadImage(HttpJsonTool.imgServerUrl + images,
+					viewHolder.content_img);
+		} else {
 			viewHolder.content_img.setImageBitmap(null);
 		}
 		return convertView;
 	}
+
 	public static class ViewHolder {
 		public ImageView content_img;
 		public TextView content_txt;

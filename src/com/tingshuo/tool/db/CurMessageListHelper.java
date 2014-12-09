@@ -2,16 +2,15 @@ package com.tingshuo.tool.db;
 
 import java.util.ArrayList;
 
-import com.tingshuo.hearfrom.HearFromApp;
-import com.tingshuo.tool.observer.Observable;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class ChatMessageHelper extends DBHelper {
-	public final static String TABLE_NAME = "chat_message_order";
+import com.tingshuo.hearfrom.HearFromApp;
+
+public class CurMessageListHelper extends DBHelper {
+	public final static String TABLE_NAME = "cur_message_order";
 	public final static String ID = "_id";
 	public final static String USER_ID = "user_id";
 	public final static String TIME = "time";
@@ -20,8 +19,7 @@ public class ChatMessageHelper extends DBHelper {
 	public final static String TO_ID = "to_id";
 	public final static String CONTENT = "content";
 	public final static String STATUS = "status";
-	public static Observable mObservable=new Observable();
-	public ChatMessageHelper(Context context) {
+	public CurMessageListHelper(Context context) {
 		super(context);
 	}
 
@@ -45,7 +43,7 @@ public class ChatMessageHelper extends DBHelper {
 		return sql;
 	}
 	
-	public long insert(ChatMessageHolder content, SQLiteDatabase db) {
+	public long insert(CurMessageListHolder content, SQLiteDatabase db) {
 		ContentValues cv = new ContentValues();
 		if (content.getId() != -1) {
 			cv.put(ID, content.getId());
@@ -58,13 +56,9 @@ public class ChatMessageHelper extends DBHelper {
 		cv.put(FROM_ID, content.getFrom_id());
 		cv.put(TO_ID, content.getTo_id());
 		
-		mObservable.setChanged();
-		mObservable.notifyObservers(content);
-		mObservable.clearChanged();
-		
 		return db.replace(TABLE_NAME, null, cv);
 	}
-	public static ChatMessageHolder getDataCursor(Cursor cursor) {
+	public static CurMessageListHolder getDataCursor(Cursor cursor) {
 		int id_column = cursor.getColumnIndex(ID);
 		int user_id_column = cursor.getColumnIndex(USER_ID);
 		int time_column = cursor.getColumnIndex(TIME);
@@ -82,18 +76,18 @@ public class ChatMessageHelper extends DBHelper {
 		String to_id = cursor.getString(to_id_column);
 		String content = cursor.getString(content_column);
 		int status = cursor.getInt(status_column);
-		ChatMessageHolder holder = new ChatMessageHolder(id, user_id, time
+		CurMessageListHolder holder = new CurMessageListHolder(id, user_id, time
 				, from_id, to_id, type, content,status);
 		return holder;
 	}
-	public ArrayList<ChatMessageHolder> selectData(int from_id,int from,int pagesize) {
+	public ArrayList<CurMessageListHolder> selectData(int from_id,int from,int pagesize) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_NAME, null, "( "+FROM_ID+"=? OR "+TO_ID+"=? ) AND "+USER_ID+"=?"
 				,new String[]{String.valueOf(from_id),String.valueOf(from_id),String.valueOf(HearFromApp.user_id)}
 				, null, null, ID + " desc limit "+ from + "," + pagesize);
-		ArrayList<ChatMessageHolder> holderlist = new ArrayList<ChatMessageHolder>();
+		ArrayList<CurMessageListHolder> holderlist = new ArrayList<CurMessageListHolder>();
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			ChatMessageHolder holder=getDataCursor(cursor);
+			CurMessageListHolder holder=getDataCursor(cursor);
 			holderlist.add(holder);
 		}
 		cursor.close();
@@ -105,19 +99,18 @@ public class ChatMessageHelper extends DBHelper {
 			return db.delete(TABLE_NAME,  ID + "=" + id, null);
 		}
 	}
-	public ArrayList<ChatMessageHolder> selectData(int from,int pagesize) {
+	public ArrayList<CurMessageListHolder> selectData() {
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(TABLE_NAME, null, null,null, null, null, ID + " asc limit "
-							+ from + "," + pagesize);
-		ArrayList<ChatMessageHolder> holderlist = new ArrayList<ChatMessageHolder>();
+		Cursor cursor = db.query(TABLE_NAME, null, null,null, null, null, TIME + " desc");
+		ArrayList<CurMessageListHolder> holderlist = new ArrayList<CurMessageListHolder>();
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			ChatMessageHolder holder=getDataCursor(cursor);
+			CurMessageListHolder holder=getDataCursor(cursor);
 			holderlist.add(holder);
 		}
 		cursor.close();
 		return holderlist;
 	}
-	public ChatMessageHolder selectData_Id(int v_id) {
+	public CurMessageListHolder selectData_Id(int v_id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_NAME, null, ID + "=?",
 				new String[] { String.valueOf(v_id) }, null, null, null);
@@ -125,7 +118,7 @@ public class ChatMessageHelper extends DBHelper {
 			cursor.close();
 			return null;
 		}
-		ChatMessageHolder holder=getDataCursor(cursor);
+		CurMessageListHolder holder=getDataCursor(cursor);
 		cursor.close();
 		return holder;
 	}

@@ -97,6 +97,7 @@
         </activity>
         <activity
             android:name="com.tingshuo.hearfrom.HearFromTabMainActivity"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.MyTheme" >
         </activity>
         <activity

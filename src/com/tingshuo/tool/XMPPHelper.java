@@ -3,11 +3,18 @@ package com.tingshuo.tool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.content.Context;
-import android.text.Editable;
-import android.util.TypedValue;
-
 import com.tingshuo.exception.XXAdressMalformedException;
+import com.tingshuo.hearfrom.HearFromApp;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
+import android.util.TypedValue;
 
 
 public class XMPPHelper {
@@ -75,7 +82,7 @@ public class XMPPHelper {
 	 * @param small
 	 *            是否需要小图片
 	 * @return
-	
+	 */
 	public static CharSequence convertNormalStringToSpannableString(
 			Context context, String message, boolean small) {
 		String hackTxt;
@@ -92,8 +99,8 @@ public class XMPPHelper {
 			int k = localMatcher.start();
 			int m = localMatcher.end();
 			if (m - k < 8) {
-				if (XXApp.getInstance().getFaceMap().containsKey(str2)) {
-					int face = XXApp.getInstance().getFaceMap().get(str2);
+				if (HearFromApp.getInstance().getFaceMap().containsKey(str2)) {
+					int face = HearFromApp.getInstance().getFaceMap().get(str2);
 					Bitmap bitmap = BitmapFactory.decodeResource(
 							context.getResources(), face);
 					if (bitmap != null) {
@@ -126,6 +133,6 @@ public class XMPPHelper {
 			}
 		}
 		return value;
-	} */
+	}
 
 }

@@ -1,6 +1,6 @@
 package com.tingshuo.tool.db;
 
-public class ChatMessageHolder {
+public class CurMessageListHolder {
 	private int id;
 	private int user_id;
 	private long time;
@@ -16,7 +16,7 @@ public class ChatMessageHolder {
 	public static final int STATUS_SENDED=2;
 	
 	
-	public ChatMessageHolder(int id, int user_id, long time, String from_id,
+	public CurMessageListHolder(int id, int user_id, long time, String from_id,
 			String to_id, String type, String content,int status) {
 		super();
 		this.id = id;

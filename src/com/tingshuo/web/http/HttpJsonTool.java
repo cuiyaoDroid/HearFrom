@@ -1182,6 +1182,9 @@ public class HttpJsonTool {
 	 */
 	private int insertUserInfo(JSONObject json,UserInfoHelper helper,SQLiteDatabase db){
 		int user_id = json.optInt("id");
+		if(user_id==HearFromApp.user_id){
+			return user_id;
+		}
 		String account = json.optString("account");
 		String nickname = json.optString("nickname");
 		String head = json.optString("head");
@@ -1754,4 +1757,60 @@ public class HttpJsonTool {
 		}
 		return SUCCESS;
 	}
+	
+	public synchronized String getUserInfo(Context context,int user_id) {
+		try {
+			HttpClient client = getHttpClient();
+			;
+			if (cookieInfo != null) {
+				((AbstractHttpClient) client).setCookieStore(cookieInfo);
+			}
+			StringBuilder builder = new StringBuilder();
+			HttpPost httpRequest = new HttpPost(ServerUrl
+					+ "/user/getUserInfoByUserId/");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("id", String.valueOf(user_id)));
+			params.add(new BasicNameValuePair("token", HearFromApp.token));
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response = client.execute(httpRequest);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == 403) {
+				httpjsontool = null;
+				return ERROR403;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			L.i(builder.toString());
+			JSONObject jsonObject = new JSONObject(builder.toString());
+			int status = jsonObject.optInt(STATUS);
+			if (status != StatusTool.STATUS_OK) {
+				return ERROR;
+			}
+			JSONObject json = jsonObject.getJSONObject("data");
+			UserInfoHelper helper = new UserInfoHelper(context);
+			insertUserInfo(json, helper, helper.getWritableDatabase());
+			helper.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ERROR + "ÍøÂç´íÎó";
+		}
+		return SUCCESS;
+	}
+	
 }

@@ -44,7 +44,6 @@ public class ContactsActivity extends BaseSwipeBaceActivity {
 		= new HashMap<String, ArrayList<Map<String, Object>>>();
 	HanyuPinyinOutputFormat outputFormat = new HanyuPinyinOutputFormat();
 	private ProgressBar progressBar;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -106,6 +105,7 @@ public class ContactsActivity extends BaseSwipeBaceActivity {
 		sideBar.setShowString(letters);
 		refreshFriendsInThread();
 		getFriendsList();
+		
 	}
 
 	private void getFriendsList() {
@@ -132,44 +132,32 @@ public class ContactsActivity extends BaseSwipeBaceActivity {
 			}
 		};
 		getFriendsListtask.execute();
+		
 	}
 
 	private AsyncTask<Void, Void, String> getFriendsListtask;
-	private AsyncTask<Void, Void, String> refreshFriendstask;
 
 	private void refreshFriendsInThread() {
-		if (refreshFriendstask != null) {
-			refreshFriendstask.cancel(true);
-		}
 		expandableListView.setVisibility(View.GONE);
 		progressBar.setVisibility(View.VISIBLE);
-		refreshFriendstask = new AsyncTask<Void, Void, String>() {
-
+		expandableListView.post(new Runnable() {
+			
 			@Override
-			protected String doInBackground(Void... params) {
+			public void run() {
 				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(String result) {
-				// TODO Auto-generated method stub
-				super.onPostExecute(result);
+				refreshFriendsData();
 				progressBar.setVisibility(View.GONE);
 				expandableListView.setVisibility(View.VISIBLE);
-				refreshFriendsData();
 			}
-		};
-		refreshFriendstask.execute();
+		});
+		
+		
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if (refreshFriendstask != null) {
-			refreshFriendstask.cancel(true);
-		}
 		if (getFriendsListtask != null) {
 			getFriendsListtask.cancel(true);
 		}

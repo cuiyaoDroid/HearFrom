@@ -121,6 +121,7 @@ public class NativeImageLoader {
 						mImageCache.addBitmapToCache(path, mBitmap);
 						} catch (OutOfMemoryError e) {
 							mImageCache.clearMemorCaches();
+							System.gc();
 							e.printStackTrace();
 							// clearCache();
 						}
@@ -163,8 +164,8 @@ public class NativeImageLoader {
 					Bitmap mBitmap;
 					// 先获取图片的缩略图
 					if (mPoint == null) {
-						mBitmap = PictureUtil.getimage(path, 1000, 1000,
-								2 * 1024 * 1024);
+						mBitmap = PictureUtil.getimage(path, 800, 800,
+								1 * 1024 * 1024);
 					} else {
 						mBitmap = decodeThumbBitmapForFile(path, mPoint.x,
 								mPoint.y);
@@ -176,6 +177,7 @@ public class NativeImageLoader {
 					// addBitmapToMemoryCache("big_"+path, mBitmap);
 				} catch (OutOfMemoryError e) {
 					mImageCache.clearMemorCaches();
+					System.gc();
 					e.printStackTrace();
 					// clearCache();
 				}

@@ -1,10 +1,7 @@
 package com.tingshuo.tool.view.adapter;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +10,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.tingshuo.hearfrom.R;
-import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
 import com.tingshuo.tool.TimeUtil;
@@ -73,36 +69,11 @@ public class ChatAdapter extends SimpleCursorAdapter {
 					+ come);
 		}
 
-		if (!from_me && delivery_status == ChatConstants.DS_NEW) {
-			markAsReadDelayed(_id, DELAY_NEWMSG);
-		}
 
 		bindViewData(viewHolder, date, from_me, jid, message, delivery_status);
 		return convertView;
 	}
 
-	private void markAsReadDelayed(final int id, int delay) {
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				markAsRead(id);
-			}
-		}, delay);
-	}
-
-	/**
-	 * 标记为已读消�?
-	 * 
-	 * @param id
-	 */
-	private void markAsRead(int id) {
-		Uri rowuri = Uri.parse("content://" + ChatProvider.AUTHORITY + "/"
-				+ ChatProvider.TABLE_NAME + "/" + id);
-		L.d("markAsRead: " + rowuri);
-		ContentValues values = new ContentValues();
-		values.put(ChatConstants.DELIVERY_STATUS, ChatConstants.DS_SENT_OR_READ);
-		mContext.getContentResolver().update(rowuri, values, null, null);
-	}
 
 	private void bindViewData(ViewHolder holder, String date, boolean from_me,
 			String from, String message, int delivery_status) {
