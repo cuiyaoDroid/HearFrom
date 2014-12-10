@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.tingshuo.hearfrom.R;
 import com.tingshuo.tool.db.CurMessageListHelper;
 import com.tingshuo.tool.db.UserInfoHelper;
-import com.tingshuo.tool.db.mainPostListHelper;
 import com.tingshuo.web.http.HttpJsonTool;
 import com.tingshuo.web.img.fetcher.ImageCache;
 import com.tingshuo.web.img.fetcher.ImageFetcher;
@@ -64,16 +62,22 @@ public class MessageListAdapter extends BaseAdapter {
 					.findViewById(R.id.content_txt);
 			viewHolder.title_txt = (TextView) convertView
 					.findViewById(R.id.title_txt);
+			viewHolder.txtCount = (TextView) convertView
+					.findViewById(R.id.txtCount);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		int count = (Integer) list.get(position).get(
+				CurMessageListHelper.COUNT);
 		String images = (String) list.get(position).get(
 				UserInfoHelper.HEAD);
 		String content = (String) list.get(position).get(
 				CurMessageListHelper.CONTENT);
 		String title = (String) list.get(position).get(
 				UserInfoHelper.NICK_NAME);
+		viewHolder.txtCount.setVisibility(count==0?View.GONE:View.VISIBLE);
+		viewHolder.txtCount.setText(String.valueOf(count));
 		viewHolder.title_txt.setText(title);
 		viewHolder.content_txt.setText(content);
 		if (images.length() > 0) {
@@ -89,6 +93,7 @@ public class MessageListAdapter extends BaseAdapter {
 		public ImageView content_img;
 		public TextView content_txt;
 		public TextView title_txt;
+		public TextView txtCount;
 	}
 
 }

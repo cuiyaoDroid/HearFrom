@@ -1,14 +1,16 @@
 package com.tingshuo.tool.im;
 
-import java.util.ArrayList;
-
-import org.json.JSONObject;
-
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.ConversationType;
 import io.rong.imlib.RongIMClient.Message;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
 import io.rong.message.TextMessage;
+
+import java.util.ArrayList;
+
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,7 +20,7 @@ import com.tingshuo.web.http.ApiHttpClient;
 import com.tingshuo.web.http.FormatType;
 import com.tingshuo.web.http.SdkHttpResult;
 
-public class RongIMTool {
+public class RongIMTool implements RongIMClient.SendMessageCallback {
 
 	private static RongIMTool mRongIMTool;
 
@@ -39,11 +41,20 @@ public class RongIMTool {
 		void onMessageReceive(Message msg, int status);
 	}
 
+	public interface MessageStatusListener {
+		public void onError(int arg0, ErrorCode arg1);
+
+		public void onProgress(int arg0, int arg1);
+
+		public void onSuccess(int arg0);
+	}
+
 	private RongIMClient client;
 	private boolean isConnect = false;
 	private ArrayList<ConnectListener> mConnectListeners = new ArrayList<RongIMTool.ConnectListener>();
 	private ArrayList<MessageReceivelistener> mMessageReceivelisteners = new ArrayList<RongIMTool.MessageReceivelistener>();
-	
+	private ArrayList<MessageStatusListener> mMessageStatusListeners = new ArrayList<RongIMTool.MessageStatusListener>();
+
 	public void addConnectListener(ConnectListener mConnectListener) {
 		this.mConnectListeners.add(mConnectListener);
 	}
@@ -51,16 +62,30 @@ public class RongIMTool {
 	public void clearListener() {
 		mConnectListeners.clear();
 		mMessageReceivelisteners.clear();
+		mMessageStatusListeners.clear();
 	}
 
 	public void removeConnectListener(ConnectListener mConnectListener) {
 		mConnectListeners.remove(mConnectListener);
 	}
-	public void addMessageReceivelistener(MessageReceivelistener mMessageReceivelistener) {
+
+	public void addMessageReceivelistener(
+			MessageReceivelistener mMessageReceivelistener) {
 		this.mMessageReceivelisteners.add(mMessageReceivelistener);
 	}
-	public void removeMessageReceivelistener(MessageReceivelistener mMessageReceivelistener) {
+
+	public void removeMessageReceivelistener(
+			MessageReceivelistener mMessageReceivelistener) {
 		mMessageReceivelisteners.remove(mMessageReceivelistener);
+	}
+	public void addMessageStatusListener (
+			MessageStatusListener mMessageStatusListener) {
+		this.mMessageStatusListeners.add(mMessageStatusListener);
+	}
+
+	public void removeMessageStatusListener(
+			MessageStatusListener mMessageStatusListener ) {
+		mMessageStatusListeners.remove(mMessageStatusListener);
 	}
 	public boolean isConnect() {
 		return isConnect;
@@ -90,10 +115,11 @@ public class RongIMTool {
 				// TODO Auto-generated method stub
 				String token = "";
 				try {
+					L.i("=================task=======getToken");
 					SdkHttpResult result = ApiHttpClient.getToken(
 							HearFromApp.APP_KEY, HearFromApp.APPSECRT, account,
 							nickname, head, FormatType.json);
-
+					L.i("=================task=======getToken end " + result);
 					JSONObject jsonObject = new JSONObject(result.getResult());
 					token = jsonObject.optString("token");
 					L.i(token);
@@ -133,15 +159,28 @@ public class RongIMTool {
 								mConnectListener.connectComplete();
 							}
 							client.setOnReceiveMessageListener(new OnReceiveMessageListener() {
-								
+
 								@Override
 								public void onReceived(Message msg, int status) {
 									// TODO Auto-generated method stub
-									for(MessageReceivelistener listener:mMessageReceivelisteners){
+									for (MessageReceivelistener listener : mMessageReceivelisteners) {
 										listener.onMessageReceive(msg, status);
 									}
 								}
 							});
+							RongIMClient
+									.setConnectionStatusListener(new ConnectionStatusListener() {
+										@Override
+										public void onChanged(
+												ConnectionStatus status) {
+											// TODO Auto-generated method stub
+											if (status == ConnectionStatus.CONNECTED) {
+												isConnect = true;
+											} else {
+												isConnect = false;
+											}
+										}
+									});
 						}
 
 						@Override
@@ -160,37 +199,38 @@ public class RongIMTool {
 		}
 	}
 
-	public void sendMessage(String type,String content,String toUserId) {
-		if(client==null){
-			return;
+	public int sendMessage(String type, String content, String toUserId) {
+		if (client == null) {
+			return -1;
 		}
-		Message msg = new Message();
-		TextMessage textContent=new TextMessage(content);
+		TextMessage textContent = new TextMessage(content);
 		textContent.setExtra(type);
-		msg.setContent(textContent);
-		client.sendMessage(ConversationType.PRIVATE, toUserId,
-				msg.getContent(), new RongIMClient.SendMessageCallback() {
+		Message msg = client.sendMessage(ConversationType.PRIVATE, toUserId,
+				textContent, this);
+		return msg.getMessageId();
+	}
 
-					@Override
-					public void onError(int arg0, ErrorCode arg1) {
-						// TODO Auto-generated
-						// method stub
+	@Override
+	public void onError(int arg0, ErrorCode arg1) {
+		// TODO Auto-generated method stub
+		for (MessageStatusListener mMessageStatusListener : mMessageStatusListeners) {
+			mMessageStatusListener.onError(arg0, arg1);
+		}
+	}
 
-					}
+	@Override
+	public void onProgress(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		for (MessageStatusListener mMessageStatusListener : mMessageStatusListeners) {
+			mMessageStatusListener.onProgress(arg0, arg1);
+		}
+	}
 
-					@Override
-					public void onProgress(int arg0, int arg1) {
-						// TODO Auto-generated
-						// method stub
-
-					}
-
-					@Override
-					public void onSuccess(int arg0) {
-						// TODO Auto-generated
-						// method stub
-						L.i("sendMessage onSuccess");
-					}
-				});
+	@Override
+	public void onSuccess(int arg0) {
+		// TODO Auto-generated method stub
+		for (MessageStatusListener mMessageStatusListener : mMessageStatusListeners) {
+			mMessageStatusListener.onSuccess(arg0);
+		}
 	}
 }

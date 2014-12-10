@@ -3,13 +3,6 @@ package com.tingshuo.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tingshuo.hearfrom.FriendsRequestListActivity;
-import com.tingshuo.hearfrom.HearFromMainActivity;
-import com.tingshuo.hearfrom.R;
-import com.tingshuo.tool.L;
-import com.tingshuo.tool.PreferenceConstants;
-import com.tingshuo.tool.PreferenceUtils;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,11 +10,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.Vibrator;
 import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
+
+import com.tingshuo.hearfrom.R;
+import com.tingshuo.tool.L;
+import com.tingshuo.tool.PreferenceConstants;
+import com.tingshuo.tool.PreferenceUtils;
 
 
 public abstract class BaseRongYunService extends Service {

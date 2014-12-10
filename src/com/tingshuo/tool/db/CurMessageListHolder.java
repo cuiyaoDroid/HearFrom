@@ -9,7 +9,7 @@ public class CurMessageListHolder {
 	private String type;
 	private String content;
 	private int status;
-	
+	private int count;
 	
 	public static final int STATUS_RECIVED=0;
 	public static final int STATUS_SENDING=1;
@@ -17,7 +17,7 @@ public class CurMessageListHolder {
 	
 	
 	public CurMessageListHolder(int id, int user_id, long time, String from_id,
-			String to_id, String type, String content,int status) {
+			String to_id, String type, String content,int status,int count) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
@@ -27,6 +27,7 @@ public class CurMessageListHolder {
 		this.type = type;
 		this.content = content;
 		this.status = status;
+		this.count = count;
 	}
 	
 	public int getStatus() {
@@ -78,6 +79,14 @@ public class CurMessageListHolder {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 	
 

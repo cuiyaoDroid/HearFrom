@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,11 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tingshuo.service.NotificationService;
+import com.tingshuo.tool.L;
 import com.tingshuo.tool.T;
+import com.tingshuo.tool.db.CurMessageListHelper;
+import com.tingshuo.tool.observer.Observable;
+import com.tingshuo.tool.observer.Observer;
 
 @SuppressWarnings("deprecation")
 public class HearFromTabMainActivity extends TabActivity implements
-		OnClickListener {
+		OnClickListener,Observer {
 	public static final String SELECT_TION="select_tion";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,17 @@ public class HearFromTabMainActivity extends TabActivity implements
 	private TextView txtCount3;
 	private TextView txtCount4;
 	private TextView txtCount5;
-
+	private void setIMessageCount(TextView txtCount2){
+		CurMessageListHelper helper = new CurMessageListHelper(getApplicationContext());
+		int count=helper.sumCount();
+		helper.close();
+		if(count==0){
+			txtCount2.setVisibility(View.GONE);
+		}else{
+			txtCount2.setVisibility(View.VISIBLE);
+			txtCount2.setText(String.valueOf(count));
+		}
+	}
 	private void initTabHost() {
 		TabHost host = getTabHost();
 
@@ -54,11 +69,9 @@ public class HearFromTabMainActivity extends TabActivity implements
 				.setContent(new Intent(this, MainListActivity.class)));
 
 		
-		
-		
 		View view2 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount2 = (TextView) view2.findViewById(R.id.txtCount);
-		txtCount2.setVisibility(View.GONE);
+		setIMessageCount(txtCount2);
 		ImageView icon2 = (ImageView) view2.findViewById(R.id.icon);
 		icon2.setImageResource(R.drawable.tab_item2);
 		host.addTab(host.newTabSpec("tab_item2").setIndicator(view2)
@@ -109,8 +122,14 @@ public class HearFromTabMainActivity extends TabActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		CurMessageListHelper.mObservable.addObserver(this);
 	}
-
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		CurMessageListHelper.mObservable.deleteObserver(this);
+	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -150,5 +169,17 @@ public class HearFromTabMainActivity extends TabActivity implements
 		// TODO Auto-generated method stub
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		super.startActivityForResult(intent, requestCode);
+	}
+	private Handler mHandler=new Handler();
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				setIMessageCount(txtCount2);
+			}
+		});
 	}
 }

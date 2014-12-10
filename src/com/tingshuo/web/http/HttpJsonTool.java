@@ -1130,7 +1130,7 @@ public class HttpJsonTool {
 			db.beginTransaction();
 			for (int i = 0; i < list.length(); i++) {
 				JSONObject json = (JSONObject) list.get(i);
-				int user_id=insertUserInfo(json, helper, db);
+				int user_id=insertUserInfo(json, helper, db,false);
 				long request_time = json.optLong("request_time");
 				int request_id = json.optInt("request_id");
 				FriendsRequestHolder reholder = new FriendsRequestHolder(request_id,
@@ -1161,7 +1161,7 @@ public class HttpJsonTool {
 			db.beginTransaction();
 			for (int i = 0; i < list.length(); i++) {
 				JSONObject json = (JSONObject) list.get(i);
-				int user_id=insertUserInfo(json, helper, db);
+				int user_id=insertUserInfo(json, helper, db,false);
 				FriendsListHolder reholder = new FriendsListHolder(user_id,
 						user_id);
 				reHelper.insert(reholder, db);
@@ -1180,9 +1180,9 @@ public class HttpJsonTool {
 	 * @param db
 	 * @return
 	 */
-	private int insertUserInfo(JSONObject json,UserInfoHelper helper,SQLiteDatabase db){
+	private int insertUserInfo(JSONObject json,UserInfoHelper helper,SQLiteDatabase db,boolean ifmy){
 		int user_id = json.optInt("id");
-		if(user_id==HearFromApp.user_id){
+		if(user_id==HearFromApp.user_id&&!ifmy){
 			return user_id;
 		}
 		String account = json.optString("account");
@@ -1791,7 +1791,7 @@ public class HttpJsonTool {
 			}
 			JSONObject json = jsonObject.getJSONObject("data");
 			UserInfoHelper helper = new UserInfoHelper(context);
-			insertUserInfo(json, helper, helper.getWritableDatabase());
+			insertUserInfo(json, helper, helper.getWritableDatabase(),true);
 			helper.close();
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

@@ -13,6 +13,8 @@ import com.tingshuo.hearfrom.screen.leaderSecondScreen;
 import com.tingshuo.hearfrom.screen.leaderThridScreen;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
+import com.tingshuo.tool.db.UserInfoHelper;
+import com.tingshuo.tool.db.UserInfoHolder;
 
 public class RegisterFastActivity extends FragmentActivity implements
 		ScreenChangeListener {

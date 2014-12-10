@@ -1,5 +1,7 @@
 package com.tingshuo.hearfrom;
 
+import io.rong.imlib.RongIMClient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
 import com.tingshuo.tool.L;
@@ -62,7 +65,7 @@ import com.tingshuo.tool.view.adapter.FacePageAdeapter;
 import com.tingshuo.tool.view.adapter.RongChatAdapter;
 
 public class RongYunChatActivity extends BaseSwipeBaceActivity implements
-		OnTouchListener, OnClickListener, IXListViewListener, Observer,OnResizeListener {
+		OnTouchListener, OnClickListener, IXListViewListener, Observer,OnResizeListener{
 	public static final String INTENT_EXTRA_USERNAME = RongYunChatActivity.class
 			.getName() + ".username";// 昵称对应的key
 	private MsgListView mMsgListView;// 对话ListView
@@ -83,6 +86,9 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 	private Pager mPage;
 	private List<Map<String, Object>> mChatData = new ArrayList<Map<String, Object>>();
 	private ResizeLinearLayout rootview;
+	
+	
+	public static int in_use_id;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,7 +109,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 			finish();
 			return;
 		}
-
+		in_use_id=friend_id;
 		UserInfoHelper helper = new UserInfoHelper(getApplicationContext());
 		userInfo = helper.selectData_Id(friend_id);
 		if (userInfo == null) {
@@ -118,7 +124,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 		rootview = (ResizeLinearLayout)findViewById(R.id.root);
 		rootview.setOnResizeListener(this);
 	}
-
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -174,6 +180,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		in_use_id=-1;
 	}
 
 	@Override
@@ -462,12 +469,16 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 
 	private void sendMessage() {
 		String content = mChatEditText.getText().toString();
-		RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_TEXT,
+		int msg_id=RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_TEXT,
 				content, String.valueOf(friend_id));
+		if(msg_id==-1){
+			Toast.makeText(getApplicationContext(), "发送失败网络状况不好", Toast.LENGTH_SHORT);
+			return;
+		}
 		ChatMessageHelper helper = new ChatMessageHelper(
 				getApplicationContext());
 		long time=System.currentTimeMillis();
-		ChatMessageHolder holder = new ChatMessageHolder(-1,
+		ChatMessageHolder holder = new ChatMessageHolder(msg_id,
 				HearFromApp.user_id, time,
 				String.valueOf(HearFromApp.user_id), String.valueOf(friend_id),
 				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
@@ -478,7 +489,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 				HearFromApp.user_id, time,
 				String.valueOf(HearFromApp.user_id), String.valueOf(friend_id),
 				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
-				ChatMessageHolder.STATUS_SENDING);
+				ChatMessageHolder.STATUS_SENDING,0);
 		
 		synchronized (lock.Lock) {
 			helper.insert(holder, helper.getWritableDatabase());
@@ -488,7 +499,6 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 		curhelper.close();
 		mChatEditText.setText("");
 	}
-
 	@Override
 	public void update(Observable o, final Object msg) {
 		// TODO Auto-generated method stub
@@ -518,7 +528,6 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 	@Override
 	public void OnResize(int w, int h, int oldw, int oldh) {
 		// TODO Auto-generated method stub
-		L.i("================OnResize");
 		mMsgListView.setSelection(mChatAdapter.getCount() - 1);
 	}
 
@@ -527,4 +536,5 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 		// TODO Auto-generated method stub
 		
 	}
+
 }

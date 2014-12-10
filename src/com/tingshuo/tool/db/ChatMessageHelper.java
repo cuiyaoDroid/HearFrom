@@ -60,7 +60,6 @@ public class ChatMessageHelper extends DBHelper {
 		
 		mObservable.setChanged();
 		mObservable.notifyObservers(content);
-		mObservable.clearChanged();
 		
 		return db.replace(TABLE_NAME, null, cv);
 	}

@@ -26,6 +26,6 @@
         android:textColor="#FFFFFF"
         android:textSize="9sp"
         android:visibility="gone"
+        android:background="@drawable/bg_level_lose"
         android:textStyle="bold" />
-
 </RelativeLayout>

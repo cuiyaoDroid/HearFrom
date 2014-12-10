@@ -91,7 +91,8 @@ public class AddFriendsActivity extends BaseSwipeFragmentActivity {
 				}else if(result.startsWith(HttpJsonTool.ERROR403)){
 					
 				}else if(result.startsWith(HttpJsonTool.SUCCESS)){
-					RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_ADDFRIENDS,nickname+"请求添加你为好友", String.valueOf(user_id));
+					RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_ADDFRIENDS
+							,nickname+"请求添加你为好友", String.valueOf(user_id));
 					T.show(getApplicationContext(), "发送请求成功，等待对方答复", Toast.LENGTH_SHORT);
 					finish();
 				}

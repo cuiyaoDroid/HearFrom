@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tingshuo.hearfrom.R;
@@ -59,16 +60,21 @@ public class RongChatAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher
 					+ holder.getStatus());
 		}
-
-		bindViewData(viewHolder, holder.getTime(),  nick_name, holder.getContent());
+		bindViewData(viewHolder, holder,  nick_name, holder.getContent());
 		return convertView;
 	}
 
-	private void bindViewData(ViewHolder holder, long date
+	private void bindViewData(ViewHolder holder, ChatMessageHolder chat_date
 			,String from, String message) {
 		holder.avatar.setBackgroundResource(R.drawable.login_default_avatar);
 		holder.content.setText(XMPPHelper.convertNormalStringToSpannableString(mContext,message,false));
-		holder.time.setText(TimeFormatTool.format(date));
+		holder.time.setText(TimeFormatTool.format(chat_date.getTime()));
+		if(chat_date.getStatus() == ChatMessageHolder.STATUS_SENDED
+				|| chat_date.getStatus() == ChatMessageHolder.STATUS_RECIVED){
+			holder.progressBar.setVisibility(View.GONE);
+		}else {
+			holder.progressBar.setVisibility(View.VISIBLE);
+		}
 
 	}
 
@@ -77,13 +83,15 @@ public class RongChatAdapter extends BaseAdapter {
 		holder.content = (TextView) convertView.findViewById(R.id.textView2);
 		holder.time = (TextView) convertView.findViewById(R.id.datetime);
 		holder.avatar = (ImageView) convertView.findViewById(R.id.icon);
+		holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar1);
 		return holder;
 	}
 
 	private static class ViewHolder {
 		TextView content;
 		TextView time;
-		ImageView avatar;
+		ImageView avatar; 
+		ProgressBar progressBar;
 
 	}
 

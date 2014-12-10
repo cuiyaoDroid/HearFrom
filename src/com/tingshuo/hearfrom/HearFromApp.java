@@ -17,6 +17,7 @@ import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
 import com.tingshuo.tool.db.DBHelper;
 import com.tingshuo.tool.db.UserInfoHelper;
+import com.tingshuo.tool.db.UserInfoHolder;
 import com.tingshuo.web.http.HttpJsonTool;
 
 public class HearFromApp extends Application {
@@ -66,6 +67,14 @@ public class HearFromApp extends Application {
 				"");
 		user_id = PreferenceUtils.getPrefInt(this, PreferenceConstants.USER_ID,
 				-1);
+		
+		UserInfoHelper helper = new UserInfoHelper(getApplicationContext());
+		UserInfoHolder holder = helper.selectData_Id(HearFromApp.user_id);
+		helper.close();
+		if (holder == null) {
+			getMyInfo();
+		}
+		
 		upGradeDBifnessage();
 		
 		L.isDebug = PreferenceUtils.getPrefBoolean(this,
@@ -75,6 +84,7 @@ public class HearFromApp extends Application {
 			CrashHandler.getInstance().init(this);
 		RongIMClient.init(this, APP_KEY, R.drawable.ic_launcher);
 		initFaceMap();
+		
 		//getFriendsList();
 	}
 	public Map<String, Integer> getFaceMap() {
@@ -82,14 +92,13 @@ public class HearFromApp extends Application {
 			return mFaceMap;
 		return null;
 	}
-	private void getFriendsList() {
+	private void getMyInfo() {
 		AsyncTask<Void, Void, String> getFriendsListtask = new AsyncTask<Void, Void, String>() {
 
 			@Override
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
-				HttpJsonTool.getInstance().friend_getlist(
-						getApplicationContext());
+				HttpJsonTool.getInstance().getUserInfo(getApplicationContext(), user_id);
 				return null;
 			}
 

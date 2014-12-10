@@ -54,7 +54,7 @@ public class leaderFourthScreen extends BaseScreen{
 			protected void onPostExecute(String result) {
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
-				progressBar.setVisibility(View.GONE);
+				//progressBar.setVisibility(View.GONE);
 				if(result.startsWith(HttpJsonTool.ERROR)){
 					Context context=getActivity();
 					if(context!=null){

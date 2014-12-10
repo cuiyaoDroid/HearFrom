@@ -22,50 +22,52 @@
         android:textSize="10.0sp"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/datetime"
-        android:layout_toLeftOf="@+id/icon"
         android:layout_marginRight="5dip"
-        android:background="@drawable/balloon_r_selector"
-        android:clickable="true"
-        android:minHeight="44.0dip" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:focusable="true"
-            android:textColor="@android:color/black"
-            android:textSize="16.0sp" />
+        android:layout_toLeftOf="@+id/icon" >
 
         <ProgressBar
             android:id="@+id/progressBar1"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="7.0dip"
-            android:layout_alignBottom="@id/textView2"
-            android:layout_alignLeft="@id/textView2"
-            android:layout_alignRight="@id/textView2"
-            android:layout_marginBottom="3.0dip"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="4.0dip"
-            android:layout_marginRight="4.0dip"
-            android:max="100"
-            android:visibility="gone" />
-    </RelativeLayout>
+            android:layout_marginRight="4.0dip" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/balloon_r_selector"
+            android:clickable="true"
+            android:minHeight="44.0dip" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:focusable="true"
+                android:textColor="@android:color/black"
+                android:textSize="16.0sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="40.0dip"
         android:layout_height="40.0dip"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/datetime"
         android:background="@drawable/login_default_avatar"
         android:clickable="true"
         android:focusable="true"
-        android:layout_alignParentRight="true"
         android:scaleType="fitXY" />
+
 
 </RelativeLayout>

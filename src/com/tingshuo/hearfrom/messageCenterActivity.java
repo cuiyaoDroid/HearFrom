@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -18,13 +19,16 @@ import com.tingshuo.tool.db.CurMessageListHelper;
 import com.tingshuo.tool.db.CurMessageListHolder;
 import com.tingshuo.tool.db.UserInfoHelper;
 import com.tingshuo.tool.db.UserInfoHolder;
+import com.tingshuo.tool.observer.Observable;
+import com.tingshuo.tool.observer.Observer;
 import com.tingshuo.tool.view.adapter.MessageListAdapter;
 
-public class messageCenterActivity extends BaseAcivity {
+public class messageCenterActivity extends BaseAcivity implements Observer {
 	private ListView messageList;
 	private MessageListAdapter adapter;
 	private List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 	private ProgressBar progressBar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -40,23 +44,38 @@ public class messageCenterActivity extends BaseAcivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				int user_id=(Integer) data.get(position).get(CurMessageListHelper.ID);
+				int user_id = (Integer) data.get(position).get(
+						CurMessageListHelper.ID);
 				Intent intent = new Intent(getApplicationContext(),
 						RongYunChatActivity.class);
 				intent.putExtra(UserInfoHelper.ID, user_id);
 				startActivity(intent);
+				CurMessageListHelper helper = new CurMessageListHelper(
+						getApplicationContext());
+				helper.zeroCount(user_id);
+				helper.close();
 			}
 		});
+		adapter = new MessageListAdapter(getApplicationContext(), data);
+		messageList.setAdapter(adapter);
 	}
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		refreshMessageData();
 		progressBar.setVisibility(View.GONE);
-		adapter = new MessageListAdapter(getApplicationContext(), data);
-		messageList.setAdapter(adapter);
+		CurMessageListHelper.mObservable.addObserver(this);
 	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		CurMessageListHelper.mObservable.deleteObserver(this);
+	}
+
 	private void refreshMessageData() {
 		data.clear();
 		CurMessageListHelper helper = new CurMessageListHelper(
@@ -76,12 +95,15 @@ public class messageCenterActivity extends BaseAcivity {
 			map.put(CurMessageListHelper.USER_ID, holder.getUser_id());
 			map.put(CurMessageListHelper.TIME, holder.getTime());
 			map.put(CurMessageListHelper.CONTENT, holder.getContent());
+			map.put(CurMessageListHelper.COUNT, holder.getCount());
 			map.put(UserInfoHelper.NICK_NAME, user_holder.getNickname());
 			map.put(UserInfoHelper.HEAD, user_holder.getHead());
 			data.add(map);
 		}
 		user_helper.close();
+		adapter.notifyDataSetChanged();
 	}
+
 	@Override
 	protected void initContentView() {
 		// TODO Auto-generated method stub
@@ -100,11 +122,28 @@ public class messageCenterActivity extends BaseAcivity {
 			finish();
 			break;
 		case R.id.title_txt_right:
-			Intent intent=new Intent(getApplicationContext(),ContactsActivity.class);
+			Intent intent = new Intent(getApplicationContext(),
+					ContactsActivity.class);
 			startActivity(intent);
 			break;
 		default:
 			break;
 		}
+	}
+	private Handler mHandler=new Handler();
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		int op=(Integer)arg;
+		if(op==CurMessageListHelper.OB_OP_ZERO){
+			return;
+		}
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				refreshMessageData();
+			}
+		});
 	}
 }
