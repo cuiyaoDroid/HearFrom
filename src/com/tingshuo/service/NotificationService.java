@@ -186,18 +186,21 @@ public class NotificationService extends BaseRongYunService implements
 	@Override
 	public void onError(int arg0, ErrorCode arg1) {
 		// TODO Auto-generated method stub
-		
+		ChatMessageHelper helper=new ChatMessageHelper(getApplicationContext());
+		helper.update(arg0, ChatMessageHolder.STATUS_SEND_ERROR);
+		helper.close();
 	}
 
 	@Override
 	public void onProgress(int arg0, int arg1) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onSuccess(int arg0) {
 		// TODO Auto-generated method stub
-		
+		ChatMessageHelper helper=new ChatMessageHelper(getApplicationContext());
+		helper.update(arg0, ChatMessageHolder.STATUS_SENDED);
+		helper.close();
 	}
 }

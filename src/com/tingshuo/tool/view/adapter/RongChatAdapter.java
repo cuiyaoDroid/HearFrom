@@ -47,7 +47,8 @@ public class RongChatAdapter extends BaseAdapter {
 				|| convertView.getTag(R.drawable.ic_launcher
 						+ holder.getStatus()) == null) {
 			if (holder.getStatus() == ChatMessageHolder.STATUS_SENDED
-					|| holder.getStatus() == ChatMessageHolder.STATUS_SENDING) {
+					|| holder.getStatus() == ChatMessageHolder.STATUS_SENDING
+					|| holder.getStatus() == ChatMessageHolder.STATUS_SEND_ERROR) {
 				convertView = mInflater.inflate(R.layout.chat_item_right,
 						parent, false);
 			} else {
@@ -70,7 +71,8 @@ public class RongChatAdapter extends BaseAdapter {
 		holder.content.setText(XMPPHelper.convertNormalStringToSpannableString(mContext,message,false));
 		holder.time.setText(TimeFormatTool.format(chat_date.getTime()));
 		if(chat_date.getStatus() == ChatMessageHolder.STATUS_SENDED
-				|| chat_date.getStatus() == ChatMessageHolder.STATUS_RECIVED){
+				|| chat_date.getStatus() == ChatMessageHolder.STATUS_RECIVED
+				|| chat_date.getStatus() == ChatMessageHolder.STATUS_SEND_ERROR){
 			holder.progressBar.setVisibility(View.GONE);
 		}else {
 			holder.progressBar.setVisibility(View.VISIBLE);
