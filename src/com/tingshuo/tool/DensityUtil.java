@@ -4,7 +4,9 @@ import java.lang.reflect.Field;
 import android.content.Context;  
   
 public class DensityUtil {  
-  
+	public static int LISTWIDTH=260;
+	public static int MHEADHEIGHT=60;
+	public static int MFOOTHEIGHT=50;
     /** 
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素) 
      */  

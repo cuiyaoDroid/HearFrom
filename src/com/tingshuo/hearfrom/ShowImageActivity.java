@@ -27,7 +27,7 @@ import com.tingshuo.web.img.ImageFileCache;
 public class ShowImageActivity extends BaseSelectImageActivity implements
 		imageSelectListener {
 	private final static int PIC_LOAD_FINISH = 2;
-	public static final int fin_MAX_SELECT = 9;
+	public static final int fin_MAX_SELECT = 3;
 	public static int MAX_SELECT;
 	private ChildAdapter adapter;
 	private Handler mHandler = new Handler() {

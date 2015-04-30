@@ -1,5 +1,7 @@
 package com.tingshuo.hearfrom;
 
+import java.io.File;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,8 +15,6 @@ import com.tingshuo.hearfrom.screen.leaderSecondScreen;
 import com.tingshuo.hearfrom.screen.leaderThridScreen;
 import com.tingshuo.tool.PreferenceConstants;
 import com.tingshuo.tool.PreferenceUtils;
-import com.tingshuo.tool.db.UserInfoHelper;
-import com.tingshuo.tool.db.UserInfoHolder;
 
 public class RegisterFastActivity extends FragmentActivity implements
 		ScreenChangeListener {
@@ -23,11 +23,17 @@ public class RegisterFastActivity extends FragmentActivity implements
 	private leaderSecondScreen leadersecond_screen;
 	private leaderThridScreen leaderthrid_screen;
 	private leaderFourthScreen leaderfourth_screen;
-
+	private void createPath(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		createPath(HearFromApp.appPath);
 		setContentView(R.layout.activity_register_fast);
 		boolean first_use=PreferenceUtils.getPrefBoolean(getApplicationContext()
 				, PreferenceConstants.FIRST_USE, true);

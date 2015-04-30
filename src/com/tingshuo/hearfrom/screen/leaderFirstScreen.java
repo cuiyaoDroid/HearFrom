@@ -24,8 +24,8 @@ public class leaderFirstScreen extends BaseScreen{
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					if(listener!=null){
-						listener.changeToScreen(2);
-//						listener.startMainPage();
+						//listener.changeToScreen(2);
+						listener.startMainPage();
 					}
 				}
 			});

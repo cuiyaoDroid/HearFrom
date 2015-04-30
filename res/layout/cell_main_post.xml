@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tingshuo="http://schemas.android.com/apk/res/com.tingshuo.hearfrom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,13 +9,16 @@
     android:padding="10dp" >
 
     <RelativeLayout
+        android:id="@+id/relayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/img_gridview" >
 
         <com.tingshuo.tool.view.RoundAngleImageView
             android:id="@+id/head_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="3dp"
             android:background="@color/app_bg"
             android:src="@drawable/abs__ab_bottom_solid_inverse_holo"
             tingshuo:roundHeight="10dp"
@@ -27,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
             android:layout_toRightOf="@+id/head_img"
             android:text="TextView"
             android:textColor="@android:color/black"
@@ -42,20 +46,41 @@
             android:text="TextView"
             android:textColor="@android:color/black"
             android:textSize="@dimen/small_txt_size" />
+
+        <TextView
+            android:id="@+id/role_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:padding="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/name_txt"
+            android:background="@drawable/radiu_boy_bg"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/small_txt_size"
+            android:text="TextView" />
+
     </RelativeLayout>
 
     <TextView
         android:id="@+id/content_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/relayout"
+        android:layout_alignRight="@+id/relayout"
+        android:layout_alignStart="@+id/relayout"
+        android:layout_alignEnd="@+id/relayout"
+        android:layout_below="@+id/relayout"
         android:layout_marginTop="10dp"
+        android:maxLines="5"
         android:text="TextView"
+        android:ellipsize="end"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/normal_txt_size" />
+        android:textSize="@dimen/big_txt_size" />
 
     <com.tingshuo.tool.view.MyGridView
         android:id="@+id/img_gridview"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:cacheColorHint="@android:color/transparent"
         android:columnWidth="90dp"
@@ -63,20 +88,32 @@
         android:focusableInTouchMode="false"
         android:gravity="center"
         android:horizontalSpacing="5dip"
+        android:layout_alignParentRight="true"
         android:listSelector="@android:color/transparent"
-        android:numColumns="3"
+        android:numColumns="1"
         android:scrollbars="none"
         android:stretchMode="none"
         android:verticalSpacing="5dip" >
     </com.tingshuo.tool.view.MyGridView>
 
     <LinearLayout
+        android:id="@+id/linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="right"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
-
+		<TextView
+        	android:id="@+id/zan_txt"
+        	android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:paddingBottom="8dp"
+        	android:paddingTop="8dp"
+        	android:text="TextView"
+        	android:layout_weight="1"
+        	android:textColor="@android:color/black"
+        	android:textSize="@dimen/small_txt_size" />
         <CheckBox
             android:id="@+id/zan_check"
             android:layout_width="wrap_content"
@@ -114,19 +151,11 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/divider_t"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginTop="8dp"
+        android:layout_above="@+id/linearlayout"
         android:background="@color/divider_color" />
 
-    <TextView
-        android:id="@+id/zan_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:text="TextView"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/small_txt_size" />
-
-</LinearLayout>
+</RelativeLayout>
