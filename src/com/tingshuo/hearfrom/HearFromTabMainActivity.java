@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tingshuo.service.NotificationService;
+import com.tingshuo.tool.L;
 import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.CurMessageListHelper;
 import com.tingshuo.tool.observer.Observable;
@@ -58,6 +59,15 @@ public class HearFromTabMainActivity extends TabActivity implements
 	}
 	private void initTabHost() {
 		TabHost host = getTabHost();
+
+		View view = getLayoutInflater().inflate(R.layout.tabicon, null);
+		txtCount = (TextView) view.findViewById(R.id.txtCount);
+		txtCount.setVisibility(View.GONE);
+		ImageView icon = (ImageView) view.findViewById(R.id.icon);
+		icon.setImageResource(R.drawable.tab_item1);
+		host.addTab(host.newTabSpec("tab_item1").setIndicator(view)
+				.setContent(new Intent(this, MainListActivity.class)));
+
 		
 		View view2 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount2 = (TextView) view2.findViewById(R.id.txtCount);
@@ -69,16 +79,7 @@ public class HearFromTabMainActivity extends TabActivity implements
 						,Uri.parse("rong://com.tingshuo.hearfrom/conversationlist"))));*/
 				new Intent(this, messageCenterActivity.class)));
 		
-		
-		View view = getLayoutInflater().inflate(R.layout.tabicon, null);
-		txtCount = (TextView) view.findViewById(R.id.txtCount);
-		txtCount.setVisibility(View.GONE);
-		ImageView icon = (ImageView) view.findViewById(R.id.icon);
-		icon.setImageResource(R.drawable.tab_item1);
-		host.addTab(host.newTabSpec("tab_item1").setIndicator(view)
-				.setContent(new Intent(this, MainListActivity.class)));
-		
-		/*View view3 = getLayoutInflater().inflate(R.layout.tabicon, null);
+		View view3 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount3 = (TextView) view3.findViewById(R.id.txtCount);
 		txtCount3.setVisibility(View.GONE);
 		ImageView icon3 = (ImageView) view3.findViewById(R.id.icon);
@@ -103,7 +104,7 @@ public class HearFromTabMainActivity extends TabActivity implements
 		ImageView icon4 = (ImageView) view4.findViewById(R.id.icon);
 		icon4.setImageResource(R.drawable.tab_item4);
 		host.addTab(host.newTabSpec("tab_item4").setIndicator(view4)
-				.setContent(new Intent(this, ResearchActivity.class)));*/
+				.setContent(new Intent(this, ResearchActivity.class)));
 
 		View view5 = getLayoutInflater().inflate(R.layout.tabicon, null);
 		txtCount5 = (TextView) view5.findViewById(R.id.txtCount);
@@ -113,7 +114,7 @@ public class HearFromTabMainActivity extends TabActivity implements
 		host.addTab(host.newTabSpec("tab_item5").setIndicator(view5)
 				.setContent(new Intent(this, MyCenterActivity.class)));
 		
-		int selected=getIntent().getIntExtra(SELECT_TION , 1);
+		int selected=getIntent().getIntExtra(SELECT_TION , 0);
 		host.setCurrentTab(selected);
 	}
 
@@ -121,7 +122,6 @@ public class HearFromTabMainActivity extends TabActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		setIMessageCount(txtCount2);
 		CurMessageListHelper.mObservable.addObserver(this);
 	}
 	@Override

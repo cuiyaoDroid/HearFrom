@@ -128,7 +128,7 @@ public class NotificationService extends BaseRongYunService implements
 			Intent mNotificationIntent = new Intent(this,
 					HearFromTabMainActivity.class);
 			mNotificationIntent
-					.putExtra(HearFromTabMainActivity.SELECT_TION, 0);
+					.putExtra(HearFromTabMainActivity.SELECT_TION, 1);
 			notifyClient(RongMessageTYPE.MESSAGE_TYPE_TEXT, "Ã˝ÀµÃ·–—", text_msg.getContent(),
 					mNotificationIntent);
 		} else if (isAddMessage) {

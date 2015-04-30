@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.view.View;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.tingshuo.tool.CrashHandler;
 import com.tingshuo.tool.L;
 import com.tingshuo.tool.PreferenceConstants;
@@ -45,7 +44,12 @@ public class HearFromApp extends Application {
 		helper.close();
 	}
 
-	
+	private void createPath(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+	}
 
 	public static boolean isFlitClose;
 
@@ -55,8 +59,7 @@ public class HearFromApp extends Application {
 		super.onCreate();
 		// JPushInterface.setDebugMode(true);
 		// JPushInterface.init(this);
-		
-		SDKInitializer.initialize(this);
+		createPath(appPath);
 		mApplication = this;
 		isFlitClose = PreferenceUtils.getPrefBoolean(getApplicationContext(),
 				PreferenceConstants.SETTING_FLIT_CLOSE, true);

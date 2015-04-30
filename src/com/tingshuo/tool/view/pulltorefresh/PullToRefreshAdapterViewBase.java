@@ -16,15 +16,12 @@
 package com.tingshuo.tool.view.pulltorefresh;
 
 import com.tingshuo.hearfrom.R;
-import com.tingshuo.tool.DensityUtil;
-import com.tingshuo.tool.L;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -56,8 +53,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 		return newLp;
 	}
-	private int mFirstVisibleItem;
-	private int mItemHeight;
+	
 	private boolean mLastItemVisible;
 	private OnScrollListener mOnScrollListener;
 	private OnLastItemVisibleListener mOnLastItemVisibleListener;
@@ -68,33 +64,27 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 	private boolean mShowIndicator;
 	private boolean mScrollEmptyView = true;
-	private int mHeadHeight;
+
 	public PullToRefreshAdapterViewBase(Context context) {
 		super(context);
 		mRefreshableView.setOnScrollListener(this);
-		mHeadHeight=DensityUtil.dip2px(context, DensityUtil.MHEADHEIGHT);
 	}
 
 	public PullToRefreshAdapterViewBase(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mRefreshableView.setOnScrollListener(this);
-		mHeadHeight=DensityUtil.dip2px(context, DensityUtil.MHEADHEIGHT);
 	}
 
 	public PullToRefreshAdapterViewBase(Context context, Mode mode) {
 		super(context, mode);
 		mRefreshableView.setOnScrollListener(this);
-		mHeadHeight=DensityUtil.dip2px(context, DensityUtil.MHEADHEIGHT);
 	}
 
 	public PullToRefreshAdapterViewBase(Context context, Mode mode, AnimationStyle animStyle) {
 		super(context, mode, animStyle);
 		mRefreshableView.setOnScrollListener(this);
-		mHeadHeight=DensityUtil.dip2px(context, DensityUtil.MHEADHEIGHT);
 	}
-	public void setItemHeight(int mItemHeight){
-		this.mItemHeight=mItemHeight;
-	}
+
 	/**
 	 * Gets whether an indicator graphic should be displayed when the View is in
 	 * a state where a Pull-to-Refresh can happen. An example of this state is
@@ -116,7 +106,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount
 					+ ". Total Items:" + totalItemCount);
 		}
-		mFirstVisibleItem = firstVisibleItem;
+
 		/**
 		 * Set whether the Last Item is Visible. lastVisibleItemIndex is a
 		 * zero-based index, so we minus one totalItemCount to check
@@ -135,83 +125,12 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 		}
 	}
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		if (/*ev.getAction() == MotionEvent.ACTION_CANCEL
-				||*/ ev.getAction() == MotionEvent.ACTION_UP) {
-			checkForReset(1);
-		}
-		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//			mRefreshableView.getS
-		}
-		return super.dispatchTouchEvent(ev);
-	}
-	protected void checkForReset(final int speed)
-	{
-		// 获取第一个Item的top
-		int itop = mRefreshableView.getChildAt(0).getTop();
-		final int top=itop-mHeadHeight;
-		if (top == 0)
-			return;
-		// 绝对值不为0时，如果绝对值大于mItemHeight的一半，则收缩，即显示下一个Item
-		if (Math.abs(top) > mItemHeight / 2)
-		{
-			// this.scrollTo(x, y)
-			// smoothScrollToPosition(mFirstVisibleItem - 1);
-			// scrollBy(0, mItemHeight- Math.abs(top));
-			mRefreshableView.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					int delay;
-					if(speed!=0){
-						delay=(mItemHeight- Math.abs(top))/speed;
-					}else {
-						delay=0;
-					}
-					mRefreshableView.smoothScrollBy(mItemHeight- Math.abs(top), delay);
-				}
-			});
-			
 
-		} else
-		// 绝对值不为0时，如果绝对值小于于mItemHeight的一半，则展开，显示当前完整的Item
-		{
-			// this.scrollTo(x, y)
-			
-			mRefreshableView.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					int delay;
-					if(speed!=0){
-						delay=Math.abs(top)/speed;
-					}else {
-						delay=0;
-					}
-					mRefreshableView.smoothScrollBy( -Math.abs(top), delay);
-				}
-			});
-			// smoothScrollByOffset(offset);
-			// scrollBy(0, -Math.abs(top));
-			// smoothScrollToPosition(mFirstVisibleItem);
-		}
-		// smoothScrollToPosition(mFirstVisibleItem);
-	}
 	public final void onScrollStateChanged(final AbsListView view, final int state) {
 		/**
 		 * Check that the scrolling has stopped, and that the last item is
 		 * visible.
 		 */
-		
-		// 滚动结束
-		if (state == OnScrollListener.SCROLL_STATE_IDLE)
-		{
-			checkForReset(1);
-		}
 		if (state == OnScrollListener.SCROLL_STATE_IDLE && null != mOnLastItemVisibleListener && mLastItemVisible) {
 			mOnLastItemVisibleListener.onLastItemVisible();
 		}
@@ -220,6 +139,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			mOnScrollListener.onScrollStateChanged(view, state);
 		}
 	}
+
 	/**
 	 * Pass-through method for {@link PullToRefreshBase#getRefreshableView()
 	 * getRefreshableView()}.

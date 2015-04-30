@@ -9,8 +9,6 @@ public class PreferenceConstants {
 	public static final String DEFUALT_ROLE_ID = "default_role_id";
 	
 	public final static String SETTING_FLIT_CLOSE= "setting_flit_close";
-	public final static String USE_MY_LOCATION= "use_my_location";
-	
 	
 	public static final String GMAIL_SERVER = "talk.google.com";
 	public final static String ISNEEDLOG = "isneedlog";

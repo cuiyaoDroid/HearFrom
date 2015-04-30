@@ -63,9 +63,6 @@ public class mineTopicScreen extends BaseScreen implements
 					int position, long id) {
 				// TODO Auto-generated method stub
 				position = position - mainpostListView.getRefreshableView().getHeaderViewsCount();
-				if(position<0||position>=listData.size()){
-					return;
-				}
 				Intent intent=new Intent(getActivity(),TopicDetailActivity.class);
 				intent.putExtra(mainPostListHelper.ID
 						, (Integer)(listData.get(position).get(mainPostListHelper.ID)));

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<attr name="itemCount" format="integer" />
 
-    <declare-styleable name="MyListView">
-        <attr name="itemCount" />
-    </declare-styleable>
     <declare-styleable name="CirclePageIndicator">
 
         <!-- Whether or not the indicators should be centered. -->

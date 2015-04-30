@@ -54,10 +54,20 @@
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="5dip" >
                 </com.tingshuo.tool.view.MyGridView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/main_list_bg"
+                android:orientation="vertical" >
+
                 <include
                     android:id="@+id/setting_role"
                     layout="@layout/cell_setting_click" >
                 </include>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
@@ -65,36 +75,9 @@
 
                 <include
                     android:id="@+id/setting_location"
-                    layout="@layout/cell_setting_check" >
+                    layout="@layout/cell_setting_click" >
                 </include>
             </LinearLayout>
-
-
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <Button
-                    android:id="@+id/record_btn"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/round_btn_sel_bg"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/big_txt_size"
-                    android:text="按住录音" />
-
-                <View
-                    android:id="@+id/record_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_gravity="top|center"
-                    android:background="@color/title_color"/>
-                
-
-            </FrameLayout>
-
         </LinearLayout>
     </com.tingshuo.tool.view.CustomerScrollView>
 

@@ -14,7 +14,6 @@ public class ActivityTool {
 					LoginActivity.class);
 			T.show(context, "您的账号已在其他设备上登录，请重新登录",
 					Toast.LENGTH_LONG);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(intent);
 		} catch (Exception e) {
 		}

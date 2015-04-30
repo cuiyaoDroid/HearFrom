@@ -4,11 +4,12 @@ package com.tingshuo.tool.view.imageshower;
  * GalleryAdapter.java
  * @version 1.0
  * @author Haven
- * @createTime 2011-12-9 æ¶“ï¿½ï¿½ï¿½ï¿½05:04:34
+ * @createTime 2011-12-9 ä¸‹åˆ05:04:34
  */
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -80,7 +81,7 @@ public class GalleryAdapter extends BaseAdapter {
 			
 			view=(ShowerImageView) cell.findViewById(R.id.shower_img);
 			view.setTag(path);
-			// åˆ©ç”¨NativeImageLoaderç±»åŠ è½½æœ¬åœ°å›¾ç‰‡
+			// ÀûÓÃNativeImageLoaderÀà¼ÓÔØ±¾µØÍ¼Æ¬
 			if (isWeb) {
 				
 				Bitmap bit =mImageCache.getBitmapFromMemCache(HttpJsonTool.imgServerUrl+"small/"+path);
@@ -95,7 +96,7 @@ public class GalleryAdapter extends BaseAdapter {
 				downloader.download(HttpJsonTool.imgServerUrl+"big/"+path, view,null,bit);
 				
 			} else {
-				// åˆ©ç”¨NativeImageLoaderç±»åŠ è½½æœ¬åœ°å›¾ç‰‡
+				// ÀûÓÃNativeImageLoaderÀà¼ÓÔØ±¾µØÍ¼Æ¬
 				Bitmap bitmap = NativeImageLoader.getInstance(context)
 						.loadBigNativeImage(path, null,
 								new NativeImageCallBack() {

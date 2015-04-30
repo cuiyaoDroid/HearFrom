@@ -1,7 +1,5 @@
 package com.tingshuo.hearfrom;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,24 +7,12 @@ import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,11 +21,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.tingshuo.hearfrom.base.BaseAcivity;
 import com.tingshuo.tool.ActivityTool;
-import com.tingshuo.tool.DensityUtil;
 import com.tingshuo.tool.FileTool;
-import com.tingshuo.tool.L;
-import com.tingshuo.tool.PreferenceConstants;
-import com.tingshuo.tool.PreferenceUtils;
 import com.tingshuo.tool.RoleUtil;
 import com.tingshuo.tool.T;
 import com.tingshuo.tool.db.MapHolder;
@@ -61,16 +43,7 @@ public class publishTopickActivity extends BaseAcivity{
 	private TextView setting_role_content;
 	private View setting_location;
 	private TextView setting_location_title;
-	private CheckBox setting_location_content;
-	private Button record_btn;
-	private View record_progress;
-	private MyCount mCountDownTimer; 
-	
-	
-	private MediaPlayer mPlayer = null; 
-	private MediaRecorder mRecorder = null;  
-	private final static int RCORDTIME=60;
-	
+	private TextView setting_location_content;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -81,20 +54,14 @@ public class publishTopickActivity extends BaseAcivity{
 		refreshPicData(null);
 	}
 	private int role_id;
-	private int mScreemWidth;
 	@Override
 	protected void initContentView() {
 		super.initContentView();
-		
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		mScreemWidth = dm.widthPixels;
-		
-		
 		title_middle.setText("");
 		titleback.setVisibility(View.VISIBLE);
 		title_right.setText("发布");
 		title_right.setVisibility(View.VISIBLE);
+		
 		pic_data = new ArrayList<Map<String, Object>>();
 		mPicGridView = (GridView) findViewById(R.id.pic_gridView);
 		content_txt = (EditText) findViewById(R.id.content_txt);
@@ -145,120 +112,14 @@ public class publishTopickActivity extends BaseAcivity{
 		}
 		setting_role.setOnClickListener(this);
 
-		//是否使用当前位置
 		setting_location = findViewById(R.id.setting_location);
 		setting_location_title = (TextView) setting_location.findViewById(R.id.title);
-		setting_location_content = (CheckBox) setting_location.findViewById(R.id.checker);
-		boolean ifuselocation=PreferenceUtils.getPrefBoolean(getApplicationContext()
-				, PreferenceConstants.USE_MY_LOCATION, true);
-		setting_location_content.setChecked(ifuselocation);
-		setting_location_content.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
-				PreferenceUtils.setPrefBoolean(getApplicationContext()
-						, PreferenceConstants.USE_MY_LOCATION, isChecked);
-			}
-		});
-		setting_location_title.setText("使用我的位置");
+		setting_location_content = (TextView) setting_location.findViewById(R.id.content);
+		setting_location_content.setText("选择位置");
+		setting_location_title.setText("位置");
 		setting_location.setOnClickListener(this);
-		initRecordComp();
 	}
-	private void initRecordComp(){
-		record_progress = findViewById(R.id.record_progress);
-		record_progress.setVisibility(View.GONE);
-		
-		record_btn = (Button)findViewById(R.id.record_btn);
-		record_btn.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					record_progress.setVisibility(View.VISIBLE);
-					mCountDownTimer = new MyCount(RCORDTIME*1000, 200);  
-					mCountDownTimer.start();
-					startRecord();
-					break;
-				case MotionEvent.ACTION_CANCEL:
-				case MotionEvent.ACTION_UP:
-					record_progress.setVisibility(View.GONE);
-					mCountDownTimer.cancel();
-					stopRecord();
-					break;
-				default:
-					break;
-				}
-				return false;
-			}
-		});
-	}
-	private String mFilename;
-	private void startRecord(){
-		if(mFilename!=null){
-			deleteFileIFExist(mFilename);
-		}
-		mFilename=HearFromApp.appPath+System.currentTimeMillis()+".amr";
-		mRecorder = new MediaRecorder();  
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);  
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);  
-        mRecorder.setOutputFile(mFilename);  
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);  
-        try {  
-            mRecorder.prepare();  
-        } catch (IOException e) {  
-            L.e( "prepare() failed");  
-        }  
-        mRecorder.start(); 
-	}
-	
-	private void deleteFileIFExist(String filename){
-		File file=new File(filename);
-		if(file.exists()){
-			file.delete();
-		}
-	}
-	private void stopRecord(){
-		if(mRecorder==null){
-			return;
-		}
-		try{
-		mRecorder.stop();// 停止刻录   
-    	mRecorder.release(); // 刻录完成一定要释放资源   
-		}catch(RuntimeException e){
-			e.printStackTrace();
-		}
-	}
-	/*定义一个倒计时的内部类*/  
-    class MyCount extends CountDownTimer { 
-    	private int progresswidth;
-    	private int progressJUMP;
-        public MyCount(long millisInFuture, long countDownInterval) {     
-            super(millisInFuture, countDownInterval); 
-            progresswidth=mScreemWidth;
-            progressJUMP=progresswidth/(RCORDTIME*5);
-        }     
-       
-        @Override     
-        public void onFinish() {  
-        	L.i("CountDownTimer stop");
-        	stopRecord();
-        	
-        }     
-        @Override     
-        public void onTick(long millisUntilFinished) {   
-        	progresswidth-=progressJUMP;
-        	L.i("progresswidth"+progresswidth);
-        	setProgressWidth(progresswidth);
-        }    
-    } 
-    private void setProgressWidth(int width){
-    	FrameLayout.LayoutParams layout= (FrameLayout.LayoutParams) record_progress.getLayoutParams();
-        layout.width=width;
-        record_progress.setLayoutParams(layout);
-    }
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -392,7 +253,6 @@ public class publishTopickActivity extends BaseAcivity{
 			startActivityForResult(intent, RoleUtil.RESULT_SETTING_ROLE);
 			break;
 		case R.id.setting_location:
-			setting_location_content.setChecked(!setting_location_content.isChecked());
 			break;
 		default:
 			break;
