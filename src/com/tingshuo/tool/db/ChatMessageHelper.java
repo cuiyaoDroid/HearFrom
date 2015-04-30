@@ -20,7 +20,10 @@ public class ChatMessageHelper extends DBHelper {
 	public final static String TO_ID = "to_id";
 	public final static String CONTENT = "content";
 	public final static String STATUS = "status";
-	public static Observable mObservable=new Observable();
+	public static Observable mObservable = new Observable();
+	
+	
+	
 	public ChatMessageHelper(Context context) {
 		super(context);
 	}
@@ -28,23 +31,19 @@ public class ChatMessageHelper extends DBHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		
+
 		db.execSQL(getCreateSql());
 	}
-	private String getCreateSql(){
-		String sql = "Create table IF NOT EXISTS " + TABLE_NAME + "(" 
-				+ ID + " integer primary key autoincrement, " 
-				+ USER_ID + " integer, " 
-				+ TIME + " LONG, " 
-				+ FROM_ID + " VARCHAR, " 
-				+ TO_ID + " VARCHAR, " 
-				+ CONTENT + " VARCHAR, "
-				+ STATUS + " integer, "
-				+ TYPE + " VARCHAR" 
-				+ ");";
+
+	private String getCreateSql() {
+		String sql = "Create table IF NOT EXISTS " + TABLE_NAME + "(" + ID
+				+ " integer primary key autoincrement, " + USER_ID
+				+ " integer, " + TIME + " LONG, " + FROM_ID + " VARCHAR, "
+				+ TO_ID + " VARCHAR, " + CONTENT + " VARCHAR, " + STATUS
+				+ " integer, " + TYPE + " VARCHAR" + ");";
 		return sql;
 	}
-	
+
 	public long insert(ChatMessageHolder content, SQLiteDatabase db) {
 		ContentValues cv = new ContentValues();
 		if (content.getId() != -1) {
@@ -57,12 +56,33 @@ public class ChatMessageHelper extends DBHelper {
 		cv.put(CONTENT, content.getContent());
 		cv.put(FROM_ID, content.getFrom_id());
 		cv.put(TO_ID, content.getTo_id());
-		
+
 		mObservable.setChanged();
 		mObservable.notifyObservers(content);
-		
+
 		return db.replace(TABLE_NAME, null, cv);
 	}
+	public class UpdataHolder{
+		public int id;
+		public int status;
+		public UpdataHolder(int id, int status) {
+			this.id = id;
+			this.status = status;
+		}
+	}
+	public long update(int id, int status) {
+		synchronized (lock.Lock) {
+			SQLiteDatabase db=getWritableDatabase();
+			ContentValues cv = new ContentValues();
+			cv.put(STATUS, status);
+			mObservable.setChanged();
+			UpdataHolder holder=new UpdataHolder(id, status);
+			mObservable.notifyObservers(holder);
+			return db.update(TABLE_NAME, cv, ID+"=?"
+					, new String[]{String.valueOf(id)});
+		}
+	}
+
 	public static ChatMessageHolder getDataCursor(Cursor cursor) {
 		int id_column = cursor.getColumnIndex(ID);
 		int user_id_column = cursor.getColumnIndex(USER_ID);
@@ -81,41 +101,52 @@ public class ChatMessageHelper extends DBHelper {
 		String to_id = cursor.getString(to_id_column);
 		String content = cursor.getString(content_column);
 		int status = cursor.getInt(status_column);
-		ChatMessageHolder holder = new ChatMessageHolder(id, user_id, time
-				, from_id, to_id, type, content,status);
+		ChatMessageHolder holder = new ChatMessageHolder(id, user_id, time,
+				from_id, to_id, type, content, status);
 		return holder;
 	}
-	public ArrayList<ChatMessageHolder> selectData(int from_id,int from,int pagesize) {
+
+	public ArrayList<ChatMessageHolder> selectData(int from_id, int from,
+			int pagesize) {
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(TABLE_NAME, null, "( "+FROM_ID+"=? OR "+TO_ID+"=? ) AND "+USER_ID+"=?"
-				,new String[]{String.valueOf(from_id),String.valueOf(from_id),String.valueOf(HearFromApp.user_id)}
-				, null, null, ID + " desc limit "+ from + "," + pagesize);
+		Cursor cursor = db.query(
+				TABLE_NAME,
+				null,
+				"( " + FROM_ID + "=? OR " + TO_ID + "=? ) AND " + USER_ID
+						+ "=?",
+				new String[] { String.valueOf(from_id),
+						String.valueOf(from_id),
+						String.valueOf(HearFromApp.user_id) }, null, null, ID
+						+ " desc limit " + from + "," + pagesize);
 		ArrayList<ChatMessageHolder> holderlist = new ArrayList<ChatMessageHolder>();
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			ChatMessageHolder holder=getDataCursor(cursor);
+			ChatMessageHolder holder = getDataCursor(cursor);
 			holderlist.add(holder);
 		}
 		cursor.close();
 		return holderlist;
 	}
-	public int delete_id(int id){
+
+	public int delete_id(int id) {
 		synchronized (lock.Lock) {
 			SQLiteDatabase db = getWritableDatabase();
-			return db.delete(TABLE_NAME,  ID + "=" + id, null);
+			return db.delete(TABLE_NAME, ID + "=" + id, null);
 		}
 	}
-	public ArrayList<ChatMessageHolder> selectData(int from,int pagesize) {
+
+	public ArrayList<ChatMessageHolder> selectData(int from, int pagesize) {
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(TABLE_NAME, null, null,null, null, null, ID + " asc limit "
-							+ from + "," + pagesize);
+		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, ID
+				+ " asc limit " + from + "," + pagesize);
 		ArrayList<ChatMessageHolder> holderlist = new ArrayList<ChatMessageHolder>();
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			ChatMessageHolder holder=getDataCursor(cursor);
+			ChatMessageHolder holder = getDataCursor(cursor);
 			holderlist.add(holder);
 		}
 		cursor.close();
 		return holderlist;
 	}
+
 	public ChatMessageHolder selectData_Id(int v_id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.query(TABLE_NAME, null, ID + "=?",
@@ -124,10 +155,11 @@ public class ChatMessageHelper extends DBHelper {
 			cursor.close();
 			return null;
 		}
-		ChatMessageHolder holder=getDataCursor(cursor);
+		ChatMessageHolder holder = getDataCursor(cursor);
 		cursor.close();
 		return holder;
 	}
+
 	public void clear() {
 		synchronized (lock.Lock) {
 			SQLiteDatabase db = this.getWritableDatabase();
