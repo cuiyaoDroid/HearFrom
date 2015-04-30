@@ -1,5 +1,7 @@
 package com.tingshuo.hearfrom;
 
+import io.rong.imlib.RongIMClient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tingshuo.hearfrom.base.BaseSwipeBaceActivity;
+import com.tingshuo.tool.L;
 import com.tingshuo.tool.db.ChatMessageHelper;
 import com.tingshuo.tool.db.ChatMessageHolder;
 import com.tingshuo.tool.db.CurMessageListHelper;
@@ -62,8 +65,7 @@ import com.tingshuo.tool.view.adapter.FacePageAdeapter;
 import com.tingshuo.tool.view.adapter.RongChatAdapter;
 
 public class RongYunChatActivity extends BaseSwipeBaceActivity implements
-		OnTouchListener, OnClickListener, IXListViewListener, Observer,
-		OnResizeListener {
+		OnTouchListener, OnClickListener, IXListViewListener, Observer,OnResizeListener{
 	public static final String INTENT_EXTRA_USERNAME = RongYunChatActivity.class
 			.getName() + ".username";// 昵称对应的key
 	private MsgListView mMsgListView;// 对话ListView
@@ -79,13 +81,14 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 	private List<String> mFaceMapKeys;// 表情对应的字符串数组
 	private int friend_id;
 	private UserInfoHolder userInfo;
+
 	private RongChatAdapter mChatAdapter;
 	private Pager mPage;
 	private List<Map<String, Object>> mChatData = new ArrayList<Map<String, Object>>();
 	private ResizeLinearLayout rootview;
-
+	
+	
 	public static int in_use_id;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,14 +97,9 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 		initData();// 初始化数据
 		initView();// 初始化view
 		initFacePage();// 初始化表情
-		clearChatCount();
+
 	}
-	private void clearChatCount(){
-		CurMessageListHelper helper = new CurMessageListHelper(
-				getApplicationContext());
-		helper.zeroCount(friend_id);
-		helper.close();
-	}
+
 	@Override
 	protected void initContentView() {
 		super.initContentView();
@@ -111,7 +109,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 			finish();
 			return;
 		}
-		in_use_id = friend_id;
+		in_use_id=friend_id;
 		UserInfoHelper helper = new UserInfoHelper(getApplicationContext());
 		userInfo = helper.selectData_Id(friend_id);
 		if (userInfo == null) {
@@ -123,10 +121,10 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 		titleback.setVisibility(View.GONE);
 		titleback.setVisibility(View.VISIBLE);
 		title_right.setVisibility(View.GONE);
-		rootview = (ResizeLinearLayout) findViewById(R.id.root);
+		rootview = (ResizeLinearLayout)findViewById(R.id.root);
 		rootview.setOnResizeListener(this);
 	}
-
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -146,12 +144,12 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 				mPage.curpage * mPage.pagesize, mPage.pagesize);
 		helper.close();
 		if (more) {
-			for (ChatMessageHolder holder : holders) {
+			for (ChatMessageHolder holder:holders) {
 				Map<String, Object> data = new HashMap<String, Object>();
 				data.put(ChatMessageHelper.TABLE_NAME, holder);
 				data.put(UserInfoHelper.NICK_NAME, userInfo.getNickname());
 				data.put(UserInfoHelper.HEAD, userInfo.getHead());
-				mChatData.add(0, data);
+				mChatData.add(0,data);
 			}
 		} else {
 			for (int i = holders.size() - 1; i >= 0; i--) {
@@ -182,7 +180,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		in_use_id = -1;
+		in_use_id=-1;
 	}
 
 	@Override
@@ -192,6 +190,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 
 	private void initData() {
 		// 将表情map的key保存在数组中
+
 		Set<String> keySet = HearFromApp.getInstance().getFaceMap().keySet();
 		mFaceMapKeys = new ArrayList<String>();
 		mFaceMapKeys.addAll(keySet);
@@ -470,29 +469,28 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 
 	private void sendMessage() {
 		String content = mChatEditText.getText().toString();
-		int msg_id = RongIMTool.getInstance().sendMessage(
-				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
-				String.valueOf(friend_id));
-		if (msg_id == -1) {
-			Toast.makeText(getApplicationContext(), "发送失败网络状况不好",
-					Toast.LENGTH_SHORT);
+		int msg_id=RongIMTool.getInstance().sendMessage(RongMessageTYPE.MESSAGE_TYPE_TEXT,
+				content, String.valueOf(friend_id));
+		if(msg_id==-1){
+			Toast.makeText(getApplicationContext(), "发送失败网络状况不好", Toast.LENGTH_SHORT);
 			return;
 		}
 		ChatMessageHelper helper = new ChatMessageHelper(
 				getApplicationContext());
-		long time = System.currentTimeMillis();
+		long time=System.currentTimeMillis();
 		ChatMessageHolder holder = new ChatMessageHolder(msg_id,
-				HearFromApp.user_id, time, String.valueOf(HearFromApp.user_id),
-				String.valueOf(friend_id), RongMessageTYPE.MESSAGE_TYPE_TEXT,
-				content, ChatMessageHolder.STATUS_SENDING);
-
-		CurMessageListHelper curhelper = new CurMessageListHelper(
-				getApplicationContext());
-		CurMessageListHolder curholder = new CurMessageListHolder(friend_id,
-				HearFromApp.user_id, time, String.valueOf(HearFromApp.user_id),
-				String.valueOf(friend_id), RongMessageTYPE.MESSAGE_TYPE_TEXT,
-				content, ChatMessageHolder.STATUS_SENDING, 0);
-
+				HearFromApp.user_id, time,
+				String.valueOf(HearFromApp.user_id), String.valueOf(friend_id),
+				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
+				ChatMessageHolder.STATUS_SENDING);
+		
+		CurMessageListHelper curhelper=new CurMessageListHelper(getApplicationContext());
+		CurMessageListHolder curholder=new CurMessageListHolder(friend_id,
+				HearFromApp.user_id, time,
+				String.valueOf(HearFromApp.user_id), String.valueOf(friend_id),
+				RongMessageTYPE.MESSAGE_TYPE_TEXT, content,
+				ChatMessageHolder.STATUS_SENDING,0);
+		
 		synchronized (lock.Lock) {
 			helper.insert(holder, helper.getWritableDatabase());
 			curhelper.insert(curholder, helper.getWritableDatabase());
@@ -501,7 +499,6 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 		curhelper.close();
 		mChatEditText.setText("");
 	}
-
 	@Override
 	public void update(Observable o, final Object msg) {
 		// TODO Auto-generated method stub
@@ -509,36 +506,21 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				if (msg instanceof ChatMessageHolder) {
-					UserInfoHelper userHelper = new UserInfoHelper(
-							getApplicationContext());
-					ChatMessageHolder holder = (ChatMessageHolder) msg;
-					if (!(holder.getFrom_id().equals(String.valueOf(friend_id)) || holder
-							.getTo_id().equals(String.valueOf(friend_id)))) {
-						return;
-					}
-					Map<String, Object> data = new HashMap<String, Object>();
-					data.put(ChatMessageHelper.TABLE_NAME, holder);
-					data.put(UserInfoHelper.NICK_NAME, userInfo.getNickname());
-					data.put(UserInfoHelper.HEAD, userInfo.getHead());
-					mChatData.add(data);
-					userHelper.close();
-					mChatAdapter.notifyDataSetChanged();
-					mMsgListView.setSelection(mChatAdapter.getCount() - 1);
-				} else if (msg instanceof ChatMessageHelper.UpdataHolder) {
-					ChatMessageHelper.UpdataHolder update = (ChatMessageHelper.UpdataHolder) msg;
-					for (int i = mChatData.size()-1; i >= 0; i--) {
-						ChatMessageHolder holder = (ChatMessageHolder) mChatData
-								.get(i).get(ChatMessageHelper.TABLE_NAME);
-						if(holder.getId()==update.id){
-							holder.setStatus(update.status);
-							mChatData.get(i).put(ChatMessageHelper.TABLE_NAME, holder);
-							mChatAdapter.notifyDataSetChanged();
-							break;
-						}
-					}
-
+				UserInfoHelper userHelper = new UserInfoHelper(
+						getApplicationContext());
+				ChatMessageHolder holder = (ChatMessageHolder) msg;
+				if (!(holder.getFrom_id().equals(String.valueOf(friend_id)) || holder
+						.getTo_id().equals(String.valueOf(friend_id)))) {
+					return;
 				}
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put(ChatMessageHelper.TABLE_NAME, holder);
+				data.put(UserInfoHelper.NICK_NAME, userInfo.getNickname());
+				data.put(UserInfoHelper.HEAD, userInfo.getHead());
+				mChatData.add(data);
+				userHelper.close();
+				mChatAdapter.notifyDataSetChanged();
+				mMsgListView.setSelection(mChatAdapter.getCount() - 1);
 			}
 		});
 	}
@@ -552,7 +534,7 @@ public class RongYunChatActivity extends BaseSwipeBaceActivity implements
 	@Override
 	public void OnLayout(int l, int t, int r, int b) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

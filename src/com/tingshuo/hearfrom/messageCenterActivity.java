@@ -50,6 +50,10 @@ public class messageCenterActivity extends BaseAcivity implements Observer {
 						RongYunChatActivity.class);
 				intent.putExtra(UserInfoHelper.ID, user_id);
 				startActivity(intent);
+				CurMessageListHelper helper = new CurMessageListHelper(
+						getApplicationContext());
+				helper.zeroCount(user_id);
+				helper.close();
 			}
 		});
 		adapter = new MessageListAdapter(getApplicationContext(), data);

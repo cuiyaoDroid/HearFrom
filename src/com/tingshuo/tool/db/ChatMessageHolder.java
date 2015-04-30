@@ -14,7 +14,7 @@ public class ChatMessageHolder {
 	public static final int STATUS_RECIVED=0;
 	public static final int STATUS_SENDING=1;
 	public static final int STATUS_SENDED=2;
-	public static final int STATUS_SEND_ERROR=3;
+	
 	
 	public ChatMessageHolder(int id, int user_id, long time, String from_id,
 			String to_id, String type, String content,int status) {
